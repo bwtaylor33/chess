@@ -1,6 +1,8 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Objects;
 
 /**
@@ -64,7 +66,17 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        throw new RuntimeException("Not implemented");
+        Collection<ChessMove> possibleMoves = possibleMoves(board, myPosition);
+        possibleMoves.removeIf(move -> isInvalid(board, move));
+        return possibleMoves;
+    }
+
+    protected boolean isInvalid(ChessBoard board, ChessMove move) {
+        return true;
+    }
+
+    protected Collection<ChessMove> possibleMoves(ChessBoard board, ChessPosition myPosition) {
+        return new ArrayList<>();
     }
 
     private ChessGame.TeamColor pieceColor;
