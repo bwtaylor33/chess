@@ -10,12 +10,13 @@ public class QueenMovesCalculator extends PieceMovesCalculator {
     }
 
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
+        // queen has same moves as bishop + rook
 
-        ChessGame.TeamColor color = board.getPiece(myPosition).getTeamColor();
+        // bishop moves
+        Collection<ChessMove> moves = new BishopMovesCalculator(getColor()).pieceMoves(board, myPosition);
 
-        Collection<ChessMove> moves = new BishopMovesCalculator(color).pieceMoves(board, myPosition);
-
-        Collection<ChessMove> rookMoves = new RookMovesCalculator(color).pieceMoves(board, myPosition);
+        // rook moves
+        Collection<ChessMove> rookMoves = new RookMovesCalculator(getColor()).pieceMoves(board, myPosition);
 
         moves.addAll(rookMoves);
 

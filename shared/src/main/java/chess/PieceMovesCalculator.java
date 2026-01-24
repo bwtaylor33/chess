@@ -15,6 +15,7 @@ abstract public class PieceMovesCalculator {
         return color;
     }
 
+    // check to see if move will be in bounds and not blocked by piece on same team
     protected boolean isInBoundsAndNotBlocked(ChessBoard board, ChessPosition position) {
         if (position.getRow() < 1 || position.getRow() > 8) {
             return false;
@@ -28,6 +29,7 @@ abstract public class PieceMovesCalculator {
         return true;
     }
 
+    // used for rook and bishop moves. repeats same move until it is an invalid move
     protected ArrayList<ChessMove> getSlideMoves(ChessBoard board, ChessPosition position, int deltaRow, int deltaColumn) {
         ArrayList<ChessMove> moves = new ArrayList<>();
         int row = position.getRow();
@@ -50,6 +52,7 @@ abstract public class PieceMovesCalculator {
         return moves;
     }
 
+    // factory returns move calculator for a given piece
     public static PieceMovesCalculator getCalculator(ChessPiece piece) {
         PieceMovesCalculator pieceMovesCalculator = null;
         switch(piece.getPieceType()) {
@@ -76,5 +79,4 @@ abstract public class PieceMovesCalculator {
     }
 
     private ChessGame.TeamColor color;
-
 }
