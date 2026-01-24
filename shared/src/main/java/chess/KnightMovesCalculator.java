@@ -14,39 +14,53 @@ public class KnightMovesCalculator extends PieceMovesCalculator {
         ArrayList<ChessMove> moves = new ArrayList<>();
         ChessGame.TeamColor color = board.getPiece(myPosition).getTeamColor();
 
-//        // forward one
-//        int deltaRow = color == ChessGame.TeamColor.WHITE ? -1 : 1;
-//        ChessPosition newSpot = new ChessPosition(myPosition.getRow() + deltaRow, myPosition.getColumn());
-//        if (board.getPiece(newSpot) == null) {
-//            moves.add(new ChessMove(myPosition, newSpot, null));
-//        }
-//
-//        // attack left
-//        if (myPosition.getColumn() > 1) {
-//            deltaRow = color == ChessGame.TeamColor.WHITE ? -1 : 1;
-//            newSpot = new ChessPosition(myPosition.getRow() + deltaRow,myPosition.getColumn() - 1);
-//            if (board.getPiece(newSpot).getTeamColor() != getColor()) {
-//                moves.add(new ChessMove(myPosition, newSpot, null));
-//            }
-//        }
-//
-//        // attack right
-//        if (myPosition.getColumn() <= 7) {
-//            deltaRow = color == ChessGame.TeamColor.WHITE ? -1 : 1;
-//            newSpot = new ChessPosition(myPosition.getRow() + deltaRow, myPosition.getColumn() + 1);
-//            moves.add(new ChessMove(myPosition, newSpot, null));
-//        }
-//
-//        // opening move
-//        if ((color == ChessGame.TeamColor.WHITE && myPosition.getRow() == 2) || (color == ChessGame.TeamColor.BLACK && myPosition.getRow() == 7)) {
-//            int newRow = color == ChessGame.TeamColor.WHITE ? 4 : 5;
-//            int intermediateRow = color == ChessGame.TeamColor.WHITE ? 3 : 6;
-//            newSpot = new ChessPosition(newRow, myPosition.getColumn());
-//            ChessPosition intermediateSpot = new ChessPosition(intermediateRow, myPosition.getColumn());
-//            if (board.getPiece(intermediateSpot) == null) {
-//                moves.add(new ChessMove(myPosition, newSpot, null));
-//            }
-//        }
+        // up 1, right 2
+        ChessPosition up1right2 = new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn() + 2);
+        if (isInBoundsAndNotBlocked(board, up1right2)) {
+            moves.add(new ChessMove(myPosition, up1right2, null));
+        }
+
+        // up 1, left 2
+        ChessPosition up1left2 = new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn() - 2);
+        if (isInBoundsAndNotBlocked(board, up1left2)) {
+            moves.add(new ChessMove(myPosition, up1left2, null));
+        }
+
+        // up 2, right 1
+        ChessPosition up2right1 = new ChessPosition(myPosition.getRow() + 2, myPosition.getColumn() + 1);
+        if (isInBoundsAndNotBlocked(board, up2right1)) {
+            moves.add(new ChessMove(myPosition, up2right1, null));
+        }
+
+        // up 2, left 1
+        ChessPosition up2left1 = new ChessPosition(myPosition.getRow() + 2, myPosition.getColumn() - 1);
+        if (isInBoundsAndNotBlocked(board, up2left1)) {
+            moves.add(new ChessMove(myPosition, up2left1, null));
+        }
+
+        // down 1, right 2
+        ChessPosition down1right2 = new ChessPosition(myPosition.getRow() - 1, myPosition.getColumn() + 2);
+        if (isInBoundsAndNotBlocked(board, down1right2)) {
+            moves.add(new ChessMove(myPosition, down1right2, null));
+        }
+
+        // down 1, left 2
+        ChessPosition down1left2 = new ChessPosition(myPosition.getRow() - 1, myPosition.getColumn() - 2);
+        if (isInBoundsAndNotBlocked(board, down1left2)) {
+            moves.add(new ChessMove(myPosition, down1left2, null));
+        }
+
+        // down 2, right 1
+        ChessPosition down2right1 = new ChessPosition(myPosition.getRow() - 2, myPosition.getColumn() + 1);
+        if (isInBoundsAndNotBlocked(board, down2right1)) {
+            moves.add(new ChessMove(myPosition, down2right1, null));
+        }
+
+        // down 2, left 1
+        ChessPosition down2left1 = new ChessPosition(myPosition.getRow() - 2, myPosition.getColumn() - 1);
+        if (isInBoundsAndNotBlocked(board, down2left1)) {
+            moves.add(new ChessMove(myPosition, down2left1, null));
+        }
 
         return moves;
     }

@@ -14,6 +14,19 @@ abstract public class PieceMovesCalculator {
         return color;
     }
 
+    protected boolean isInBoundsAndNotBlocked(ChessBoard board, ChessPosition position) {
+        if (position.getRow() < 1 || position.getRow() > 8) {
+            return false;
+        }
+        if (position.getColumn() < 1 || position.getColumn() > 8) {
+            return false;
+        }
+        if (board.getPiece(position) != null && board.getPiece(position).getTeamColor() == color) {
+            return false;
+        }
+        return true;
+    }
+
     public static PieceMovesCalculator getCalculator(ChessPiece piece) {
         PieceMovesCalculator pieceMovesCalculator = null;
         switch(piece.getPieceType()) {
@@ -40,4 +53,5 @@ abstract public class PieceMovesCalculator {
     }
 
     private ChessGame.TeamColor color;
+
 }

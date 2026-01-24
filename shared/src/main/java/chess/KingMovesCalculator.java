@@ -14,39 +14,53 @@ public class KingMovesCalculator extends PieceMovesCalculator {
         ArrayList<ChessMove> moves = new ArrayList<>();
         ChessGame.TeamColor color = board.getPiece(myPosition).getTeamColor();
 
-//        // forward one
-//        int deltaRow = color == ChessGame.TeamColor.WHITE ? -1 : 1;
-//        ChessPosition newSpot = new ChessPosition(myPosition.getRow() + deltaRow, myPosition.getColumn());
-//        if (board.getPiece(newSpot) == null) {
-//            moves.add(new ChessMove(myPosition, newSpot, null));
-//        }
-//
-//        // attack left
-//        if (myPosition.getColumn() > 1) {
-//            deltaRow = color == ChessGame.TeamColor.WHITE ? -1 : 1;
-//            newSpot = new ChessPosition(myPosition.getRow() + deltaRow,myPosition.getColumn() - 1);
-//            if (board.getPiece(newSpot).getTeamColor() != getColor()) {
-//                moves.add(new ChessMove(myPosition, newSpot, null));
-//            }
-//        }
-//
-//        // attack right
-//        if (myPosition.getColumn() <= 7) {
-//            deltaRow = color == ChessGame.TeamColor.WHITE ? -1 : 1;
-//            newSpot = new ChessPosition(myPosition.getRow() + deltaRow, myPosition.getColumn() + 1);
-//            moves.add(new ChessMove(myPosition, newSpot, null));
-//        }
-//
-//        // opening move
-//        if ((color == ChessGame.TeamColor.WHITE && myPosition.getRow() == 2) || (color == ChessGame.TeamColor.BLACK && myPosition.getRow() == 7)) {
-//            int newRow = color == ChessGame.TeamColor.WHITE ? 4 : 5;
-//            int intermediateRow = color == ChessGame.TeamColor.WHITE ? 3 : 6;
-//            newSpot = new ChessPosition(newRow, myPosition.getColumn());
-//            ChessPosition intermediateSpot = new ChessPosition(intermediateRow, myPosition.getColumn());
-//            if (board.getPiece(intermediateSpot) == null) {
-//                moves.add(new ChessMove(myPosition, newSpot, null));
-//            }
-//        }
+        // up
+        ChessPosition up = new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn());
+        if (isInBoundsAndNotBlocked(board, up)) {
+            moves.add(new ChessMove(myPosition, up, null));
+        }
+
+        // down
+        ChessPosition down = new ChessPosition(myPosition.getRow() - 1, myPosition.getColumn());
+        if (isInBoundsAndNotBlocked(board, down)) {
+            moves.add(new ChessMove(myPosition, down, null));
+        }
+
+        // left
+        ChessPosition left = new ChessPosition(myPosition.getRow(), myPosition.getColumn() - 1);
+        if (isInBoundsAndNotBlocked(board, left)) {
+            moves.add(new ChessMove(myPosition, left, null));
+        }
+
+        // right
+        ChessPosition right = new ChessPosition(myPosition.getRow(), myPosition.getColumn() + 1);
+        if (isInBoundsAndNotBlocked(board, right)) {
+            moves.add(new ChessMove(myPosition, right, null));
+        }
+
+        // diagonal up-left
+        ChessPosition upLeft = new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn() - 1);
+        if (isInBoundsAndNotBlocked(board, upLeft)) {
+            moves.add(new ChessMove(myPosition, upLeft, null));
+        }
+
+        // diagonal up-right
+        ChessPosition upRight = new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn() + 1);
+        if (isInBoundsAndNotBlocked(board, upRight)) {
+            moves.add(new ChessMove(myPosition, upRight, null));
+        }
+
+        // diagonal down-left
+        ChessPosition downLeft = new ChessPosition(myPosition.getRow() - 1, myPosition.getColumn() - 1);
+        if (isInBoundsAndNotBlocked(board, downLeft)) {
+            moves.add(new ChessMove(myPosition, downLeft, null));
+        }
+
+        // diagonal down-right
+        ChessPosition downRight = new ChessPosition(myPosition.getRow() - 1, myPosition.getColumn() + 1);
+        if (isInBoundsAndNotBlocked(board, downRight)) {
+            moves.add(new ChessMove(myPosition, downRight, null));
+        }
 
         return moves;
     }
