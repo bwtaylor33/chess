@@ -66,17 +66,8 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        Collection<ChessMove> possibleMoves = possibleMoves(board, myPosition);
-        possibleMoves.removeIf(move -> isInvalid(board, move));
-        return possibleMoves;
-    }
-
-    protected boolean isInvalid(ChessBoard board, ChessMove move) {
-        return true;
-    }
-
-    protected Collection<ChessMove> possibleMoves(ChessBoard board, ChessPosition myPosition) {
-        return new ArrayList<>();
+        PieceMovesCalculator movesCalculator = PieceMovesCalculator.getCalculator(board.getPiece(myPosition));
+        return movesCalculator.pieceMoves(board, myPosition);
     }
 
     private ChessGame.TeamColor pieceColor;
