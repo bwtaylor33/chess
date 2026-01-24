@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Collection;
+import java.util.ArrayList;
 
 abstract public class PieceMovesCalculator {
 
@@ -25,6 +26,28 @@ abstract public class PieceMovesCalculator {
             return false;
         }
         return true;
+    }
+
+    protected ArrayList<ChessMove> getSlideMoves(ChessBoard board, ChessPosition position, int deltaRow, int deltaColumn) {
+        ArrayList<ChessMove> moves = new ArrayList<>();
+        int row = position.getRow();
+        int column = position.getColumn();
+        while (true) {
+            row += deltaRow;
+            column += deltaColumn;
+            ChessPosition testPosition = new ChessPosition(row, column);
+            if (isInBoundsAndNotBlocked(board, testPosition)) {
+                moves.add(new ChessMove(position, testPosition, null));
+                if (board.getPiece(testPosition) != null) {
+                    // hit an opponent
+                    break;
+                }
+            } else {
+                // ran into own piece or out of bounds
+                break;
+            }
+        }
+        return moves;
     }
 
     public static PieceMovesCalculator getCalculator(ChessPiece piece) {
