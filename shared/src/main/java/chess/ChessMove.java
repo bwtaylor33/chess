@@ -55,6 +55,11 @@ public class ChessMove {
         return promotionPiece;
     }
 
+    @Override
+    public String toString() {
+        return String.format("S: %s --> E: %s (%s)", startPosition, endPosition, promotionPiece);
+    }
+
     private ChessPosition startPosition;
     private ChessPosition endPosition;
     private ChessPiece.PieceType promotionPiece;

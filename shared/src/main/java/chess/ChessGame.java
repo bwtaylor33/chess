@@ -128,6 +128,9 @@ public class ChessGame {
             for (int j=1; j<=8; j++) {
                 ChessPosition position = new ChessPosition(i, j);
                 ChessPiece piece = board.getPiece(position);
+
+                System.out.println("checking moves for " + piece + " at " + position);
+
                 if (piece != null && piece.getTeamColor() != teamColor) {
 
                     Collection<ChessMove> validMoves = piece.pieceMoves(board, position);
@@ -206,6 +209,7 @@ public class ChessGame {
         board.addPiece(move.getEndPosition(), capturedPiece);
         toggleTeamTurn();
 
+        System.out.println(move.toString() + " " + isInCheck);
         return !isInCheck;
     }
 

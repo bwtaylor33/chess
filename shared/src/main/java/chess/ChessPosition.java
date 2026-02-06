@@ -45,6 +45,11 @@ public class ChessPosition {
         return column;
     }
 
+    @Override
+    public String toString() {
+        return String.format("[%d,%d]", row, column);
+    }
+
     private int row;
     private int column;
 }

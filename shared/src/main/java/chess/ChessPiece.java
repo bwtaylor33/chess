@@ -70,6 +70,30 @@ public class ChessPiece {
         return movesCalculator.pieceMoves(board, myPosition);
     }
 
+    @Override
+    public String toString() {
+        String s = "";
+        if (pieceType == PieceType.KING) {
+            s = "k";
+        } else if (pieceType == PieceType.QUEEN) {
+            s = "q";
+        } else if (pieceType == PieceType.ROOK) {
+            s = "r";
+        } else if (pieceType == PieceType.KNIGHT) {
+            s = "k";
+        } else if (pieceType == PieceType.BISHOP) {
+            s = "b";
+        } else if (pieceType == PieceType.PAWN) {
+            s = "p";
+        }
+
+        if (pieceColor == ChessGame.TeamColor.BLACK) {
+            s = s.toUpperCase();
+        }
+
+        return s;
+    }
+
     private ChessGame.TeamColor pieceColor;
     private ChessPiece.PieceType pieceType;
 }
