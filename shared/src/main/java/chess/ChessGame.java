@@ -60,9 +60,7 @@ public class ChessGame {
 
         // iterate through all possible moves
         Collection<ChessMove> possibleMoves = piece.pieceMoves(board, startPosition);
-        Iterator<ChessMove> it = possibleMoves.iterator();
-        while (it.hasNext()) {
-            ChessMove move = it.next();
+        for (ChessMove move : possibleMoves) {
             if (isValidMove(move)) {
                 validMoves.add(move);
             }
@@ -88,7 +86,21 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        for (int i=0; i<8; i++) {
+            for (int j=0; j<8; j++) {
+                ChessPosition position = new ChessPosition(i, j);
+                ChessPiece piece = board.getPiece(position);
+                Collection<ChessMove> validMoves = piece.pieceMoves(board, position);
+
+                for (ChessMove move : validMoves) {
+                    ChessPiece capturedPiece = board.getPiece(move.getEndPosition());
+                    if (capturedPiece != null && capturedPiece.getTeamColor() == teamColor && capturedPiece.getPieceType() == ChessPiece.PieceType.KING) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -131,11 +143,23 @@ public class ChessGame {
     }
 
     private boolean isValidMove(ChessMove move) {
+        TeamColor currentTurn = turn;
+        TeamColor nextTurn = turn == TeamColor.WHITE ? TeamColor.BLACK : TeamColor.WHITE;
+
         // create a board that represents doing this potential move
         ChessPiece capturedPiece = board.getPiece(move.getEndPosition());
+        board.addPiece(move.getEndPosition(), board.getPiece(move.getStartPosition()));
+        board.addPiece(move.getStartPosition(), null);
+        turn = nextTurn;
 
         // test to make sure that the move doesn't put himself into check
+        boolean isInCheck = isInCheck(currentTurn);
 
+        // now put board back to original state
+        board.addPiece(move.getStartPosition(), board.getPiece(move.getEndPosition()));
+        board.addPiece(move.getEndPosition(), capturedPiece);
+        turn = currentTurn;
+        return isInCheck;
     }
 
     private ChessBoard board = new ChessBoard();
