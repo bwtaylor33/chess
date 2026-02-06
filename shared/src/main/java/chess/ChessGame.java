@@ -3,6 +3,7 @@ package chess;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Objects;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -14,6 +15,20 @@ public class ChessGame {
 
     public ChessGame() {
         board.resetBoard();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessGame chessGame = (ChessGame) o;
+        return Objects.equals(getBoard(), chessGame.getBoard()) && turn == chessGame.turn;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getBoard(), turn);
     }
 
     /**
@@ -86,16 +101,19 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        for (int i=0; i<8; i++) {
-            for (int j=0; j<8; j++) {
+        for (int i=1; i<=8; i++) {
+            for (int j=1; j<=8; j++) {
                 ChessPosition position = new ChessPosition(i, j);
                 ChessPiece piece = board.getPiece(position);
-                Collection<ChessMove> validMoves = piece.pieceMoves(board, position);
+                if (piece != null) {
 
-                for (ChessMove move : validMoves) {
-                    ChessPiece capturedPiece = board.getPiece(move.getEndPosition());
-                    if (capturedPiece != null && capturedPiece.getTeamColor() == teamColor && capturedPiece.getPieceType() == ChessPiece.PieceType.KING) {
-                        return true;
+                    Collection<ChessMove> validMoves = piece.pieceMoves(board, position);
+
+                    for (ChessMove move : validMoves) {
+                        ChessPiece capturedPiece = board.getPiece(move.getEndPosition());
+                        if (capturedPiece != null && capturedPiece.getTeamColor() == teamColor && capturedPiece.getPieceType() == ChessPiece.PieceType.KING) {
+                            return true;
+                        }
                     }
                 }
             }
