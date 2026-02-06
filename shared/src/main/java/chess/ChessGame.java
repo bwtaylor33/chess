@@ -1,6 +1,8 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -46,7 +48,27 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        ChessPiece piece = board.getPiece(startPosition);
+
+        // check if empty space on board
+        if (piece == null) {
+            return null;
+        }
+
+        // place valid moves into this array
+        ArrayList<ChessMove> validMoves = new ArrayList<>();
+
+        // iterate through all possible moves
+        Collection<ChessMove> possibleMoves = piece.pieceMoves(board, startPosition);
+        Iterator<ChessMove> it = possibleMoves.iterator();
+        while (it.hasNext()) {
+            ChessMove move = it.next();
+            if (isValidMove(move)) {
+                validMoves.add(move);
+            }
+        }
+
+        return validMoves;
     }
 
     /**
@@ -106,6 +128,14 @@ public class ChessGame {
      */
     public ChessBoard getBoard() {
         return board;
+    }
+
+    private boolean isValidMove(ChessMove move) {
+        // create a board that represents doing this potential move
+        ChessPiece capturedPiece = board.getPiece(move.getEndPosition());
+
+        // test to make sure that the move doesn't put himself into check
+
     }
 
     private ChessBoard board = new ChessBoard();
