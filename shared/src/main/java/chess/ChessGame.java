@@ -158,23 +158,7 @@ public class ChessGame {
             return false;
         }
 
-        for (int i=1; i<=8; i++) {
-            for (int j = 1; j <= 8; j++) {
-                ChessPosition position = new ChessPosition(i, j);
-                ChessPiece piece = board.getPiece(position);
-
-                if (piece != null && piece.getTeamColor() != teamColor) {
-                    System.out.println("checking moves for " + piece + " " + piece.getTeamColor() + " at " + position);
-
-                    Collection<ChessMove> validMoves = piece.pieceMoves(board, position);
-                    if (!validMoves.isEmpty()) {
-                        return false;
-                    }
-                }
-            }
-        }
-
-        return true;
+        return checkValidBoardMoves(teamColor);
     }
 
     /**
@@ -189,23 +173,7 @@ public class ChessGame {
             return false;
         }
 
-        for (int i=1; i<=8; i++) {
-            for (int j = 1; j <= 8; j++) {
-                ChessPosition position = new ChessPosition(i, j);
-                ChessPiece piece = board.getPiece(position);
-
-                if (piece != null && piece.getTeamColor() != teamColor) {
-                    System.out.println("checking moves for " + piece + " " + piece.getTeamColor() + " at " + position);
-
-                    Collection<ChessMove> validMoves = piece.pieceMoves(board, position);
-                    if (!validMoves.isEmpty()) {
-                        return false;
-                    }
-                }
-            }
-        }
-
-        return true;
+        return checkValidBoardMoves(teamColor);
     }
 
     /**
@@ -259,6 +227,26 @@ public class ChessGame {
 
     private void toggleTeamTurn() {
         turn = turn == TeamColor.WHITE ? TeamColor.BLACK : TeamColor.WHITE;
+    }
+
+    private boolean checkValidBoardMoves(TeamColor teamColor) {
+        for (int i=1; i<=8; i++) {
+            for (int j = 1; j <= 8; j++) {
+                ChessPosition position = new ChessPosition(i, j);
+                ChessPiece piece = board.getPiece(position);
+
+                if (piece != null && piece.getTeamColor() == teamColor) {
+                    System.out.println("checking moves for " + piece + " " + piece.getTeamColor() + " at " + position);
+
+                    Collection<ChessMove> validMoves = validMoves(position);
+                    if (!validMoves.isEmpty()) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
     }
 
     private ChessBoard board = new ChessBoard();
