@@ -130,14 +130,14 @@ public class ChessGame {
                 ChessPiece piece = board.getPiece(position);
 
                 if (piece != null && piece.getTeamColor() != teamColor) {
-                    System.out.println("checking moves for " + piece + " " + piece.getTeamColor() + " at " + position);
+                    // System.out.println("checking moves for " + piece + " " + piece.getTeamColor() + " at " + position);
 
                     Collection<ChessMove> validMoves = piece.pieceMoves(board, position);
 
                     for (ChessMove move : validMoves) {
                         ChessPiece capturedPiece = board.getPiece(move.getEndPosition());
                         if (capturedPiece != null && capturedPiece.getPieceType() == ChessPiece.PieceType.KING) {
-                            System.out.println("is in check from " + piece + " @ " + position);
+                            // System.out.println("is in check from " + piece + " @ " + position);
                             return true;
                         }
                     }
@@ -221,7 +221,7 @@ public class ChessGame {
         board.addPiece(move.getEndPosition(), capturedPiece);
         toggleTeamTurn();
 
-        System.out.println(move.toString() + " " + isInCheck);
+        // System.out.println(move.toString() + " " + isInCheck);
         return !isInCheck;
     }
 
@@ -236,7 +236,7 @@ public class ChessGame {
                 ChessPiece piece = board.getPiece(position);
 
                 if (piece != null && piece.getTeamColor() == teamColor) {
-                    System.out.println("checking moves for " + piece + " " + piece.getTeamColor() + " at " + position);
+                    // System.out.println("checking moves for " + piece + " " + piece.getTeamColor() + " at " + position);
 
                     Collection<ChessMove> validMoves = validMoves(position);
                     if (!validMoves.isEmpty()) {
