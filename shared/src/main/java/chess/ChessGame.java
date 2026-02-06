@@ -129,15 +129,15 @@ public class ChessGame {
                 ChessPosition position = new ChessPosition(i, j);
                 ChessPiece piece = board.getPiece(position);
 
-                System.out.println("checking moves for " + piece + " at " + position);
-
                 if (piece != null && piece.getTeamColor() != teamColor) {
+                    System.out.println("checking moves for " + piece + " " + piece.getTeamColor() + " at " + position);
 
                     Collection<ChessMove> validMoves = piece.pieceMoves(board, position);
 
                     for (ChessMove move : validMoves) {
                         ChessPiece capturedPiece = board.getPiece(move.getEndPosition());
                         if (capturedPiece != null && capturedPiece.getPieceType() == ChessPiece.PieceType.KING) {
+                            System.out.println("is in check from " + piece + " @ " + position);
                             return true;
                         }
                     }
@@ -154,7 +154,27 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        if (!isInCheck(teamColor)) {
+            return false;
+        }
+
+        for (int i=1; i<=8; i++) {
+            for (int j = 1; j <= 8; j++) {
+                ChessPosition position = new ChessPosition(i, j);
+                ChessPiece piece = board.getPiece(position);
+
+                if (piece != null && piece.getTeamColor() != teamColor) {
+                    System.out.println("checking moves for " + piece + " " + piece.getTeamColor() + " at " + position);
+
+                    Collection<ChessMove> validMoves = piece.pieceMoves(board, position);
+                    if (!validMoves.isEmpty()) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -165,7 +185,27 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        if (isInCheck(teamColor)) {
+            return false;
+        }
+
+        for (int i=1; i<=8; i++) {
+            for (int j = 1; j <= 8; j++) {
+                ChessPosition position = new ChessPosition(i, j);
+                ChessPiece piece = board.getPiece(position);
+
+                if (piece != null && piece.getTeamColor() != teamColor) {
+                    System.out.println("checking moves for " + piece + " " + piece.getTeamColor() + " at " + position);
+
+                    Collection<ChessMove> validMoves = piece.pieceMoves(board, position);
+                    if (!validMoves.isEmpty()) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -187,25 +227,29 @@ public class ChessGame {
     }
 
     private boolean isValidMove(ChessMove move) {
-        TeamColor currentTurn = turn;
+        ChessPiece startPiece = board.getPiece(move.getStartPosition());
+
+        if (startPiece == null) {
+            return false;
+        }
 
         // first check if move is even possible
-        Collection<ChessMove> validMoves = board.getPiece(move.getStartPosition()).pieceMoves(board, move.getStartPosition());
-        if (!validMoves.contains(move)) {
+        if (!startPiece.pieceMoves(board, move.getStartPosition()).contains(move)) {
             return false;
         }
 
         // create a board that represents doing this potential move
         ChessPiece capturedPiece = board.getPiece(move.getEndPosition());
-        board.addPiece(move.getEndPosition(), board.getPiece(move.getStartPosition()));
+
+        board.addPiece(move.getEndPosition(), startPiece);
         board.addPiece(move.getStartPosition(), null);
         toggleTeamTurn();
 
         // test to make sure that the move doesn't put himself into check
-        boolean isInCheck = isInCheck(currentTurn);
+        boolean isInCheck = isInCheck(startPiece.getTeamColor());
 
         // now put board back to original state
-        board.addPiece(move.getStartPosition(), board.getPiece(move.getEndPosition()));
+        board.addPiece(move.getStartPosition(), startPiece);
         board.addPiece(move.getEndPosition(), capturedPiece);
         toggleTeamTurn();
 
