@@ -91,7 +91,18 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+        if (!isValidMove(move)) {
+            throw new InvalidMoveException();
+        }
+
+        // handling promotions
+        ChessPiece startPiece = board.getPiece(move.getStartPosition());
+        ChessPiece piece = move.getPromotionPiece() == null ? startPiece : new ChessPiece(startPiece.getTeamColor(), move.getPromotionPiece());
+
+        // moving piece on the board
+        board.addPiece(move.getEndPosition(), piece);
+        board.addPiece(move.getStartPosition(), null);
+        toggleTeamTurn();
     }
 
     /**
@@ -162,13 +173,12 @@ public class ChessGame {
 
     private boolean isValidMove(ChessMove move) {
         TeamColor currentTurn = turn;
-        TeamColor nextTurn = turn == TeamColor.WHITE ? TeamColor.BLACK : TeamColor.WHITE;
 
         // create a board that represents doing this potential move
         ChessPiece capturedPiece = board.getPiece(move.getEndPosition());
         board.addPiece(move.getEndPosition(), board.getPiece(move.getStartPosition()));
         board.addPiece(move.getStartPosition(), null);
-        turn = nextTurn;
+        toggleTeamTurn();
 
         // test to make sure that the move doesn't put himself into check
         boolean isInCheck = isInCheck(currentTurn);
@@ -176,8 +186,13 @@ public class ChessGame {
         // now put board back to original state
         board.addPiece(move.getStartPosition(), board.getPiece(move.getEndPosition()));
         board.addPiece(move.getEndPosition(), capturedPiece);
-        turn = currentTurn;
+        toggleTeamTurn();
+
         return isInCheck;
+    }
+
+    private void toggleTeamTurn() {
+        turn = turn == TeamColor.WHITE ? TeamColor.BLACK : TeamColor.WHITE;
     }
 
     private ChessBoard board = new ChessBoard();
