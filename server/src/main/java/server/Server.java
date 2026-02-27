@@ -1,7 +1,11 @@
 package server;
 
 import io.javalin.*;
+import service.InvalidUsernameException;
+import service.ResponseException;
 import service.UserService;
+
+import java.util.Map;
 
 public class Server {
 
@@ -13,6 +17,8 @@ public class Server {
         // Register your endpoints and exception handlers here.
         UserHandler userHandler = new UserHandler(new UserService());
         javalin.post("/user", userHandler::registerHandler);
+
+        // add exception handlers
 
     }
 

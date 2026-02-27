@@ -6,6 +6,7 @@ import io.javalin.http.InternalServerErrorResponse;
 import model.request.RegisterRequest;
 import model.response.RegisterResult;
 import service.InvalidUsernameException;
+import service.MissingBodyException;
 import service.ResponseException;
 import service.UserService;
 
@@ -22,10 +23,15 @@ public class UserHandler extends BaseHandler {
 
             // Convert bodyObject back to json and send to client
             context.json(new Gson().toJson(registerResult));
+
         }catch (InvalidUsernameException i) {
-            context.status(403);
-        }catch (ResponseException e) {
-            throw new InternalServerErrorResponse(e.getMessage());
+            context.status(403).result(i.toJson());
+
+        }catch (MissingBodyException m) {
+            context.status(400).result(m.toJson());
+
+        }catch (Exception e) {
+            context.status(500).result("{\"message\": \"" + e.getMessage() + "\"}");
         }
     }
 
