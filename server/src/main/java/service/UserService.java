@@ -71,6 +71,7 @@ public class UserService {
     }
 
     public void logout(LogoutRequest logoutRequest) {
+        System.out.println("logging out user: " + logoutRequest.username());
         try{
 
             // delete user's authToken

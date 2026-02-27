@@ -3,6 +3,7 @@ package server;
 import com.google.gson.Gson;
 import io.javalin.http.Context;
 import model.request.LoginRequest;
+import model.request.LogoutRequest;
 import model.request.RegisterRequest;
 import model.response.LoginResult;
 import model.response.RegisterResult;
@@ -43,6 +44,22 @@ public class UserHandler extends BaseHandler {
 
             // Convert bodyObject back to json and send to client
             context.json(new Gson().toJson(loginResult));
+
+        }catch (MissingBodyException m) {
+            context.status(400).result(m.toJson());
+
+        }catch (ResponseException r) {
+            context.status(401).result(r.toJson());
+
+        }catch (Exception e) {
+            context.status(500).result("{\"message\": \"" + e.getMessage() + "\"}");
+        }
+    }
+
+    public void logoutHandler(Context context) {
+        try {
+            LogoutRequest logoutRequest = getBodyObject(context, LogoutRequest.class);
+            userService.logout(logoutRequest);
 
         }catch (MissingBodyException m) {
             context.status(400).result(m.toJson());
