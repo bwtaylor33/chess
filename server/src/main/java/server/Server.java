@@ -22,6 +22,10 @@ public class Server {
         javalin.post("/user", userHandler::registerHandler);
         javalin.post("/session", userHandler::loginHandler);
         javalin.delete("/session", userHandler::logoutHandler);
+
+        GameHandler gameHandler = new GameHandler(gameService);
+        javalin.post("/game", gameHandler::createHandler);
+        javalin.put("/game", gameHandler::joinHandler);
     }
 
     public int run(int desiredPort) {

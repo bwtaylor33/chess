@@ -8,7 +8,7 @@ import model.request.LogoutRequest;
 
 public class BaseService {
 
-    protected void validateAuthToken(String authToken) {
+    protected void validateAuthToken(String authToken) throws ResponseException {
         System.out.println("validating authToken: " + authToken);
         try{
 
@@ -18,7 +18,7 @@ public class BaseService {
             authTokenDAO.getAuthToken(authToken);
 
         }catch (DataAccessException e) {
-            throw new ResponseException("Error logging out user: " + e.getMessage());
+            throw new ResponseException("Error: invalid authToken " + e.getMessage());
         }
     }
 }

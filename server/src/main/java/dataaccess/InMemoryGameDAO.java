@@ -1,22 +1,21 @@
 package dataaccess;
 
+import chess.ChessGame;
 import model.GameData;
 
 import java.util.HashMap;
 
 public class InMemoryGameDAO implements GameDAO {
 
-    public void createGame(GameData gameData) throws DataAccessException {
-        if (!games.containsKey(gameData.getGameID())) {
-            throw new DataAccessException("Game already exists for given gameID: " + gameData.getGameID());
-        }
-
+    public GameData createGame(String gameName) throws DataAccessException {
+        GameData gameData = new GameData(nextGameID++, null, null, gameName, new ChessGame());
         games.put(gameData.getGameID(), gameData);
+        return gameData;
     }
 
     public GameData getGame(int gameID) throws DataAccessException {
         if (!games.containsKey(gameID)) {
-            throw new DataAccessException("Game not found: " + gameID);
+            throw new DataAccessException("Error: game not found: " + gameID);
         }
 
         return games.get(gameID);
@@ -28,15 +27,16 @@ public class InMemoryGameDAO implements GameDAO {
 
     public void deleteGame(int gameID) throws  DataAccessException {
         if (!games.containsKey(gameID)) {
-            throw new DataAccessException("Game not found: " + gameID);
+            throw new DataAccessException("Error: game not found: " + gameID);
         }
 
         games.remove(gameID);
     }
 
     public void clearAllGames() throws DataAccessException {
-        games = new HashMap<>();
+        games.clear();
     }
 
     private HashMap<Integer, GameData> games = new HashMap<>();
+    private static int nextGameID = 1;
 }
