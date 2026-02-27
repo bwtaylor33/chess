@@ -12,6 +12,7 @@ public class InMemoryUserDAO implements UserDAO {
         }
 
         users.put(userData.getUsername(), userData);
+        System.out.println("User added to database: " + userData.getUsername());
     }
 
     public UserData getUser(String username) throws DataAccessException {

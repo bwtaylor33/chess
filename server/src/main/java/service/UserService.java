@@ -18,8 +18,8 @@ public class UserService {
         // check and see if username is already in use
         UserDAO userDAO = DAOFactory.getUserDAO();
         try{
-            UserData userData = userDAO.getUser(registerRequest.username);
-            throw new ResponseException("Username is already in use: " + registerRequest.username);
+            UserData userData = userDAO.getUser(registerRequest.username());
+            throw new InvalidUsernameException("Username is already in use: " + registerRequest.username());
         }catch (DataAccessException e) {
             // username is not already present
         }
@@ -50,7 +50,7 @@ public class UserService {
         try{
             UserData userData = userDAO.getUser(loginRequest.username());
             // check for password match
-            if (loginRequest.password() != userData.getPassword()) {
+            if (!loginRequest.password().equals(userData.getPassword())) {
                 throw new DataAccessException("Incorrect password");
             }
 
@@ -69,7 +69,16 @@ public class UserService {
     }
 
     public void logout(LogoutRequest logoutRequest) {
+        try{
 
+            // delete user's authToken
+            AuthTokenDAO authTokenDAO = DAOFactory.getAuthTokenDAO();
+
+            authTokenDAO.deleteAuthToken(logoutRequest.username());
+
+        }catch (DataAccessException e) {
+            throw new ResponseException("Error logging out user: " + e.getMessage());
+        }
     }
 
 }
