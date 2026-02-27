@@ -16,6 +16,7 @@ public class InMemoryAuthTokenDAO implements AuthTokenDAO {
         for (String username: authTokens.keySet()) {
             if (authTokens.get(username).getAuthToken().equals(authToken)) {
                 authData.setUsername(username);
+                System.out.println("Matched username to token: " + username);
                 break;
             }
         }
@@ -33,11 +34,15 @@ public class InMemoryAuthTokenDAO implements AuthTokenDAO {
 
     public void deleteAuthToken(String authToken) throws  DataAccessException {
         AuthData authData = getAuthToken(authToken);
+        System.out.println("Deleting: " + authToken);
+        System.out.println("authTokens size: " + authTokens.size());
 
         //if authTokens not found, then just silently proceed
-        if (authTokens.containsValue(authData)) {
+        if (authTokens.containsKey(authData.getUsername())) {
+            System.out.println("Database contains authData");
             authTokens.remove(authData.getUsername());
         }
+        System.out.println("post authTokens size: " + authTokens.size());
     }
 
     public void clearAllAuthTokens() throws DataAccessException {
