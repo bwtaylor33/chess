@@ -2,8 +2,9 @@ package server;
 
 import com.google.gson.Gson;
 import io.javalin.http.Context;
-import io.javalin.http.InternalServerErrorResponse;
+import model.request.LoginRequest;
 import model.request.RegisterRequest;
+import model.response.LoginResult;
 import model.response.RegisterResult;
 import service.InvalidUsernameException;
 import service.MissingBodyException;
@@ -29,6 +30,25 @@ public class UserHandler extends BaseHandler {
 
         }catch (MissingBodyException m) {
             context.status(400).result(m.toJson());
+
+        }catch (Exception e) {
+            context.status(500).result("{\"message\": \"" + e.getMessage() + "\"}");
+        }
+    }
+
+    public void loginHandler(Context context) {
+        try {
+            LoginRequest loginRequest = getBodyObject(context, LoginRequest.class);
+            LoginResult loginResult = userService.login(loginRequest);
+
+            // Convert bodyObject back to json and send to client
+            context.json(new Gson().toJson(loginResult));
+
+        }catch (MissingBodyException m) {
+            context.status(400).result(m.toJson());
+
+        }catch (ResponseException r) {
+            context.status(401).result(r.toJson());
 
         }catch (Exception e) {
             context.status(500).result("{\"message\": \"" + e.getMessage() + "\"}");

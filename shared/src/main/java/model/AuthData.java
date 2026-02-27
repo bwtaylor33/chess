@@ -12,7 +12,7 @@ public class AuthData {
     }
 
     public AuthData(String username) {
-        this.authToken = getAuthToken();
+        this.authToken = generateToken();
         this.username = username;
     }
 

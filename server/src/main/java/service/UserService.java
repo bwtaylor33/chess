@@ -45,6 +45,7 @@ public class UserService {
     }
 
     public LoginResult login(LoginRequest loginRequest) {
+        System.out.println("trying to login user: " + loginRequest.username());
         // check and see if username exists
         UserDAO userDAO = DAOFactory.getUserDAO();
         try{
@@ -61,6 +62,7 @@ public class UserService {
             authTokenDAO.createAuthToken(authData);
 
             // return the authToken
+            System.out.println("returning authToken: " + authData.getAuthToken());
             return new LoginResult(authData.getAuthToken());
 
         }catch (DataAccessException e) {
