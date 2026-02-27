@@ -10,24 +10,34 @@ public class InMemoryAuthTokenDAO implements AuthTokenDAO {
         updateAuthToken(authData);
     }
 
-    public AuthData getAuthToken(String username) throws DataAccessException {
-        if (!authTokens.containsKey(username)) {
-            throw new DataAccessException("No authToken found for user: " + username);
+    public AuthData getAuthToken(String authToken) throws DataAccessException {
+
+        AuthData authData = new AuthData(authToken, "");
+        for (String username: authTokens.keySet()) {
+            if (authTokens.get(username).getAuthToken().equals(authToken)) {
+                authData.setUsername(username);
+                break;
+            }
         }
 
-        return authTokens.get(username);
+        if (authData.getUsername().isEmpty()) {
+            throw new DataAccessException("Invalid authToken: " + authToken);
+        }
+
+        return authData;
     }
 
     public void updateAuthToken(AuthData authData) throws DataAccessException {
         authTokens.put(authData.getUsername(), authData);
     }
 
-    public void deleteAuthToken(String username) throws  DataAccessException {
-        if (!authTokens.containsKey(username)) {
-            throw new DataAccessException("authToken not found for user: " + username);
-        }
+    public void deleteAuthToken(String authToken) throws  DataAccessException {
+        AuthData authData = getAuthToken(authToken);
 
-        authTokens.remove(username);
+        //if authTokens not found, then just silently proceed
+        if (authTokens.containsValue(authData)) {
+            authTokens.remove(authData.getUsername());
+        }
     }
 
     public void clearAllAuthTokens() throws DataAccessException {

@@ -12,14 +12,23 @@ import model.request.RegisterRequest;
 import model.response.LoginResult;
 import model.response.RegisterResult;
 
-public class UserService {
+public class UserService extends BaseService {
 
     public RegisterResult register(RegisterRequest registerRequest) throws ResponseException {
+
+        if (registerRequest.username() == null) {
+            throw new BadRequestException("Error: username cannot be null");
+        }
+
+        if (registerRequest.password() == null) {
+            throw new BadRequestException("Error: password cannot be null");
+        }
+
         // check and see if username is already in use
         UserDAO userDAO = DAOFactory.getUserDAO();
         try{
             UserData userData = userDAO.getUser(registerRequest.username());
-            throw new InvalidUsernameException("Username is already in use: " + registerRequest.username());
+            throw new InvalidUsernameException("Error: username is already in use: " + registerRequest.username());
         }catch (DataAccessException e) {
             // username is not already present
         }
@@ -37,15 +46,24 @@ public class UserService {
             authTokenDAO.createAuthToken(authData);
 
             // return the authToken
-            return new RegisterResult(authData.getAuthToken());
+            return new RegisterResult(authData.getUsername(), authData.getAuthToken());
 
         }catch (DataAccessException e) {
             throw new ResponseException("Error creating user: " + e.getMessage());
         }
     }
 
-    public LoginResult login(LoginRequest loginRequest) {
+    public LoginResult login(LoginRequest loginRequest) throws ResponseException {
         System.out.println("trying to login user: " + loginRequest.username());
+
+        if (loginRequest.username() == null) {
+            throw new BadRequestException("Error: username cannot be null");
+        }
+
+        if (loginRequest.password() == null) {
+            throw new BadRequestException("Error: password cannot be null");
+        }
+
         // check and see if username exists
         UserDAO userDAO = DAOFactory.getUserDAO();
         try{
@@ -63,25 +81,36 @@ public class UserService {
 
             // return the authToken
             System.out.println("returning authToken: " + authData.getAuthToken());
-            return new LoginResult(authData.getAuthToken());
+            return new LoginResult(loginRequest.username(), authData.getAuthToken());
 
         }catch (DataAccessException e) {
             throw new ResponseException("Error logging in user: " + e.getMessage());
         }
     }
 
-    public void logout(LogoutRequest logoutRequest) {
-        System.out.println("logging out user: " + logoutRequest.username());
+    public void logout(String authToken) {
+        System.out.println("logging out user: " + authToken);
+
+        validateAuthToken(authToken);
+
         try{
 
             // delete user's authToken
             AuthTokenDAO authTokenDAO = DAOFactory.getAuthTokenDAO();
 
-            authTokenDAO.deleteAuthToken(logoutRequest.username());
+            authTokenDAO.deleteAuthToken(authToken);
 
         }catch (DataAccessException e) {
             throw new ResponseException("Error logging out user: " + e.getMessage());
         }
     }
 
+    public void clear() {
+        try {
+            DAOFactory.getUserDAO().clearAllUsers();
+            DAOFactory.getAuthTokenDAO().clearAllAuthTokens();
+        }catch (DataAccessException d) {
+            throw new ResponseException("Error clearing database: " + d.getMessage());
+        }
+    }
 }

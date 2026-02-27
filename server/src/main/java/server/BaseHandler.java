@@ -2,22 +2,18 @@ package server;
 
 import com.google.gson.Gson;
 import io.javalin.http.Context;
-import service.MissingBodyException;
+import service.BadRequestException;
 
 public class BaseHandler {
 
     public BaseHandler() {
     }
 
-    protected void validateAuthToken() {
-
-    }
-
-    protected static <T> T getBodyObject(Context context, Class<T> clazz) throws MissingBodyException {
+    protected static <T> T getBodyObject(Context context, Class<T> clazz) throws BadRequestException {
         var bodyObject = new Gson().fromJson(context.body(), clazz);
 
         if (bodyObject == null) {
-            throw new MissingBodyException();
+            throw new BadRequestException("Error: body cannot be empty");
         }
 
         return bodyObject;

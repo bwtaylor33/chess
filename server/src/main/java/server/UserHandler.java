@@ -8,7 +8,7 @@ import model.request.RegisterRequest;
 import model.response.LoginResult;
 import model.response.RegisterResult;
 import service.InvalidUsernameException;
-import service.MissingBodyException;
+import service.BadRequestException;
 import service.ResponseException;
 import service.UserService;
 
@@ -29,7 +29,7 @@ public class UserHandler extends BaseHandler {
         }catch (InvalidUsernameException i) {
             context.status(403).result(i.toJson());
 
-        }catch (MissingBodyException m) {
+        }catch (BadRequestException m) {
             context.status(400).result(m.toJson());
 
         }catch (Exception e) {
@@ -45,7 +45,7 @@ public class UserHandler extends BaseHandler {
             // Convert bodyObject back to json and send to client
             context.json(new Gson().toJson(loginResult));
 
-        }catch (MissingBodyException m) {
+        }catch (BadRequestException m) {
             context.status(400).result(m.toJson());
 
         }catch (ResponseException r) {
@@ -58,10 +58,10 @@ public class UserHandler extends BaseHandler {
 
     public void logoutHandler(Context context) {
         try {
-            LogoutRequest logoutRequest = getBodyObject(context, LogoutRequest.class);
-            userService.logout(logoutRequest);
+            userService.logout(context.header("Authorization"));
+            System.out.println("About to logout: " + context.header("Authorization"));
 
-        }catch (MissingBodyException m) {
+        }catch (BadRequestException m) {
             context.status(400).result(m.toJson());
 
         }catch (ResponseException r) {
