@@ -2,14 +2,11 @@ package server;
 
 import com.google.gson.Gson;
 import io.javalin.http.Context;
-import model.GameData;
 import model.request.CreateGameRequest;
 import model.request.JoinGameRequest;
 import model.response.CreateGameResult;
 import model.response.ListGamesResult;
 import service.*;
-
-import java.util.ArrayList;
 
 public class GameHandler extends BaseHandler {
 

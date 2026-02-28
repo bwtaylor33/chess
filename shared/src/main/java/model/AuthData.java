@@ -3,21 +3,10 @@ package model;
 import java.util.UUID;
 
 public class AuthData {
-    private String authToken;
-    private String username;
-
-    public AuthData(String authToken, String username) {
-        this.authToken = authToken;
-        this.username = username;
-    }
 
     public AuthData(String username) {
         this.authToken = generateToken();
         this.username = username;
-    }
-
-    private static String generateToken() {
-        return UUID.randomUUID().toString();
     }
 
     public String getAuthToken() {
@@ -35,4 +24,11 @@ public class AuthData {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    private static String generateToken() {
+        return UUID.randomUUID().toString();
+    }
+
+    private String authToken;
+    private String username;
 }

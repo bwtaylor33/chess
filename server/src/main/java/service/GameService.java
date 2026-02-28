@@ -2,15 +2,9 @@ package service;
 
 import chess.ChessGame;
 import dataaccess.*;
-import model.AuthData;
 import model.GameData;
-import model.UserData;
-import model.request.RegisterRequest;
 import model.response.CreateGameResult;
 import model.response.ListGamesResult;
-import model.response.RegisterResult;
-
-import java.util.ArrayList;
 
 public class GameService extends BaseService {
 

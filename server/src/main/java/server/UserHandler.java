@@ -3,7 +3,6 @@ package server;
 import com.google.gson.Gson;
 import io.javalin.http.Context;
 import model.request.LoginRequest;
-import model.request.LogoutRequest;
 import model.request.RegisterRequest;
 import model.response.LoginResult;
 import model.response.RegisterResult;

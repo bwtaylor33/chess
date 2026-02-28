@@ -3,8 +3,6 @@ package service;
 import dataaccess.AuthTokenDAO;
 import dataaccess.DAOFactory;
 import dataaccess.DataAccessException;
-import model.AuthData;
-import model.request.LogoutRequest;
 
 public class BaseService {
 
