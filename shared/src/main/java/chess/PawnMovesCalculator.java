@@ -21,15 +21,7 @@ public class PawnMovesCalculator extends PieceMovesCalculator {
 
         if (isInBoundsAndNotBlocked(board, newSpot)) {
             if (board.getPiece(newSpot) == null) {
-
-                ArrayList<ChessMove> promotionMoves = getPromotionMoves(myPosition, color, newSpot);
-
-                if (promotionMoves.isEmpty()) {
-                    moves.add(new ChessMove(myPosition, newSpot, null));
-
-                } else {
-                    moves.addAll(getPromotionMoves(myPosition, color, newSpot));
-                }
+                moves.addAll(getMovesCheckingForPromotion(myPosition, color, newSpot));
             }
         }
 
@@ -40,15 +32,7 @@ public class PawnMovesCalculator extends PieceMovesCalculator {
 
             if (isInBoundsAndNotBlocked(board, newSpot)) {
                 if (board.getPiece(newSpot) != null && board.getPiece(newSpot).getTeamColor() != getColor()) {
-
-                    ArrayList<ChessMove> promotionMoves = getPromotionMoves(myPosition, color, newSpot);
-
-                    if (promotionMoves.isEmpty()) {
-                        moves.add(new ChessMove(myPosition, newSpot, null));
-
-                    } else {
-                        moves.addAll(getPromotionMoves(myPosition, color, newSpot));
-                    }
+                    moves.addAll(getMovesCheckingForPromotion(myPosition, color, newSpot));
                 }
             }
         }
@@ -60,15 +44,7 @@ public class PawnMovesCalculator extends PieceMovesCalculator {
 
             if (isInBoundsAndNotBlocked(board, newSpot)) {
                 if (board.getPiece(newSpot) != null && board.getPiece(newSpot).getTeamColor() != getColor()) {
-
-                    ArrayList<ChessMove> promotionMoves = getPromotionMoves(myPosition, color, newSpot);
-
-                    if (promotionMoves.isEmpty()) {
-                        moves.add(new ChessMove(myPosition, newSpot, null));
-
-                    } else {
-                        moves.addAll(getPromotionMoves(myPosition, color, newSpot));
-                    }
+                    moves.addAll(getMovesCheckingForPromotion(myPosition, color, newSpot));
                 }
             }
         }
@@ -85,6 +61,22 @@ public class PawnMovesCalculator extends PieceMovesCalculator {
             if (board.getPiece(intermediateSpot) == null && board.getPiece(newSpot) == null) {
                 moves.add(new ChessMove(myPosition, newSpot, null));
             }
+        }
+
+        return moves;
+    }
+
+    private ArrayList<ChessMove> getMovesCheckingForPromotion(ChessPosition myPosition, ChessGame.TeamColor color, ChessPosition newSpot) {
+
+        ArrayList<ChessMove> moves = new ArrayList<>();
+
+        ArrayList<ChessMove> promotionMoves = getPromotionMoves(myPosition, color, newSpot);
+
+        if (promotionMoves.isEmpty()) {
+            moves.add(new ChessMove(myPosition, newSpot, null));
+
+        } else {
+            moves.addAll(getPromotionMoves(myPosition, color, newSpot));
         }
 
         return moves;
