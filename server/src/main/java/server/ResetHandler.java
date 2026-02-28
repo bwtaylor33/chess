@@ -3,6 +3,9 @@ package server;
 import io.javalin.http.Context;
 import service.*;
 
+/**
+ * Handler for database cleanup
+ */
 public class ResetHandler extends BaseHandler {
 
     public ResetHandler(UserService userService, GameService gameService) {
@@ -11,6 +14,7 @@ public class ResetHandler extends BaseHandler {
     }
 
     public void resetHandler(Context context) {
+
         try {
 
             userService.clear();

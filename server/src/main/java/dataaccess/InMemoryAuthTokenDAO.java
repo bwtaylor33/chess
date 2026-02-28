@@ -3,6 +3,9 @@ package dataaccess;
 import model.AuthData;
 import java.util.HashMap;
 
+/**
+ * In-memory authToken storage implementation
+ */
 public class InMemoryAuthTokenDAO implements AuthTokenDAO {
 
     public void createAuthToken(AuthData authData) throws DataAccessException {
@@ -13,7 +16,6 @@ public class InMemoryAuthTokenDAO implements AuthTokenDAO {
 
         for (AuthData authData: authTokens.keySet()) {
             if (authData.getAuthToken().equals(authToken)) {
-                // System.out.println("Matched username to token: " + authData.getUsername());
                 return authData;
             }
         }
@@ -21,7 +23,7 @@ public class InMemoryAuthTokenDAO implements AuthTokenDAO {
         throw new DataAccessException("invalid authToken: " + authToken);
     }
 
-    public void deleteAuthToken(String authToken) throws  DataAccessException {
+    public void deleteAuthToken(String authToken) throws DataAccessException {
 
         AuthData deleteAuthData = null;
         for (AuthData authData : authTokens.keySet()) {
@@ -33,14 +35,13 @@ public class InMemoryAuthTokenDAO implements AuthTokenDAO {
 
         // if authTokens not found, then just silently proceed
         if (deleteAuthData != null) {
-            // System.out.println("Database contains authData");
             authTokens.remove(deleteAuthData);
         }
     }
 
     public void clearAllAuthTokens() throws DataAccessException {
-        authTokens = new HashMap<>();
+        authTokens.clear();
     }
 
-    private HashMap<AuthData, String> authTokens = new HashMap<>();
+    final private HashMap<AuthData, String> authTokens = new HashMap<>();
 }

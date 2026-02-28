@@ -2,6 +2,9 @@ package dataaccess;
 
 import model.AuthData;
 
+/**
+ * Authentication token DAO interface
+ */
 public interface AuthTokenDAO {
 
     public void createAuthToken(AuthData authData) throws DataAccessException;

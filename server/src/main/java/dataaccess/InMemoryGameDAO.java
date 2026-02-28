@@ -5,15 +5,21 @@ import model.GameData;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * In-memory game storage implementation
+ */
 public class InMemoryGameDAO implements GameDAO {
 
     public GameData createGame(String gameName) throws DataAccessException {
+
         GameData gameData = new GameData(nextGameID++, null, null, gameName, new ChessGame());
         games.put(gameData.getGameID(), gameData);
+
         return gameData;
     }
 
     public GameData getGame(int gameID) throws DataAccessException {
+
         if (!games.containsKey(gameID)) {
             throw new DataAccessException("Error: game not found: " + gameID);
         }
@@ -30,6 +36,7 @@ public class InMemoryGameDAO implements GameDAO {
     }
 
     public void deleteGame(int gameID) throws  DataAccessException {
+
         if (!games.containsKey(gameID)) {
             throw new DataAccessException("Error: game not found: " + gameID);
         }
@@ -41,6 +48,6 @@ public class InMemoryGameDAO implements GameDAO {
         games.clear();
     }
 
-    private HashMap<Integer, GameData> games = new HashMap<>();
+    final private HashMap<Integer, GameData> games = new HashMap<>();
     private static int nextGameID = 1;
 }

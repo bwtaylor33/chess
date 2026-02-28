@@ -3,8 +3,10 @@ package dataaccess;
 import model.UserData;
 import java.util.HashMap;
 
+/**
+ * In-memory user storage implementation
+ */
 public class InMemoryUserDAO implements UserDAO {
-    private HashMap<String, UserData> users = new HashMap<>();
 
     public void createUser(UserData userData) throws DataAccessException {
 
@@ -13,11 +15,10 @@ public class InMemoryUserDAO implements UserDAO {
         }
 
         users.put(userData.getUsername(), userData);
-        System.out.println("User added to database: " + userData.getUsername());
-        System.out.println(users);
     }
 
     public UserData getUser(String username) throws DataAccessException {
+
         if (!users.containsKey(username)) {
             throw new DataAccessException("Error: invalid username: " + username);
         }
@@ -26,6 +27,7 @@ public class InMemoryUserDAO implements UserDAO {
     }
 
     public void updateUser(UserData userData) throws DataAccessException {
+
         if (!users.containsKey(userData.getUsername())) {
             throw new DataAccessException("User not found: " + userData.getUsername());
         }
@@ -34,6 +36,7 @@ public class InMemoryUserDAO implements UserDAO {
     }
 
     public void deleteUser(String username) throws  DataAccessException {
+
         if (!users.containsKey(username)) {
             throw new DataAccessException("User not found: " + username);
         }
@@ -44,4 +47,6 @@ public class InMemoryUserDAO implements UserDAO {
     public void clearAllUsers() throws DataAccessException {
         users.clear();
     }
+
+    final private HashMap<String, UserData> users = new HashMap<>();
 }

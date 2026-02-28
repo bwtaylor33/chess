@@ -3,6 +3,9 @@ package dataaccess;
 import model.GameData;
 import java.util.ArrayList;
 
+/**
+ * Game DAO interface
+ */
 public interface GameDAO {
 
     public GameData createGame(String gameName) throws DataAccessException;

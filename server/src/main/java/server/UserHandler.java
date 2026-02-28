@@ -11,6 +11,9 @@ import service.BadRequestException;
 import service.ResponseException;
 import service.UserService;
 
+/**
+ * Handler for all user API calls
+ */
 public class UserHandler extends BaseHandler {
 
     public UserHandler(UserService userService) {
@@ -18,6 +21,7 @@ public class UserHandler extends BaseHandler {
     }
 
     public void registerHandler(Context context) {
+
         try {
             RegisterRequest registerRequest = getBodyObject(context, RegisterRequest.class);
             RegisterResult registerResult = userService.register(registerRequest);
@@ -37,6 +41,7 @@ public class UserHandler extends BaseHandler {
     }
 
     public void loginHandler(Context context) {
+
         try {
             LoginRequest loginRequest = getBodyObject(context, LoginRequest.class);
             LoginResult loginResult = userService.login(loginRequest);
@@ -56,6 +61,7 @@ public class UserHandler extends BaseHandler {
     }
 
     public void logoutHandler(Context context) {
+
         try {
             userService.logout(context.header("Authorization"));
             System.out.println("About to logout: " + context.header("Authorization"));

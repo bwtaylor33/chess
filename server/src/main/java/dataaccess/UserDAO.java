@@ -2,6 +2,9 @@ package dataaccess;
 
 import model.UserData;
 
+/**
+ * User DAO interface
+ */
 public interface UserDAO {
 
     public void createUser(UserData userData) throws DataAccessException;

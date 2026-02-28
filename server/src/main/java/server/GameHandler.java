@@ -8,6 +8,9 @@ import model.response.CreateGameResult;
 import model.response.ListGamesResult;
 import service.*;
 
+/**
+ * Handler for all game API calls
+ */
 public class GameHandler extends BaseHandler {
 
     public GameHandler(GameService gameService) {
@@ -15,6 +18,7 @@ public class GameHandler extends BaseHandler {
     }
 
     public void createHandler(Context context) {
+
         try {
             CreateGameRequest createGameRequest = getBodyObject(context, CreateGameRequest.class);
             CreateGameResult createGameResult = gameService.createGame(context.header("Authorization"), createGameRequest.gameName());
@@ -34,6 +38,7 @@ public class GameHandler extends BaseHandler {
     }
 
     public void joinHandler(Context context) {
+
         try {
             JoinGameRequest joinGameRequest = getBodyObject(context, JoinGameRequest.class);
             gameService.joinGame(context.header("Authorization"), joinGameRequest.playerColor(), joinGameRequest.gameID());
@@ -56,6 +61,7 @@ public class GameHandler extends BaseHandler {
     }
 
     public void listGamesHandler(Context context) {
+
         try {
             ListGamesResult listGamesResult = gameService.listGames(context.header("Authorization"));
 
