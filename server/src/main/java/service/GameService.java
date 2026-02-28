@@ -7,7 +7,10 @@ import model.GameData;
 import model.UserData;
 import model.request.RegisterRequest;
 import model.response.CreateGameResult;
+import model.response.ListGamesResult;
 import model.response.RegisterResult;
+
+import java.util.ArrayList;
 
 public class GameService extends BaseService {
 
@@ -51,9 +54,14 @@ public class GameService extends BaseService {
             // join game in game table
             GameData gameData = gameDAO.getGame(gameID);
             if (playerColor == ChessGame.TeamColor.WHITE) {
+                if (gameData.getWhiteUsername() != null) {
+                    throw new ForbiddenRequestException("Error: white player already taken");
+                }
                 gameData.setWhiteUsername(username);
-            }
-            if (playerColor == ChessGame.TeamColor.BLACK) {
+            }else if (playerColor == ChessGame.TeamColor.BLACK) {
+                if (gameData.getBlackUsername() != null) {
+                    throw new ForbiddenRequestException("Error: black player already taken");
+                }
                 gameData.setBlackUsername(username);
             }else {
                 throw new BadRequestException("Error: invalid team color: " + playerColor);
@@ -61,6 +69,21 @@ public class GameService extends BaseService {
 
         }catch (DataAccessException e) {
             throw new ResponseException("Error joining game: " + e.getMessage());
+        }
+    }
+
+    public ListGamesResult listGames(String authToken) throws ResponseException {
+
+        validateAuthToken(authToken);
+
+        GameDAO gameDAO = DAOFactory.getGameDAO();
+
+        try{
+            // get all games in game table
+            return new ListGamesResult(gameDAO.getAllGames());
+
+        }catch (DataAccessException e) {
+            throw new ResponseException("Error getting games list: " + e.getMessage());
         }
     }
 

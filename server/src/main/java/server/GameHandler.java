@@ -2,13 +2,14 @@ package server;
 
 import com.google.gson.Gson;
 import io.javalin.http.Context;
+import model.GameData;
 import model.request.CreateGameRequest;
 import model.request.JoinGameRequest;
 import model.response.CreateGameResult;
-import service.BadRequestException;
-import service.InvalidUsernameException;
-import service.ResponseException;
-import service.GameService;
+import model.response.ListGamesResult;
+import service.*;
+
+import java.util.ArrayList;
 
 public class GameHandler extends BaseHandler {
 
@@ -45,6 +46,24 @@ public class GameHandler extends BaseHandler {
 
         }catch (BadRequestException m) {
             context.status(400).result(m.toJson());
+
+        }catch (ForbiddenRequestException f) {
+            context.status(403).result(f.toJson());
+
+        }catch (ResponseException r) {
+            context.status(401).result(r.toJson());
+
+        }catch (Exception e) {
+            context.status(500).result("{\"message\": \"" + e.getMessage() + "\"}");
+        }
+    }
+
+    public void listGamesHandler(Context context) {
+        try {
+            ListGamesResult listGamesResult = gameService.listGames(context.header("Authorization"));
+
+            // Convert bodyObject back to Json and send to client
+            context.json(new Gson().toJson(listGamesResult));
 
         }catch (ResponseException r) {
             context.status(401).result(r.toJson());

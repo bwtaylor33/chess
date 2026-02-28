@@ -46,6 +46,7 @@ public class UserService extends BaseService {
             authTokenDAO.createAuthToken(authData);
 
             // return the authToken
+            System.out.println("authToken created on register: " + authData.getAuthToken());
             return new RegisterResult(authData.getUsername(), authData.getAuthToken());
 
         }catch (DataAccessException e) {

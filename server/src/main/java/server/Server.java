@@ -26,6 +26,7 @@ public class Server {
         GameHandler gameHandler = new GameHandler(gameService);
         javalin.post("/game", gameHandler::createHandler);
         javalin.put("/game", gameHandler::joinHandler);
+        javalin.get("/game", gameHandler::listGamesHandler);
     }
 
     public int run(int desiredPort) {
