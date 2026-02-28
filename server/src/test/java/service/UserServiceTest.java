@@ -27,7 +27,7 @@ public class UserServiceTest {
         userService.register(new RegisterRequest("testName", "testPass", "test@junk.com"));
 
         // verify data is in the database
-        UserData userData = DaoFactory.getUserDAO().getUser("testName");
+        UserData userData = DaoFactory.getUserDao().getUser("testName");
         Assertions.assertEquals("testName", userData.getUsername());
         Assertions.assertEquals("testPass", userData.getPassword());
         Assertions.assertEquals("test@junk.com", userData.getEmail());
@@ -85,7 +85,7 @@ public class UserServiceTest {
 
         // confirm token is removed from database
         Assertions.assertThrows(DataAccessException.class, () -> {
-            DaoFactory.getAuthTokenDAO().getAuthToken(authToken);
+            DaoFactory.getAuthTokenDao().getAuthToken(authToken);
         });
     }
 
@@ -109,12 +109,12 @@ public class UserServiceTest {
 
         // test for removal of both users
         Exception exception = Assertions.assertThrows(DataAccessException.class, () -> {
-            DaoFactory.getUserDAO().getUser("testName");
+            DaoFactory.getUserDao().getUser("testName");
         });
         Assertions.assertEquals("Error: invalid username: testName", exception.getMessage());
 
         exception = Assertions.assertThrows(DataAccessException.class, () -> {
-            DaoFactory.getUserDAO().getUser("testName1");
+            DaoFactory.getUserDao().getUser("testName1");
         });
         Assertions.assertEquals("Error: invalid username: testName1", exception.getMessage());
     }

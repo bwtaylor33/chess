@@ -19,11 +19,11 @@ public class GameService extends BaseService {
             throw new BadRequestException("Error: gameName cannot be empty");
         }
 
-        GameDao gameDAO = DaoFactory.getGameDAO();
+        GameDao gameDao = DaoFactory.getGameDao();
 
         try{
             // create game in game table
-            GameData gameData = gameDAO.createGame(gameName);
+            GameData gameData = gameDao.createGame(gameName);
 
             // return the authToken
             return new CreateGameResult(gameData.getGameID());
@@ -41,15 +41,15 @@ public class GameService extends BaseService {
             throw new BadRequestException("Error: invalid gameID: " + gameID);
         }
 
-        AuthTokenDao authTokenDAO = DaoFactory.getAuthTokenDAO();
-        GameDao gameDAO = DaoFactory.getGameDAO();
+        AuthTokenDao authTokenDao = DaoFactory.getAuthTokenDao();
+        GameDao gameDao = DaoFactory.getGameDao();
 
         try{
             // get username from authToken
-            String username = authTokenDAO.getAuthToken(authToken).getUsername();
+            String username = authTokenDao.getAuthToken(authToken).getUsername();
 
             // join game in game table
-            GameData gameData = gameDAO.getGame(gameID);
+            GameData gameData = gameDao.getGame(gameID);
 
             if (playerColor == ChessGame.TeamColor.WHITE) {
 
@@ -80,11 +80,11 @@ public class GameService extends BaseService {
 
         validateAuthToken(authToken);
 
-        GameDao gameDAO = DaoFactory.getGameDAO();
+        GameDao gameDao = DaoFactory.getGameDao();
 
         try{
             // get all games in game table
-            return new ListGamesResult(gameDAO.getAllGames());
+            return new ListGamesResult(gameDao.getAllGames());
 
         }catch (DataAccessException e) {
             throw new ResponseException("Error getting games list: " + e.getMessage());
@@ -94,7 +94,7 @@ public class GameService extends BaseService {
     public void clear() {
 
         try {
-            DaoFactory.getGameDAO().clearAllGames();
+            DaoFactory.getGameDao().clearAllGames();
 
         }catch (DataAccessException d) {
             throw new ResponseException("Error clearing database: " + d.getMessage());

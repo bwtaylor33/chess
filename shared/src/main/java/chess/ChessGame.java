@@ -134,20 +134,29 @@ public class ChessGame {
                 ChessPosition position = new ChessPosition(i, j);
                 ChessPiece piece = board.getPiece(position);
 
-                if (piece != null && piece.getTeamColor() != teamColor) {
-                    // System.out.println("checking moves for " + piece + " " + piece.getTeamColor() + " at " + position);
+                if (checkMovesForPieceAtPosition(position, piece, teamColor)) {
+                    return true;
+                }
+            }
+        }
 
-                    Collection<ChessMove> validMoves = piece.pieceMoves(board, position);
+        return false;
+    }
 
-                    for (ChessMove move : validMoves) {
+    private boolean checkMovesForPieceAtPosition(ChessPosition position, ChessPiece piece, TeamColor teamColor) {
 
-                        ChessPiece capturedPiece = board.getPiece(move.getEndPosition());
+        if (piece != null && piece.getTeamColor() != teamColor) {
+            // System.out.println("checking moves for " + piece + " " + piece.getTeamColor() + " at " + position);
 
-                        if (capturedPiece != null && capturedPiece.getPieceType() == ChessPiece.PieceType.KING) {
-                            // System.out.println("is in check from " + piece + " @ " + position);
-                            return true;
-                        }
-                    }
+            Collection<ChessMove> validMoves = piece.pieceMoves(board, position);
+
+            for (ChessMove move : validMoves) {
+
+                ChessPiece capturedPiece = board.getPiece(move.getEndPosition());
+
+                if (capturedPiece != null && capturedPiece.getPieceType() == ChessPiece.PieceType.KING) {
+                    // System.out.println("is in check from " + piece + " @ " + position);
+                    return true;
                 }
             }
         }

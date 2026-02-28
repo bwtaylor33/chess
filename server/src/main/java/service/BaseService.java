@@ -13,9 +13,9 @@ public class BaseService {
 
         try{
             // create authToken
-            AuthTokenDao authTokenDAO = DaoFactory.getAuthTokenDAO();
+            AuthTokenDao authTokenDao = DaoFactory.getAuthTokenDao();
 
-            authTokenDAO.getAuthToken(authToken);
+            authTokenDao.getAuthToken(authToken);
 
         }catch (DataAccessException e) {
             throw new ResponseException("Error: " + e.getMessage());

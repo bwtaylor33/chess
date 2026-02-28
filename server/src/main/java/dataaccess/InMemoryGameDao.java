@@ -31,19 +31,6 @@ public class InMemoryGameDao implements GameDao {
         return new ArrayList<>(games.values());
     }
 
-//    public void updateGame(GameData gameData) throws DataAccessException {
-//        games.put(gameData.getGameID(), gameData);
-//    }
-
-//    public void deleteGame(int gameID) throws  DataAccessException {
-//
-//        if (!games.containsKey(gameID)) {
-//            throw new DataAccessException("Error: game not found: " + gameID);
-//        }
-//
-//        games.remove(gameID);
-//    }
-
     public void clearAllGames() throws DataAccessException {
         games.clear();
     }

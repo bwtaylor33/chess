@@ -50,7 +50,7 @@ public class GameServiceTest {
         gameService.joinGame(authToken, ChessGame.TeamColor.BLACK, gameID);
 
         // confirm that game is in database
-        Assertions.assertEquals("testGameName", DaoFactory.getGameDAO().getGame(gameID).getGameName());
+        Assertions.assertEquals("testGameName", DaoFactory.getGameDao().getGame(gameID).getGameName());
     }
 
     @Test

@@ -27,10 +27,10 @@ public class UserService extends BaseService {
         }
 
         // check and see if username is already in use
-        UserDao userDAO = DaoFactory.getUserDAO();
+        UserDao userDao = DaoFactory.getUserDao();
 
         try{
-            UserData userData = userDAO.getUser(registerRequest.username());
+            UserData userData = userDao.getUser(registerRequest.username());
 
             throw new ForbiddenRequestException("Error: username is already in use: " + registerRequest.username());
         }catch (DataAccessException e) {
@@ -39,15 +39,15 @@ public class UserService extends BaseService {
 
         try{
             // create user in user table
-            userDAO.createUser(new UserData(registerRequest.username(),
+            userDao.createUser(new UserData(registerRequest.username(),
                     registerRequest.password(),
                     registerRequest.email()));
 
             // automatically login user by creating authToken
-            AuthTokenDao authTokenDAO = DaoFactory.getAuthTokenDAO();
+            AuthTokenDao authTokenDao = DaoFactory.getAuthTokenDao();
 
             AuthData authData = new AuthData(registerRequest.username());
-            authTokenDAO.createAuthToken(authData);
+            authTokenDao.createAuthToken(authData);
 
             // return the authToken
             return new RegisterResult(authData.getUsername(), authData.getAuthToken());
@@ -68,9 +68,9 @@ public class UserService extends BaseService {
         }
 
         // check and see if username exists
-        UserDao userDAO = DaoFactory.getUserDAO();
+        UserDao userDao = DaoFactory.getUserDao();
         try{
-            UserData userData = userDAO.getUser(loginRequest.username());
+            UserData userData = userDao.getUser(loginRequest.username());
 
             // check for password match
             if (!loginRequest.password().equals(userData.getPassword())) {
@@ -78,10 +78,10 @@ public class UserService extends BaseService {
             }
 
             // create authToken
-            AuthTokenDao authTokenDAO = DaoFactory.getAuthTokenDAO();
+            AuthTokenDao authTokenDao = DaoFactory.getAuthTokenDao();
 
             AuthData authData = new AuthData(loginRequest.username());
-            authTokenDAO.createAuthToken(authData);
+            authTokenDao.createAuthToken(authData);
 
             // return the authToken
             return new LoginResult(loginRequest.username(), authData.getAuthToken());
@@ -97,9 +97,9 @@ public class UserService extends BaseService {
 
         try{
             // delete user's authToken
-            AuthTokenDao authTokenDAO = DaoFactory.getAuthTokenDAO();
+            AuthTokenDao authTokenDao = DaoFactory.getAuthTokenDao();
 
-            authTokenDAO.deleteAuthToken(authToken);
+            authTokenDao.deleteAuthToken(authToken);
 
         }catch (DataAccessException e) {
             throw new ResponseException("Error logging out user: " + e.getMessage());
@@ -109,8 +109,8 @@ public class UserService extends BaseService {
     public void clear() {
 
         try {
-            DaoFactory.getUserDAO().clearAllUsers();
-            DaoFactory.getAuthTokenDAO().clearAllAuthTokens();
+            DaoFactory.getUserDao().clearAllUsers();
+            DaoFactory.getAuthTokenDao().clearAllAuthTokens();
 
         }catch (DataAccessException d) {
             throw new ResponseException("Error clearing database: " + d.getMessage());
