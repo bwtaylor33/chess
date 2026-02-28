@@ -3,51 +3,46 @@ package dataaccess;
 import model.AuthData;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class InMemoryAuthTokenDAO implements AuthTokenDAO {
 
     public void createAuthToken(AuthData authData) throws DataAccessException {
-        updateAuthToken(authData);
+        authTokens.put(authData, authData.getUsername());
     }
 
     public AuthData getAuthToken(String authToken) throws DataAccessException {
 
-        AuthData authData = new AuthData(authToken, "");
-        for (String username: authTokens.keySet()) {
-            if (authTokens.get(username).getAuthToken().equals(authToken)) {
-                authData.setUsername(username);
-                System.out.println("Matched username to token: " + username);
+        for (AuthData authData: authTokens.keySet()) {
+            if (authData.getAuthToken().equals(authToken)) {
+                // System.out.println("Matched username to token: " + authData.getUsername());
+                return authData;
+            }
+        }
+
+        throw new DataAccessException("Invalid authToken: " + authToken);
+    }
+
+    public void deleteAuthToken(String authToken) throws  DataAccessException {
+
+        AuthData deleteAuthData = null;
+        for (AuthData authData : authTokens.keySet()) {
+            if (authData.getAuthToken().equals(authToken)) {
+                deleteAuthData = authData;
                 break;
             }
         }
 
-        if (authData.getUsername().isEmpty()) {
-            throw new DataAccessException("Invalid authToken: " + authToken);
+        // if authTokens not found, then just silently proceed
+        if (deleteAuthData != null) {
+            // System.out.println("Database contains authData");
+            authTokens.remove(deleteAuthData);
         }
-
-        return authData;
-    }
-
-    public void updateAuthToken(AuthData authData) throws DataAccessException {
-        authTokens.put(authData.getUsername(), authData);
-    }
-
-    public void deleteAuthToken(String authToken) throws  DataAccessException {
-        AuthData authData = getAuthToken(authToken);
-        System.out.println("Deleting: " + authToken);
-        System.out.println("authTokens size: " + authTokens.size());
-
-        //if authTokens not found, then just silently proceed
-        if (authTokens.containsKey(authData.getUsername())) {
-            System.out.println("Database contains authData");
-            authTokens.remove(authData.getUsername());
-        }
-        System.out.println("post authTokens size: " + authTokens.size());
     }
 
     public void clearAllAuthTokens() throws DataAccessException {
         authTokens = new HashMap<>();
     }
 
-    private HashMap<String, AuthData> authTokens = new HashMap<>();
+    private HashMap<AuthData, String> authTokens = new HashMap<>();
 }
