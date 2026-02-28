@@ -9,7 +9,7 @@ public class DaoFactory {
     public static AuthTokenDao getAuthTokenDao() {
 
         if (USE_IN_MEMORY_DATA_STORE) {
-            return authTokenDao;
+            return AUTH_TOKEN_DAO;
         }
 
         throw new RuntimeException("Sql access not implemented");
@@ -18,7 +18,7 @@ public class DaoFactory {
     public static GameDao getGameDao() {
 
         if (USE_IN_MEMORY_DATA_STORE) {
-            return gameDao;
+            return GAME_DAO;
         }
 
         throw new RuntimeException("Sql access not implemented");
@@ -27,15 +27,15 @@ public class DaoFactory {
     public static UserDao getUserDao() {
 
         if (USE_IN_MEMORY_DATA_STORE) {
-            return userDao;
+            return USER_DAO;
         }
 
         throw new RuntimeException("Sql access not implemented");
     }
 
-    private static final UserDao userDao = new InMemoryUserDao();
-    private static final GameDao gameDao = new InMemoryGameDao();
-    private static final AuthTokenDao authTokenDao = new InMemoryAuthTokenDao();
+    private static final UserDao USER_DAO = new InMemoryUserDao();
+    private static final GameDao GAME_DAO = new InMemoryGameDao();
+    private static final AuthTokenDao AUTH_TOKEN_DAO = new InMemoryAuthTokenDao();
 
     private static final boolean USE_IN_MEMORY_DATA_STORE = true;
 }
