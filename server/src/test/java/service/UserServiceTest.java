@@ -77,12 +77,22 @@ public class UserServiceTest {
 
     @Test
     public void testLogoutSuccess() {
+        // log user out
+        userService.logout(authToken);
 
+        // confirm token is removed from database
+        Assertions.assertThrows(DataAccessException.class, () -> {
+            DAOFactory.getAuthTokenDAO().getAuthToken(authToken);
+        });
     }
 
     @Test
     public void testLogoutFailure() {
-
+        // logging out an invalid authToken
+        Exception exception = Assertions.assertThrows(ResponseException.class, () -> {
+            userService.logout("badToken");
+        });
+        Assertions.assertEquals("Error: invalid authToken: badToken", exception.getMessage());
     }
 
     @Test
