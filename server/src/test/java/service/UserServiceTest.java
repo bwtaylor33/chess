@@ -39,7 +39,7 @@ public class UserServiceTest {
         // test for username collision
         userService.register(new RegisterRequest("testName", "testPass", "test@junk.com"));
 
-        Exception exception = Assertions.assertThrows(InvalidUsernameException.class, () -> {
+        Exception exception = Assertions.assertThrows(ForbiddenRequestException.class, () -> {
             userService.register(new RegisterRequest("testName", "testPass", "test@junk.com"));
         });
         Assertions.assertEquals("Error: username is already in use: testName", exception.getMessage());

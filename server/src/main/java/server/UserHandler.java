@@ -6,10 +6,7 @@ import model.request.LoginRequest;
 import model.request.RegisterRequest;
 import model.response.LoginResult;
 import model.response.RegisterResult;
-import service.InvalidUsernameException;
-import service.BadRequestException;
-import service.ResponseException;
-import service.UserService;
+import service.*;
 
 /**
  * Handler for all user API calls
@@ -29,8 +26,8 @@ public class UserHandler extends BaseHandler {
             // Convert bodyObject back to json and send to client
             context.json(new Gson().toJson(registerResult));
 
-        }catch (InvalidUsernameException i) {
-            context.status(403).result(i.toJson());
+        }catch (ForbiddenRequestException f) {
+            context.status(403).result(f.toJson());
 
         }catch (BadRequestException m) {
             context.status(400).result(m.toJson());
@@ -64,7 +61,6 @@ public class UserHandler extends BaseHandler {
 
         try {
             userService.logout(context.header("Authorization"));
-            System.out.println("About to logout: " + context.header("Authorization"));
 
         }catch (BadRequestException m) {
             context.status(400).result(m.toJson());

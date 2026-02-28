@@ -6,6 +6,9 @@ import model.GameData;
 import model.response.CreateGameResult;
 import model.response.ListGamesResult;
 
+/**
+ * Service handles all game functions
+ */
 public class GameService extends BaseService {
 
     public CreateGameResult createGame(String authToken, String gameName) throws ResponseException {
@@ -47,16 +50,23 @@ public class GameService extends BaseService {
 
             // join game in game table
             GameData gameData = gameDAO.getGame(gameID);
+
             if (playerColor == ChessGame.TeamColor.WHITE) {
+
                 if (gameData.getWhiteUsername() != null) {
                     throw new ForbiddenRequestException("Error: white player already taken");
                 }
+
                 gameData.setWhiteUsername(username);
+
             }else if (playerColor == ChessGame.TeamColor.BLACK) {
+
                 if (gameData.getBlackUsername() != null) {
                     throw new ForbiddenRequestException("Error: black player already taken");
                 }
+
                 gameData.setBlackUsername(username);
+
             }else {
                 throw new BadRequestException("Error: invalid team color: " + playerColor);
             }
@@ -82,8 +92,10 @@ public class GameService extends BaseService {
     }
 
     public void clear() {
+
         try {
             DAOFactory.getGameDAO().clearAllGames();
+
         }catch (DataAccessException d) {
             throw new ResponseException("Error clearing database: " + d.getMessage());
         }

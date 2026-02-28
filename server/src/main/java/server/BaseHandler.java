@@ -9,9 +9,6 @@ import service.BadRequestException;
  */
 public class BaseHandler {
 
-    protected BaseHandler() {
-    }
-
     protected static <T> T getBodyObject(Context context, Class<T> clazz) throws BadRequestException {
 
         var bodyObject = new Gson().fromJson(context.body(), clazz);

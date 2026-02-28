@@ -4,11 +4,14 @@ import dataaccess.AuthTokenDAO;
 import dataaccess.DAOFactory;
 import dataaccess.DataAccessException;
 
+/**
+ * Base class for all service implementations. Contains code for authentication session validation
+ */
 public class BaseService {
 
     protected void validateAuthToken(String authToken) throws ResponseException {
-        try{
 
+        try{
             // create authToken
             AuthTokenDAO authTokenDAO = DAOFactory.getAuthTokenDAO();
 

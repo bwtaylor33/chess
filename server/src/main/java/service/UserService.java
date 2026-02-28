@@ -11,6 +11,9 @@ import model.request.RegisterRequest;
 import model.response.LoginResult;
 import model.response.RegisterResult;
 
+/**
+ * Service handles all user and authentication functions
+ */
 public class UserService extends BaseService {
 
     public RegisterResult register(RegisterRequest registerRequest) throws ResponseException {
@@ -25,9 +28,11 @@ public class UserService extends BaseService {
 
         // check and see if username is already in use
         UserDAO userDAO = DAOFactory.getUserDAO();
+
         try{
             UserData userData = userDAO.getUser(registerRequest.username());
-            throw new InvalidUsernameException("Error: username is already in use: " + registerRequest.username());
+
+            throw new ForbiddenRequestException("Error: username is already in use: " + registerRequest.username());
         }catch (DataAccessException e) {
             // username is not already present
         }
@@ -38,14 +43,13 @@ public class UserService extends BaseService {
                     registerRequest.password(),
                     registerRequest.email()));
 
-            // automatically login to user by creating authToken
+            // automatically login user by creating authToken
             AuthTokenDAO authTokenDAO = DAOFactory.getAuthTokenDAO();
 
             AuthData authData = new AuthData(registerRequest.username());
             authTokenDAO.createAuthToken(authData);
 
             // return the authToken
-            System.out.println("authToken created on register: " + authData.getAuthToken());
             return new RegisterResult(authData.getUsername(), authData.getAuthToken());
 
         }catch (DataAccessException e) {
@@ -54,7 +58,6 @@ public class UserService extends BaseService {
     }
 
     public LoginResult login(LoginRequest loginRequest) throws ResponseException {
-        System.out.println("trying to login user: " + loginRequest.username());
 
         if (loginRequest.username() == null) {
             throw new BadRequestException("Error: username cannot be null");
@@ -68,6 +71,7 @@ public class UserService extends BaseService {
         UserDAO userDAO = DAOFactory.getUserDAO();
         try{
             UserData userData = userDAO.getUser(loginRequest.username());
+
             // check for password match
             if (!loginRequest.password().equals(userData.getPassword())) {
                 throw new DataAccessException("Incorrect password");
@@ -80,7 +84,6 @@ public class UserService extends BaseService {
             authTokenDAO.createAuthToken(authData);
 
             // return the authToken
-            System.out.println("returning authToken: " + authData.getAuthToken());
             return new LoginResult(loginRequest.username(), authData.getAuthToken());
 
         }catch (DataAccessException e) {
@@ -89,12 +92,10 @@ public class UserService extends BaseService {
     }
 
     public void logout(String authToken) {
-        System.out.println("logging out user: " + authToken);
 
         validateAuthToken(authToken);
 
         try{
-
             // delete user's authToken
             AuthTokenDAO authTokenDAO = DAOFactory.getAuthTokenDAO();
 
@@ -106,9 +107,11 @@ public class UserService extends BaseService {
     }
 
     public void clear() {
+
         try {
             DAOFactory.getUserDAO().clearAllUsers();
             DAOFactory.getAuthTokenDAO().clearAllAuthTokens();
+
         }catch (DataAccessException d) {
             throw new ResponseException("Error clearing database: " + d.getMessage());
         }
