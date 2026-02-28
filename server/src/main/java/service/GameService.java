@@ -19,7 +19,7 @@ public class GameService extends BaseService {
             throw new BadRequestException("Error: gameName cannot be empty");
         }
 
-        GameDAO gameDAO = DAOFactory.getGameDAO();
+        GameDao gameDAO = DaoFactory.getGameDAO();
 
         try{
             // create game in game table
@@ -41,8 +41,8 @@ public class GameService extends BaseService {
             throw new BadRequestException("Error: invalid gameID: " + gameID);
         }
 
-        AuthTokenDAO authTokenDAO = DAOFactory.getAuthTokenDAO();
-        GameDAO gameDAO = DAOFactory.getGameDAO();
+        AuthTokenDao authTokenDAO = DaoFactory.getAuthTokenDAO();
+        GameDao gameDAO = DaoFactory.getGameDAO();
 
         try{
             // get username from authToken
@@ -80,7 +80,7 @@ public class GameService extends BaseService {
 
         validateAuthToken(authToken);
 
-        GameDAO gameDAO = DAOFactory.getGameDAO();
+        GameDao gameDAO = DaoFactory.getGameDAO();
 
         try{
             // get all games in game table
@@ -94,7 +94,7 @@ public class GameService extends BaseService {
     public void clear() {
 
         try {
-            DAOFactory.getGameDAO().clearAllGames();
+            DaoFactory.getGameDAO().clearAllGames();
 
         }catch (DataAccessException d) {
             throw new ResponseException("Error clearing database: " + d.getMessage());

@@ -8,7 +8,7 @@ import java.util.HashMap;
 /**
  * In-memory game storage implementation
  */
-public class InMemoryGameDAO implements GameDAO {
+public class InMemoryGameDao implements GameDao {
 
     public GameData createGame(String gameName) throws DataAccessException {
 
@@ -31,18 +31,18 @@ public class InMemoryGameDAO implements GameDAO {
         return new ArrayList<>(games.values());
     }
 
-    public void updateGame(GameData gameData) throws DataAccessException {
-        games.put(gameData.getGameID(), gameData);
-    }
+//    public void updateGame(GameData gameData) throws DataAccessException {
+//        games.put(gameData.getGameID(), gameData);
+//    }
 
-    public void deleteGame(int gameID) throws  DataAccessException {
-
-        if (!games.containsKey(gameID)) {
-            throw new DataAccessException("Error: game not found: " + gameID);
-        }
-
-        games.remove(gameID);
-    }
+//    public void deleteGame(int gameID) throws  DataAccessException {
+//
+//        if (!games.containsKey(gameID)) {
+//            throw new DataAccessException("Error: game not found: " + gameID);
+//        }
+//
+//        games.remove(gameID);
+//    }
 
     public void clearAllGames() throws DataAccessException {
         games.clear();

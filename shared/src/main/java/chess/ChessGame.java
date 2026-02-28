@@ -18,9 +18,11 @@ public class ChessGame {
 
     @Override
     public boolean equals(Object o) {
+
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
+
         ChessGame chessGame = (ChessGame) o;
         return Objects.equals(getBoard(), chessGame.getBoard()) && turn == chessGame.turn;
     }
@@ -62,6 +64,7 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
+
         ChessPiece piece = board.getPiece(startPosition);
 
         // check if empty space on board
@@ -124,8 +127,10 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
+
         for (int i=1; i<=8; i++) {
             for (int j=1; j<=8; j++) {
+
                 ChessPosition position = new ChessPosition(i, j);
                 ChessPiece piece = board.getPiece(position);
 
@@ -135,7 +140,9 @@ public class ChessGame {
                     Collection<ChessMove> validMoves = piece.pieceMoves(board, position);
 
                     for (ChessMove move : validMoves) {
+
                         ChessPiece capturedPiece = board.getPiece(move.getEndPosition());
+
                         if (capturedPiece != null && capturedPiece.getPieceType() == ChessPiece.PieceType.KING) {
                             // System.out.println("is in check from " + piece + " @ " + position);
                             return true;
@@ -144,6 +151,7 @@ public class ChessGame {
                 }
             }
         }
+
         return false;
     }
 
@@ -154,6 +162,7 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
+
         if (!isInCheck(teamColor)) {
             return false;
         }
@@ -169,6 +178,7 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
+
         if (isInCheck(teamColor)) {
             return false;
         }
@@ -195,6 +205,7 @@ public class ChessGame {
     }
 
     private boolean isValidMove(ChessMove move) {
+
         ChessPiece startPiece = board.getPiece(move.getStartPosition());
 
         if (startPiece == null) {
@@ -230,8 +241,10 @@ public class ChessGame {
     }
 
     private boolean checkValidBoardMoves(TeamColor teamColor) {
+
         for (int i=1; i<=8; i++) {
             for (int j = 1; j <= 8; j++) {
+
                 ChessPosition position = new ChessPosition(i, j);
                 ChessPiece piece = board.getPiece(position);
 

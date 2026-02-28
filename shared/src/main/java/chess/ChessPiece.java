@@ -1,8 +1,6 @@
 package chess;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Objects;
 
 /**
@@ -14,16 +12,20 @@ import java.util.Objects;
 public class ChessPiece {
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
+
         this.pieceColor = pieceColor;
         this.pieceType = type;
     }
 
     @Override
     public boolean equals(Object o) {
+
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
+
         ChessPiece that = (ChessPiece) o;
+
         return pieceColor == that.pieceColor && getPieceType() == that.getPieceType();
     }
 
@@ -66,23 +68,32 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
+
         PieceMovesCalculator movesCalculator = PieceMovesCalculator.getCalculator(board.getPiece(myPosition));
+
         return movesCalculator.pieceMoves(board, myPosition);
     }
 
     @Override
     public String toString() {
+
         String s = "";
+
         if (pieceType == PieceType.KING) {
             s = "k";
+
         } else if (pieceType == PieceType.QUEEN) {
             s = "q";
+
         } else if (pieceType == PieceType.ROOK) {
             s = "r";
+
         } else if (pieceType == PieceType.KNIGHT) {
             s = "k";
+
         } else if (pieceType == PieceType.BISHOP) {
             s = "b";
+
         } else if (pieceType == PieceType.PAWN) {
             s = "p";
         }
@@ -94,6 +105,6 @@ public class ChessPiece {
         return s;
     }
 
-    private ChessGame.TeamColor pieceColor;
-    private ChessPiece.PieceType pieceType;
+    private final ChessGame.TeamColor pieceColor;
+    private final ChessPiece.PieceType pieceType;
 }

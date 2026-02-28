@@ -4,9 +4,9 @@ package dataaccess;
  * Supports centralized access to all DAO objects. Constant defined here determines
  * whether a sql database is used or in memory storage.
  */
-public class DAOFactory {
+public class DaoFactory {
 
-    public static AuthTokenDAO getAuthTokenDAO() {
+    public static AuthTokenDao getAuthTokenDAO() {
 
         if (USE_IN_MEMORY_DATA_STORE) {
             return authTokenDAO;
@@ -15,7 +15,7 @@ public class DAOFactory {
         throw new RuntimeException("Sql access not implemented");
     }
 
-    public static GameDAO getGameDAO() {
+    public static GameDao getGameDAO() {
 
         if (USE_IN_MEMORY_DATA_STORE) {
             return gameDAO;
@@ -24,7 +24,7 @@ public class DAOFactory {
         throw new RuntimeException("Sql access not implemented");
     }
 
-    public static UserDAO getUserDAO() {
+    public static UserDao getUserDAO() {
 
         if (USE_IN_MEMORY_DATA_STORE) {
             return userDAO;
@@ -33,9 +33,9 @@ public class DAOFactory {
         throw new RuntimeException("Sql access not implemented");
     }
 
-    private static final UserDAO userDAO = new InMemoryUserDAO();
-    private static final GameDAO gameDAO = new InMemoryGameDAO();
-    private static final AuthTokenDAO authTokenDAO = new InMemoryAuthTokenDAO();
+    private static final UserDao userDAO = new InMemoryUserDao();
+    private static final GameDao gameDAO = new InMemoryGameDao();
+    private static final AuthTokenDao authTokenDAO = new InMemoryAuthTokenDao();
 
     private static final boolean USE_IN_MEMORY_DATA_STORE = true;
 }

@@ -1,9 +1,9 @@
 package service;
 
-import dataaccess.AuthTokenDAO;
-import dataaccess.DAOFactory;
+import dataaccess.AuthTokenDao;
+import dataaccess.DaoFactory;
 import dataaccess.DataAccessException;
-import dataaccess.UserDAO;
+import dataaccess.UserDao;
 import model.UserData;
 import model.AuthData;
 import model.request.LoginRequest;
@@ -27,7 +27,7 @@ public class UserService extends BaseService {
         }
 
         // check and see if username is already in use
-        UserDAO userDAO = DAOFactory.getUserDAO();
+        UserDao userDAO = DaoFactory.getUserDAO();
 
         try{
             UserData userData = userDAO.getUser(registerRequest.username());
@@ -44,7 +44,7 @@ public class UserService extends BaseService {
                     registerRequest.email()));
 
             // automatically login user by creating authToken
-            AuthTokenDAO authTokenDAO = DAOFactory.getAuthTokenDAO();
+            AuthTokenDao authTokenDAO = DaoFactory.getAuthTokenDAO();
 
             AuthData authData = new AuthData(registerRequest.username());
             authTokenDAO.createAuthToken(authData);
@@ -68,7 +68,7 @@ public class UserService extends BaseService {
         }
 
         // check and see if username exists
-        UserDAO userDAO = DAOFactory.getUserDAO();
+        UserDao userDAO = DaoFactory.getUserDAO();
         try{
             UserData userData = userDAO.getUser(loginRequest.username());
 
@@ -78,7 +78,7 @@ public class UserService extends BaseService {
             }
 
             // create authToken
-            AuthTokenDAO authTokenDAO = DAOFactory.getAuthTokenDAO();
+            AuthTokenDao authTokenDAO = DaoFactory.getAuthTokenDAO();
 
             AuthData authData = new AuthData(loginRequest.username());
             authTokenDAO.createAuthToken(authData);
@@ -97,7 +97,7 @@ public class UserService extends BaseService {
 
         try{
             // delete user's authToken
-            AuthTokenDAO authTokenDAO = DAOFactory.getAuthTokenDAO();
+            AuthTokenDao authTokenDAO = DaoFactory.getAuthTokenDAO();
 
             authTokenDAO.deleteAuthToken(authToken);
 
@@ -109,8 +109,8 @@ public class UserService extends BaseService {
     public void clear() {
 
         try {
-            DAOFactory.getUserDAO().clearAllUsers();
-            DAOFactory.getAuthTokenDAO().clearAllAuthTokens();
+            DaoFactory.getUserDAO().clearAllUsers();
+            DaoFactory.getAuthTokenDAO().clearAllAuthTokens();
 
         }catch (DataAccessException d) {
             throw new ResponseException("Error clearing database: " + d.getMessage());

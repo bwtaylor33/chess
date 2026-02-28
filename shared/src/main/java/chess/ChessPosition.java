@@ -11,16 +11,20 @@ import java.util.Objects;
 public class ChessPosition {
 
     public ChessPosition(int row, int col) {
+
         this.row = row;
         this.column = col;
     }
 
     @Override
     public boolean equals(Object o) {
+
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
+
         ChessPosition that = (ChessPosition) o;
+
         return getRow() == that.getRow() && getColumn() == that.getColumn();
     }
 
@@ -50,6 +54,6 @@ public class ChessPosition {
         return String.format("[%d,%d]", row, column);
     }
 
-    private int row;
-    private int column;
+    private final int row;
+    private final int column;
 }

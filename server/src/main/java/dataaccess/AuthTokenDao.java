@@ -5,7 +5,7 @@ import model.AuthData;
 /**
  * Authentication token DAO interface
  */
-public interface AuthTokenDAO {
+public interface AuthTokenDao {
 
     public void createAuthToken(AuthData authData) throws DataAccessException;
     public AuthData getAuthToken(String authToken) throws DataAccessException;

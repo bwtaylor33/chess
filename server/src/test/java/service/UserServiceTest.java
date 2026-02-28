@@ -1,6 +1,6 @@
 package service;
 
-import dataaccess.DAOFactory;
+import dataaccess.DaoFactory;
 import dataaccess.DataAccessException;
 import model.UserData;
 import model.request.LoginRequest;
@@ -27,7 +27,7 @@ public class UserServiceTest {
         userService.register(new RegisterRequest("testName", "testPass", "test@junk.com"));
 
         // verify data is in the database
-        UserData userData = DAOFactory.getUserDAO().getUser("testName");
+        UserData userData = DaoFactory.getUserDAO().getUser("testName");
         Assertions.assertEquals("testName", userData.getUsername());
         Assertions.assertEquals("testPass", userData.getPassword());
         Assertions.assertEquals("test@junk.com", userData.getEmail());
@@ -85,7 +85,7 @@ public class UserServiceTest {
 
         // confirm token is removed from database
         Assertions.assertThrows(DataAccessException.class, () -> {
-            DAOFactory.getAuthTokenDAO().getAuthToken(authToken);
+            DaoFactory.getAuthTokenDAO().getAuthToken(authToken);
         });
     }
 
@@ -109,12 +109,12 @@ public class UserServiceTest {
 
         // test for removal of both users
         Exception exception = Assertions.assertThrows(DataAccessException.class, () -> {
-            DAOFactory.getUserDAO().getUser("testName");
+            DaoFactory.getUserDAO().getUser("testName");
         });
         Assertions.assertEquals("Error: invalid username: testName", exception.getMessage());
 
         exception = Assertions.assertThrows(DataAccessException.class, () -> {
-            DAOFactory.getUserDAO().getUser("testName1");
+            DaoFactory.getUserDAO().getUser("testName1");
         });
         Assertions.assertEquals("Error: invalid username: testName1", exception.getMessage());
     }

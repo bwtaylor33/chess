@@ -14,14 +14,19 @@ public class PawnMovesCalculator extends PieceMovesCalculator {
         ArrayList<ChessMove> moves = new ArrayList<>();
         ChessGame.TeamColor color = board.getPiece(myPosition).getTeamColor();
 
-        // forward one
         int deltaRow = color == ChessGame.TeamColor.WHITE ? 1 : -1;
+
+        // forward one
         ChessPosition newSpot = new ChessPosition(myPosition.getRow() + deltaRow, myPosition.getColumn());
+
         if (isInBoundsAndNotBlocked(board, newSpot)) {
             if (board.getPiece(newSpot) == null) {
+
                 ArrayList<ChessMove> promotionMoves = getPromotionMoves(myPosition, color, newSpot);
+
                 if (promotionMoves.isEmpty()) {
                     moves.add(new ChessMove(myPosition, newSpot, null));
+
                 } else {
                     moves.addAll(getPromotionMoves(myPosition, color, newSpot));
                 }
@@ -30,13 +35,17 @@ public class PawnMovesCalculator extends PieceMovesCalculator {
 
         // attack left
         if (myPosition.getColumn() > 1) {
-            deltaRow = color == ChessGame.TeamColor.WHITE ? 1 : -1;
+
             newSpot = new ChessPosition(myPosition.getRow() + deltaRow,myPosition.getColumn() - 1);
+
             if (isInBoundsAndNotBlocked(board, newSpot)) {
                 if (board.getPiece(newSpot) != null && board.getPiece(newSpot).getTeamColor() != getColor()) {
+
                     ArrayList<ChessMove> promotionMoves = getPromotionMoves(myPosition, color, newSpot);
+
                     if (promotionMoves.isEmpty()) {
                         moves.add(new ChessMove(myPosition, newSpot, null));
+
                     } else {
                         moves.addAll(getPromotionMoves(myPosition, color, newSpot));
                     }
@@ -46,13 +55,17 @@ public class PawnMovesCalculator extends PieceMovesCalculator {
 
         // attack right
         if (myPosition.getColumn() <= 7) {
-            deltaRow = color == ChessGame.TeamColor.WHITE ? 1 : -1;
+
             newSpot = new ChessPosition(myPosition.getRow() + deltaRow, myPosition.getColumn() + 1);
+
             if (isInBoundsAndNotBlocked(board, newSpot)) {
                 if (board.getPiece(newSpot) != null && board.getPiece(newSpot).getTeamColor() != getColor()) {
+
                     ArrayList<ChessMove> promotionMoves = getPromotionMoves(myPosition, color, newSpot);
+
                     if (promotionMoves.isEmpty()) {
                         moves.add(new ChessMove(myPosition, newSpot, null));
+
                     } else {
                         moves.addAll(getPromotionMoves(myPosition, color, newSpot));
                     }
@@ -62,10 +75,13 @@ public class PawnMovesCalculator extends PieceMovesCalculator {
 
         // opening move
         if ((color == ChessGame.TeamColor.WHITE && myPosition.getRow() == 2) || (color == ChessGame.TeamColor.BLACK && myPosition.getRow() == 7)) {
+
             int newRow = color == ChessGame.TeamColor.WHITE ? 4 : 5;
             int intermediateRow = color == ChessGame.TeamColor.WHITE ? 3 : 6;
+
             newSpot = new ChessPosition(newRow, myPosition.getColumn());
             ChessPosition intermediateSpot = new ChessPosition(intermediateRow, myPosition.getColumn());
+
             if (board.getPiece(intermediateSpot) == null && board.getPiece(newSpot) == null) {
                 moves.add(new ChessMove(myPosition, newSpot, null));
             }
@@ -75,13 +91,18 @@ public class PawnMovesCalculator extends PieceMovesCalculator {
     }
 
     private ArrayList<ChessMove> getPromotionMoves(ChessPosition myPosition, ChessGame.TeamColor color, ChessPosition newSpot) {
+
         ArrayList<ChessMove> moves = new ArrayList<>();
-        if ((newSpot.getRow() == 1 && color == ChessGame.TeamColor.BLACK) || (newSpot.getRow() == 8 && color == ChessGame.TeamColor.WHITE)) {
+
+        if ((newSpot.getRow() == 1 && color == ChessGame.TeamColor.BLACK) ||
+                (newSpot.getRow() == 8 && color == ChessGame.TeamColor.WHITE)) {
+
             moves.add(new ChessMove(myPosition, newSpot, ChessPiece.PieceType.QUEEN));
             moves.add(new ChessMove(myPosition, newSpot, ChessPiece.PieceType.BISHOP));
             moves.add(new ChessMove(myPosition, newSpot, ChessPiece.PieceType.KNIGHT));
             moves.add(new ChessMove(myPosition, newSpot, ChessPiece.PieceType.ROOK));
         }
+
         return moves;
     }
 }

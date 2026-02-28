@@ -1,7 +1,7 @@
 package service;
 
-import dataaccess.AuthTokenDAO;
-import dataaccess.DAOFactory;
+import dataaccess.AuthTokenDao;
+import dataaccess.DaoFactory;
 import dataaccess.DataAccessException;
 
 /**
@@ -13,7 +13,7 @@ public class BaseService {
 
         try{
             // create authToken
-            AuthTokenDAO authTokenDAO = DAOFactory.getAuthTokenDAO();
+            AuthTokenDao authTokenDAO = DaoFactory.getAuthTokenDAO();
 
             authTokenDAO.getAuthToken(authToken);
 

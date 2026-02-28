@@ -54,11 +54,13 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
+
         for (int row = 0; row < 8; row++) {
             for (int column = 0; column < 8; column++) {
                 board[row][column] = null;
             }
         }
+
         // add all pieces to initial positions
         addPiece(new ChessPosition(1,1), new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK));
         addPiece(new ChessPosition(1,2), new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT));
@@ -79,15 +81,16 @@ public class ChessBoard {
         addPiece(new ChessPosition(8,7), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT));
         addPiece(new ChessPosition(8,8), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK));
         addPawns(ChessGame.TeamColor.BLACK);
-
     }
 
     private void addPawns(ChessGame.TeamColor color) {
+
         int row = color == ChessGame.TeamColor.WHITE ? 2 : 7;
+
         for (int column = 1; column <= 8; column++) {
             addPiece(new ChessPosition(row, column), new ChessPiece(color, ChessPiece.PieceType.PAWN));
         }
     }
 
-    private ChessPiece[][] board = new ChessPiece[8][8];
+    private final ChessPiece[][] board = new ChessPiece[8][8];
 }

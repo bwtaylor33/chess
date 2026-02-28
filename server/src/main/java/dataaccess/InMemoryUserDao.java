@@ -6,7 +6,7 @@ import java.util.HashMap;
 /**
  * In-memory user storage implementation
  */
-public class InMemoryUserDAO implements UserDAO {
+public class InMemoryUserDao implements UserDao {
 
     public void createUser(UserData userData) throws DataAccessException {
 
@@ -26,23 +26,23 @@ public class InMemoryUserDAO implements UserDAO {
         return users.get(username);
     }
 
-    public void updateUser(UserData userData) throws DataAccessException {
+//    public void updateUser(UserData userData) throws DataAccessException {
+//
+//        if (!users.containsKey(userData.getUsername())) {
+//            throw new DataAccessException("User not found: " + userData.getUsername());
+//        }
+//
+//        users.put(userData.getUsername(), userData);
+//    }
 
-        if (!users.containsKey(userData.getUsername())) {
-            throw new DataAccessException("User not found: " + userData.getUsername());
-        }
-
-        users.put(userData.getUsername(), userData);
-    }
-
-    public void deleteUser(String username) throws  DataAccessException {
-
-        if (!users.containsKey(username)) {
-            throw new DataAccessException("User not found: " + username);
-        }
-
-        users.remove(username);
-    }
+//    public void deleteUser(String username) throws  DataAccessException {
+//
+//        if (!users.containsKey(username)) {
+//            throw new DataAccessException("User not found: " + username);
+//        }
+//
+//        users.remove(username);
+//    }
 
     public void clearAllUsers() throws DataAccessException {
         users.clear();

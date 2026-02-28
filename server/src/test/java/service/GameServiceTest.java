@@ -1,7 +1,7 @@
 package service;
 
 import chess.ChessGame;
-import dataaccess.DAOFactory;
+import dataaccess.DaoFactory;
 import dataaccess.DataAccessException;
 import model.GameData;
 import model.request.RegisterRequest;
@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.xml.crypto.Data;
 import java.util.ArrayList;
 
 public class GameServiceTest {
@@ -51,7 +50,7 @@ public class GameServiceTest {
         gameService.joinGame(authToken, ChessGame.TeamColor.BLACK, gameID);
 
         // confirm that game is in database
-        Assertions.assertEquals("testGameName", DAOFactory.getGameDAO().getGame(gameID).getGameName());
+        Assertions.assertEquals("testGameName", DaoFactory.getGameDAO().getGame(gameID).getGameName());
     }
 
     @Test

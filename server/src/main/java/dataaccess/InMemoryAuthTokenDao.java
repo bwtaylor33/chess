@@ -6,7 +6,7 @@ import java.util.HashMap;
 /**
  * In-memory authToken storage implementation
  */
-public class InMemoryAuthTokenDAO implements AuthTokenDAO {
+public class InMemoryAuthTokenDao implements AuthTokenDao {
 
     public void createAuthToken(AuthData authData) throws DataAccessException {
         authTokens.put(authData, authData.getUsername());
