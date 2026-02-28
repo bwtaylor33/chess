@@ -13,7 +13,7 @@ public class GameService extends BaseService {
         validateAuthToken(authToken);
 
         if (gameName == null || gameName.isBlank()) {
-            throw new BadRequestException("Error: invalid gameName: " + gameName);
+            throw new BadRequestException("Error: gameName cannot be empty");
         }
 
         GameDAO gameDAO = DAOFactory.getGameDAO();

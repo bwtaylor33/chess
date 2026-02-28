@@ -7,7 +7,6 @@ import dataaccess.DataAccessException;
 public class BaseService {
 
     protected void validateAuthToken(String authToken) throws ResponseException {
-        System.out.println("validating authToken: " + authToken);
         try{
 
             // create authToken
@@ -16,7 +15,7 @@ public class BaseService {
             authTokenDAO.getAuthToken(authToken);
 
         }catch (DataAccessException e) {
-            throw new ResponseException("Error: invalid authToken " + e.getMessage());
+            throw new ResponseException("Error: " + e.getMessage());
         }
     }
 }

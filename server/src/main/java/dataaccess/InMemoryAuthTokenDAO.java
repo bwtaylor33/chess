@@ -18,7 +18,7 @@ public class InMemoryAuthTokenDAO implements AuthTokenDAO {
             }
         }
 
-        throw new DataAccessException("Invalid authToken: " + authToken);
+        throw new DataAccessException("invalid authToken: " + authToken);
     }
 
     public void deleteAuthToken(String authToken) throws  DataAccessException {

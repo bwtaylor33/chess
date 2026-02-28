@@ -19,7 +19,7 @@ public class InMemoryUserDAO implements UserDAO {
 
     public UserData getUser(String username) throws DataAccessException {
         if (!users.containsKey(username)) {
-            throw new DataAccessException("User not found: " + username);
+            throw new DataAccessException("Error: invalid username: " + username);
         }
 
         return users.get(username);

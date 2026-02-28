@@ -15,12 +15,12 @@ public class UserService extends BaseService {
 
     public RegisterResult register(RegisterRequest registerRequest) throws ResponseException {
 
-        if (registerRequest.username() == null) {
-            throw new BadRequestException("Error: username cannot be null");
+        if (registerRequest.username() == null || registerRequest.username().isBlank()) {
+            throw new BadRequestException("Error: username cannot be blank");
         }
 
-        if (registerRequest.password() == null) {
-            throw new BadRequestException("Error: password cannot be null");
+        if (registerRequest.password() == null || registerRequest.password().isBlank()) {
+            throw new BadRequestException("Error: password cannot be blank");
         }
 
         // check and see if username is already in use
