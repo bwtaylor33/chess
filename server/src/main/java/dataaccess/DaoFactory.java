@@ -8,7 +8,7 @@ import javax.xml.crypto.Data;
  */
 public class DaoFactory {
 
-    public static AuthTokenDao getAuthTokenDao() {
+    public static AuthTokenDao getAuthTokenDao() throws DataAccessException {
 
         if (AUTH_TOKEN_DAO == null) {
             AUTH_TOKEN_DAO = USE_IN_MEMORY_DATA_STORE ? new InMemoryAuthTokenDao() : new MySqlAuthTokenDao();

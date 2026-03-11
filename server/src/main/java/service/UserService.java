@@ -10,6 +10,7 @@ import model.request.LoginRequest;
 import model.request.RegisterRequest;
 import model.response.LoginResult;
 import model.response.RegisterResult;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  * Service handles all user and authentication functions
@@ -78,7 +79,7 @@ public class UserService extends BaseService {
             UserData userData = userDao.getUser(loginRequest.username());
 
             // check for password match
-            if (!loginRequest.password().equals(userData.getPassword())) {
+            if (BCrypt.checkpw(loginRequest.password(), userData.getPassword())) {
                 throw new DataAccessException("Incorrect password");
             }
 

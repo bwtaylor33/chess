@@ -2,6 +2,7 @@ package dataaccess;
 
 import com.google.gson.Gson;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,7 +28,10 @@ public class MySqlUserDao extends MySqlBaseDao implements UserDao {
     public void createUser(UserData userData) throws DataAccessException {
 
         var statement = "INSERT INTO User (username, password, email) VALUES (?, ?, ?)";
-        int id = executeUpdate(statement, userData.getUsername(), userData.getPassword(), userData.getEmail());
+
+        String hashedPassword = BCrypt.hashpw(userData.getPassword(), BCrypt.gensalt());
+
+        int id = executeUpdate(statement, userData.getUsername(), hashedPassword, userData.getEmail());
 
         if (id == 0) {
             throw new DataAccessException("Username already in use: " + userData.getUsername());
@@ -37,7 +41,12 @@ public class MySqlUserDao extends MySqlBaseDao implements UserDao {
     public UserData getUser(String username) throws DataAccessException {
 
         try {
-            return readUser(getRecordByStringKey("SELECT * FROM User WHERE username=?", username));
+            ResultSet rs = getRecordByStringKey("SELECT * FROM User WHERE username=?", username);
+
+            if (rs == null) {
+                throw new DataAccessException("Error: invalid username: " + username);
+            }
+            return readUser(rs);
 
         } catch(SQLException s) {
             throw new DataAccessException("Error: invalid username: " + username);

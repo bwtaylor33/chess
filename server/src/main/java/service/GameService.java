@@ -19,9 +19,9 @@ public class GameService extends BaseService {
             throw new BadRequestException("Error: gameName cannot be empty");
         }
 
-        GameDao gameDao = DaoFactory.getGameDao();
-
         try{
+            GameDao gameDao = DaoFactory.getGameDao();
+
             // create game in game table
             GameData gameData = gameDao.createGame(gameName);
 
@@ -41,10 +41,10 @@ public class GameService extends BaseService {
             throw new BadRequestException("Error: invalid gameID: " + gameID);
         }
 
-        AuthTokenDao authTokenDao = DaoFactory.getAuthTokenDao();
-        GameDao gameDao = DaoFactory.getGameDao();
-
         try{
+            AuthTokenDao authTokenDao = DaoFactory.getAuthTokenDao();
+            GameDao gameDao = DaoFactory.getGameDao();
+
             // get username from authToken
             String username = authTokenDao.getAuthToken(authToken).getUsername();
 
@@ -80,9 +80,9 @@ public class GameService extends BaseService {
 
         validateAuthToken(authToken);
 
-        GameDao gameDao = DaoFactory.getGameDao();
-
         try{
+            GameDao gameDao = DaoFactory.getGameDao();
+
             // get all games in game table
             return new ListGamesResult(gameDao.getAllGames());
 
