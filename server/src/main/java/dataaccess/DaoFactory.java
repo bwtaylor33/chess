@@ -8,34 +8,34 @@ public class DaoFactory {
 
     public static AuthTokenDao getAuthTokenDao() {
 
-        if (USE_IN_MEMORY_DATA_STORE) {
-            return AUTH_TOKEN_DAO;
+        if (AUTH_TOKEN_DAO == null) {
+            AUTH_TOKEN_DAO = USE_IN_MEMORY_DATA_STORE ? new InMemoryAuthTokenDao() : new MySqlAuthTokenDao();
         }
 
-        throw new RuntimeException("Sql access not implemented");
+        return AUTH_TOKEN_DAO;
     }
 
     public static GameDao getGameDao() {
 
-        if (USE_IN_MEMORY_DATA_STORE) {
-            return GAME_DAO;
+        if (GAME_DAO == null) {
+            GAME_DAO = USE_IN_MEMORY_DATA_STORE ? new InMemoryGameDao() : new MySqlGameDao();
         }
 
-        throw new RuntimeException("Sql access not implemented");
+        return GAME_DAO;
     }
 
     public static UserDao getUserDao() {
 
-        if (USE_IN_MEMORY_DATA_STORE) {
-            return USER_DAO;
+        if (USER_DAO == null) {
+            USER_DAO = USE_IN_MEMORY_DATA_STORE ? new InMemoryUserDao() : new MySqlUserDao();
         }
 
-        throw new RuntimeException("Sql access not implemented");
+        return USER_DAO;
     }
 
-    private static final UserDao USER_DAO = new InMemoryUserDao();
-    private static final GameDao GAME_DAO = new InMemoryGameDao();
-    private static final AuthTokenDao AUTH_TOKEN_DAO = new InMemoryAuthTokenDao();
+    private static UserDao USER_DAO = null;
+    private static GameDao GAME_DAO = null;
+    private static AuthTokenDao AUTH_TOKEN_DAO = null;
 
     private static final boolean USE_IN_MEMORY_DATA_STORE = false;
 }
