@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 /**
- * In-memory user storage implementation
+ * MySQL user storage implementation
  */
 public class MySqlUserDao extends MySqlBaseDao implements UserDao {
 

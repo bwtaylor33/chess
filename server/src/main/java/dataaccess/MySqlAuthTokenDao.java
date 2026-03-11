@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 /**
- * In-memory authToken storage implementation
+ * MySQL authToken storage implementation
  */
 public class MySqlAuthTokenDao extends MySqlBaseDao implements AuthTokenDao {
 

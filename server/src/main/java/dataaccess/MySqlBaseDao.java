@@ -76,6 +76,22 @@ public class MySqlBaseDao {
         return null;
     }
 
+    protected ResultSet getAllRecords(String query) throws DataAccessException {
+
+        try (Connection conn = DatabaseManager.getConnection()) {
+            try (PreparedStatement ps = conn.prepareStatement(query)) {
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        return rs;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new DataAccessException("Unable to read data: " + e.getMessage());
+        }
+        return null;
+    }
+
     private void configureDatabase() throws DataAccessException {
         DatabaseManager.createDatabase();
         try (Connection conn = DatabaseManager.getConnection()) {
