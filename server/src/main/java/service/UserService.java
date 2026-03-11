@@ -27,9 +27,11 @@ public class UserService extends BaseService {
         }
 
         // check and see if username is already in use
-        UserDao userDao = DaoFactory.getUserDao();
+        UserDao userDao = null;
 
         try{
+            userDao = DaoFactory.getUserDao();
+
             UserData userData = userDao.getUser(registerRequest.username());
 
             throw new ForbiddenRequestException("Error: username is already in use: " + registerRequest.username());
@@ -38,6 +40,8 @@ public class UserService extends BaseService {
         }
 
         try{
+            userDao = DaoFactory.getUserDao();
+
             // create user in user table
             userDao.createUser(new UserData(registerRequest.username(),
                     registerRequest.password(),
@@ -67,9 +71,10 @@ public class UserService extends BaseService {
             throw new BadRequestException("Error: password cannot be null");
         }
 
-        // check and see if username exists
-        UserDao userDao = DaoFactory.getUserDao();
         try{
+            // check and see if username exists
+            UserDao userDao = DaoFactory.getUserDao();
+
             UserData userData = userDao.getUser(loginRequest.username());
 
             // check for password match

@@ -1,5 +1,7 @@
 package dataaccess;
 
+import javax.xml.crypto.Data;
+
 /**
  * Supports centralized access to all Dao objects. Constant defined here determines
  * whether a sql database is used or in memory storage.
@@ -15,7 +17,7 @@ public class DaoFactory {
         return AUTH_TOKEN_DAO;
     }
 
-    public static GameDao getGameDao() {
+    public static GameDao getGameDao() throws DataAccessException {
 
         if (GAME_DAO == null) {
             GAME_DAO = USE_IN_MEMORY_DATA_STORE ? new InMemoryGameDao() : new MySqlGameDao();
@@ -24,7 +26,7 @@ public class DaoFactory {
         return GAME_DAO;
     }
 
-    public static UserDao getUserDao() {
+    public static UserDao getUserDao() throws DataAccessException {
 
         if (USER_DAO == null) {
             USER_DAO = USE_IN_MEMORY_DATA_STORE ? new InMemoryUserDao() : new MySqlUserDao();
