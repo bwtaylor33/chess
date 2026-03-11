@@ -37,5 +37,5 @@ public class DaoFactory {
     private static final GameDao GAME_DAO = new InMemoryGameDao();
     private static final AuthTokenDao AUTH_TOKEN_DAO = new InMemoryAuthTokenDao();
 
-    private static final boolean USE_IN_MEMORY_DATA_STORE = true;
+    private static final boolean USE_IN_MEMORY_DATA_STORE = false;
 }
