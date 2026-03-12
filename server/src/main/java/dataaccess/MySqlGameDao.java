@@ -44,7 +44,13 @@ public class MySqlGameDao extends MySqlBaseDao implements GameDao {
     public GameData getGame(int gameID) throws DataAccessException {
 
         try {
-            return readGame(getRecordByIntID("SELECT * FROM Game WHERE gameID=?", gameID));
+            ResultSet rs = getRecordByIntID("SELECT * FROM Game WHERE gameID=?", gameID);
+
+            if (rs == null) {
+                throw new DataAccessException("Error: invalid gameID: " + gameID);
+            }
+
+            return readGame(rs);
 
         } catch(SQLException s) {
             throw new DataAccessException("Error: invalid gameID: " + gameID);
@@ -57,6 +63,10 @@ public class MySqlGameDao extends MySqlBaseDao implements GameDao {
 
             var result = new ArrayList<GameData>();
             ResultSet rs = getAllRecords("SELECT * FROM Game");
+
+            if (rs == null) {
+                throw new DataAccessException("Unable to get game list");
+            }
 
             while (rs.next()) {
                 result.add(readGame(rs));

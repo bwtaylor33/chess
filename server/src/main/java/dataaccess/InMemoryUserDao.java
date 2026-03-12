@@ -1,6 +1,8 @@
 package dataaccess;
 
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
+
 import java.util.HashMap;
 
 /**
@@ -13,6 +15,8 @@ public class InMemoryUserDao implements UserDao {
         if (users.containsKey(userData.getUsername())) {
             throw new DataAccessException("Username already in use: " + userData.getUsername());
         }
+
+        userData.setPassword(BCrypt.hashpw(userData.getPassword(), BCrypt.gensalt()));
 
         users.put(userData.getUsername(), userData);
     }

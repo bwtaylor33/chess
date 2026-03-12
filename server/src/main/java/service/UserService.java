@@ -79,7 +79,7 @@ public class UserService extends BaseService {
             UserData userData = userDao.getUser(loginRequest.username());
 
             // check for password match
-            if (BCrypt.checkpw(loginRequest.password(), userData.getPassword())) {
+            if (!BCrypt.checkpw(loginRequest.password(), userData.getPassword())) {
                 throw new DataAccessException("Incorrect password");
             }
 
