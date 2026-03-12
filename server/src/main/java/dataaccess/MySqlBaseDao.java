@@ -36,26 +36,30 @@ public class MySqlBaseDao {
     }
 
     protected int executeInsertReturnId(String statement, Object... params) throws DataAccessException {
-        try (Connection conn = DatabaseManager.getConnection()) {
-            try (PreparedStatement ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
-                for (int i = 0; i < params.length; i++) {
-                    Object param = params[i];
-                    if (param instanceof String p) ps.setString(i + 1, p);
-                    else if (param instanceof Integer p) ps.setInt(i + 1, p);
-                    else if (param instanceof ChessGame p) ps.setString(i + 1, p.toString());
-                    else if (param == null) ps.setNull(i + 1, NULL);
-                }
-                ps.executeUpdate();
 
-                try (ResultSet rs = ps.getGeneratedKeys()) {
-                    if (rs.next()) {
-                        return rs.getInt(1);
-                    }
-                }
+        try {
+            Connection conn = DatabaseManager.getConnection();
+            PreparedStatement ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS);
 
-                return 0;
+            for (int i = 0; i < params.length; i++) {
+                Object param = params[i];
+                if (param instanceof String p) ps.setString(i + 1, p);
+                else if (param instanceof Integer p) ps.setInt(i + 1, p);
+                else if (param instanceof ChessGame p) ps.setString(i + 1, p.toString());
+                else if (param == null) ps.setNull(i + 1, NULL);
             }
+
+            ps.executeUpdate();
+
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+            return 0;
+
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DataAccessException("unable to update database: " + e.getMessage());
         }
     }
@@ -81,14 +85,13 @@ public class MySqlBaseDao {
 
     protected ResultSet getRecordByIntID(String query, int id) throws DataAccessException {
 
-        try (Connection conn = DatabaseManager.getConnection()) {
-            try (PreparedStatement ps = conn.prepareStatement(query)) {
-                ps.setInt(1, id);
-                try (ResultSet rs = ps.executeQuery()) {
-                    if (rs.next()) {
-                        return rs;
-                    }
-                }
+        try {
+            Connection conn = DatabaseManager.getConnection();
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs;
             }
         } catch (Exception e) {
             throw new DataAccessException("Unable to read data: " + e.getMessage());
@@ -98,18 +101,14 @@ public class MySqlBaseDao {
 
     protected ResultSet getAllRecords(String query) throws DataAccessException {
 
-        try (Connection conn = DatabaseManager.getConnection()) {
-            try (PreparedStatement ps = conn.prepareStatement(query)) {
-                try (ResultSet rs = ps.executeQuery()) {
-                    if (rs.next()) {
-                        return rs;
-                    }
-                }
-            }
+        try {
+            Connection conn = DatabaseManager.getConnection();
+            PreparedStatement ps = conn.prepareStatement(query);
+            return ps.executeQuery();
+
         } catch (Exception e) {
             throw new DataAccessException("Unable to read data: " + e.getMessage());
         }
-        return null;
     }
 
     private void configureDatabase() throws DataAccessException {

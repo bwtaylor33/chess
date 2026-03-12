@@ -20,10 +20,10 @@ public class MySqlGameDao extends MySqlBaseDao implements GameDao {
             """
             CREATE TABLE IF NOT EXISTS  Game (
               `gameID` int NOT NULL AUTO_INCREMENT,
-              `whiteUsername` varchar(64) NOT NULL,
-              `blackUsername` varchar(64) NOT NULL,
+              `whiteUsername` varchar(64) DEFAULT NULL,
+              `blackUsername` varchar(64) DEFAULT NULL,
               `gameName` varchar(64) NOT NULL,
-              `game` varchar(4096),
+              `game` varchar(4096) DEFAULT NULL,
               PRIMARY KEY (`gameID`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
             """});
@@ -32,12 +32,13 @@ public class MySqlGameDao extends MySqlBaseDao implements GameDao {
     public GameData createGame(String gameName) throws DataAccessException {
 
         var statement = "INSERT INTO Game (gameName) VALUES (?)";
-        int gameID = executeUpdate(statement, gameName);
+        int gameID = executeInsertReturnId(statement, gameName);
 
         if (gameID == 0) {
             throw new DataAccessException("Error creating game: " + gameName);
         }
 
+        System.out.println("Created gameID: " + gameID);
         return new GameData(gameID, null, null, gameName, new ChessGame());
     }
 
@@ -47,12 +48,14 @@ public class MySqlGameDao extends MySqlBaseDao implements GameDao {
             ResultSet rs = getRecordByIntID("SELECT * FROM Game WHERE gameID=?", gameID);
 
             if (rs == null) {
+                System.out.println("got a null result set");
                 throw new DataAccessException("Error: invalid gameID: " + gameID);
             }
 
             return readGame(rs);
 
         } catch(SQLException s) {
+            s.printStackTrace();
             throw new DataAccessException("Error: invalid gameID: " + gameID);
         }
     }
@@ -62,10 +65,10 @@ public class MySqlGameDao extends MySqlBaseDao implements GameDao {
         try {
 
             var result = new ArrayList<GameData>();
-            ResultSet rs = getAllRecords("SELECT * FROM Game");
+            ResultSet rs = getAllRecords("SELECT * FROM Game ORDER BY gameID");
 
             if (rs == null) {
-                throw new DataAccessException("Unable to get game list");
+                return result;
             }
 
             while (rs.next()) {
@@ -75,6 +78,7 @@ public class MySqlGameDao extends MySqlBaseDao implements GameDao {
             return result;
 
         } catch(SQLException s) {
+            s.printStackTrace();
             throw new DataAccessException("Unable to get game list: " + s.getMessage());
         }
     }

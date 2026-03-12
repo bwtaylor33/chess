@@ -26,7 +26,7 @@ public class AuthTokenDaoTests {
     }
 
     @Test
-    public void testCreateAuthFailure() throws DataAccessException {
+    public void testCreateAuthTokenFailure() throws DataAccessException {
 
         AuthData testAuth = new AuthData("hardCodedAuthToken", "testUser");
         authTokenDao.createAuthToken(testAuth);
@@ -39,7 +39,7 @@ public class AuthTokenDaoTests {
     }
 
     @Test
-    public void testGetAuthSuccess() throws DataAccessException {
+    public void testGetAuthTokenSuccess() throws DataAccessException {
 
         // create 2 authTokens for same user
         AuthData testAuth = new AuthData("testUser");
@@ -57,11 +57,41 @@ public class AuthTokenDaoTests {
     }
 
     @Test
-    public void testGetAuthFailure() throws DataAccessException {
+    public void testGetAuthTokenFailure() throws DataAccessException {
 
         // try to verify fake authToken
         Exception exception = Assertions.assertThrows(DataAccessException.class, () -> {
             authTokenDao.getAuthToken("fakeAuthToken");
+        });
+        Assertions.assertEquals("Error: invalid authToken: fakeAuthToken", exception.getMessage());
+    }
+
+    @Test
+    public void testDeleteAuthTokenSuccess() throws DataAccessException {
+
+        // create authToken
+        AuthData testAuth = new AuthData("testUser");
+        authTokenDao.createAuthToken(testAuth);
+
+        // get authToken to make sure it's there
+        authTokenDao.getAuthToken(testAuth.getAuthToken());
+
+        // delete authToken
+        authTokenDao.deleteAuthToken(testAuth.getAuthToken());
+
+        // try to verify authToken was deleted
+        Exception exception = Assertions.assertThrows(DataAccessException.class, () -> {
+            authTokenDao.getAuthToken(testAuth.getAuthToken());
+        });
+        Assertions.assertTrue(exception.getMessage().startsWith("Error: invalid authToken: "));
+    }
+
+    @Test
+    public void testDeleteAuthTokenFailure() throws DataAccessException {
+
+        // try to verify fake authToken
+        Exception exception = Assertions.assertThrows(DataAccessException.class, () -> {
+            authTokenDao.deleteAuthToken("fakeAuthToken");
         });
         Assertions.assertEquals("Error: invalid authToken: fakeAuthToken", exception.getMessage());
     }
