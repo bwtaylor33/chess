@@ -1,6 +1,6 @@
 package dataaccess;
 
-import model.UserData;
+import model.AuthData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,78 +10,76 @@ public class AuthTokenDaoTests {
     @BeforeEach
     public void setUp() throws DataAccessException {
 
-        userDao = DaoFactory.getUserDao();
-        userDao.clearAllUsers();
+        authTokenDao = DaoFactory.getAuthTokenDao();
+        authTokenDao.clearAllAuthTokens();
     }
 
     @Test
-    public void testCreateUserSuccess() throws DataAccessException {
+    public void testCreateAuthTokenSuccess() throws DataAccessException {
 
-        UserData testUser = new UserData("testNewUser", "testNewPassword", "testNewEmail");
-        userDao.createUser(testUser);
-        UserData verifiedUser = userDao.getUser("testNewUser");
+        AuthData testAuth = new AuthData("testUser");
+        authTokenDao.createAuthToken(testAuth);
+        AuthData verifiedAuth = authTokenDao.getAuthToken(testAuth.getAuthToken());
 
-        Assertions.assertEquals(testUser.getEmail(), verifiedUser.getEmail());
-        Assertions.assertEquals(testUser.getUsername(), verifiedUser.getUsername());
+        Assertions.assertEquals(testAuth.getAuthToken(), verifiedAuth.getAuthToken());
+        Assertions.assertEquals(testAuth.getUsername(), verifiedAuth.getUsername());
     }
 
     @Test
-    public void testCreateUserFailure() throws DataAccessException {
+    public void testCreateAuthFailure() throws DataAccessException {
 
-        UserData testUser = new UserData("testNewUser", "testNewPassword", "testNewEmail");
-        userDao.createUser(testUser);
+        AuthData testAuth = new AuthData("hardCodedAuthToken", "testUser");
+        authTokenDao.createAuthToken(testAuth);
 
-        // test for duplicate username
+        // test for wrong authToken
         Exception exception = Assertions.assertThrows(DataAccessException.class, () -> {
-            userDao.createUser(testUser);
+            authTokenDao.createAuthToken(testAuth);
         });
-        Assertions.assertEquals("unable to update database: Duplicate entry 'testNewUser' for key 'user.PRIMARY'", exception.getMessage());
+        Assertions.assertEquals("unable to update database: Duplicate entry 'hardCodedAuthToken' for key 'authtoken.PRIMARY'", exception.getMessage());
     }
 
     @Test
-    public void testGetUserSuccess() throws DataAccessException {
+    public void testGetAuthSuccess() throws DataAccessException {
 
-        // create 2 users
-        UserData testUser = new UserData("testNewUser", "testNewPassword", "testNewEmail");
-        userDao.createUser(testUser);
+        // create 2 authTokens for same user
+        AuthData testAuth = new AuthData("testUser");
+        authTokenDao.createAuthToken(testAuth);
 
-        UserData testUser2 = new UserData("testNewUser2", "testNewPassword2", "testNewEmail2");
-        userDao.createUser(testUser2);
+        AuthData testAuth2 = new AuthData("testUser");
+        authTokenDao.createAuthToken(testAuth2);
 
         // test if 2 users were added to database
-        UserData verifiedUser = userDao.getUser("testNewUser");
-        Assertions.assertEquals(testUser.getEmail(), verifiedUser.getEmail());
-        Assertions.assertEquals(testUser.getUsername(), verifiedUser.getUsername());
+        AuthData verifiedAuth = authTokenDao.getAuthToken(testAuth.getAuthToken());
+        Assertions.assertEquals(testAuth.getUsername(), verifiedAuth.getUsername());
 
-        UserData verifiedUser2 = userDao.getUser("testNewUser2");
-        Assertions.assertEquals(testUser2.getEmail(), verifiedUser2.getEmail());
-        Assertions.assertEquals(testUser2.getUsername(), verifiedUser2.getUsername());
+        AuthData verifiedAuth2 = authTokenDao.getAuthToken(testAuth2.getAuthToken());
+        Assertions.assertEquals(testAuth2.getUsername(), verifiedAuth2.getUsername());
     }
 
     @Test
-    public void testGetUserFailure() throws DataAccessException {
+    public void testGetAuthFailure() throws DataAccessException {
 
-        // call getUser before createUser
+        // try to verify fake authToken
         Exception exception = Assertions.assertThrows(DataAccessException.class, () -> {
-            userDao.getUser("testNewUser");
+            authTokenDao.getAuthToken("fakeAuthToken");
         });
-        Assertions.assertEquals("Error: invalid username: testNewUser", exception.getMessage());
+        Assertions.assertEquals("Error: invalid authToken: fakeAuthToken", exception.getMessage());
     }
 
     @Test
-    public void testClearAllUsers() throws DataAccessException {
+    public void testClearAllAuthTokens() throws DataAccessException {
 
-        UserData testUser = new UserData("testNewUser", "testNewPassword", "testNewEmail");
-        userDao.createUser(testUser);
+        AuthData testAuth = new AuthData("testUser");
+        authTokenDao.createAuthToken(testAuth);
 
-        // clear users
-        userDao.clearAllUsers();
+        // clear authTokens
+        authTokenDao.clearAllAuthTokens();
 
         Exception exception = Assertions.assertThrows(DataAccessException.class, () -> {
-            userDao.getUser("testNewUser");
+            authTokenDao.getAuthToken(testAuth.getAuthToken());
         });
-        Assertions.assertEquals("Error: invalid username: testNewUser", exception.getMessage());
+        Assertions.assertTrue(exception.getMessage().startsWith("Error: invalid authToken: "));
     }
 
-    private UserDao userDao;
+    private AuthTokenDao authTokenDao;
 }
