@@ -42,17 +42,14 @@ public class MySqlUserDao extends MySqlBaseDao implements UserDao {
 
         try {
             ResultSet rs = getRecordByStringKey("SELECT * FROM User WHERE username=?", username);
-            System.out.println("Back from query");
 
             if (rs == null) {
                 throw new DataAccessException("Error: invalid username: " + username);
             }
-            System.out.println("Going to read user");
 
             return readUser(rs);
 
         } catch(SQLException s) {
-            s.printStackTrace();
             throw new DataAccessException("Error: invalid username: " + username);
         }
     }
@@ -67,7 +64,6 @@ public class MySqlUserDao extends MySqlBaseDao implements UserDao {
         var password = rs.getString("password");
         var email = rs.getString("email");
 
-        System.out.println("Password: " + password);
         return new UserData(username, password, email);
     }
 }
