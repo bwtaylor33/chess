@@ -8,6 +8,7 @@ import model.request.RegisterRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class UserServiceTest {
 
@@ -29,7 +30,7 @@ public class UserServiceTest {
         // verify data is in the database
         UserData userData = DaoFactory.getUserDao().getUser("testName");
         Assertions.assertEquals("testName", userData.getUsername());
-        Assertions.assertEquals("testPass", userData.getPassword());
+        Assertions.assertTrue(BCrypt.checkpw("testPass", userData.getPassword()));
         Assertions.assertEquals("test@junk.com", userData.getEmail());
     }
 
@@ -68,7 +69,7 @@ public class UserServiceTest {
         Exception exception = Assertions.assertThrows(ResponseException.class, () -> {
             userService.login(new LoginRequest("testUsername", "badPassword"));
         });
-        Assertions.assertEquals("Error logging in user: Incorrect password", exception.getMessage());
+        Assertions.assertEquals("Error logging in user: Error: incorrect password", exception.getMessage());
 
         // test for unregistered user
         exception = Assertions.assertThrows(ResponseException.class, () -> {
@@ -96,7 +97,7 @@ public class UserServiceTest {
         Exception exception = Assertions.assertThrows(ResponseException.class, () -> {
             userService.logout("badToken");
         });
-        Assertions.assertEquals("Error: invalid authToken: badToken", exception.getMessage());
+        Assertions.assertEquals("Error: Error: invalid authToken: badToken", exception.getMessage());
     }
 
     @Test

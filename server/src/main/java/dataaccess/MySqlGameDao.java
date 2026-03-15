@@ -83,6 +83,25 @@ public class MySqlGameDao extends MySqlBaseDao implements GameDao {
         }
     }
 
+    public void updateGame(GameData gameData) throws DataAccessException {
+        String json = null;
+
+        if (gameData.getGame() != null) {
+            json = new Gson().toJson(gameData.getGame());
+        }
+
+        int rowsUpdated = executeUpdate("UPDATE Game SET whiteUsername=?, blackUsername=?, gameName=?, game=? WHERE gameID=?",
+                gameData.getWhiteUsername(),
+                gameData.getBlackUsername(),
+                gameData.getGameName(),
+                json,
+                gameData.getGameID());
+
+        if (rowsUpdated != 1) {
+            throw new DataAccessException("Error: invalid gameID: " + gameData.getGameID());
+        }
+    }
+
     public void clearAllGames() throws DataAccessException {
         executeUpdate("TRUNCATE Game");
     }

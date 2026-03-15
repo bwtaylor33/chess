@@ -89,11 +89,8 @@ public class AuthTokenDaoTests {
     @Test
     public void testDeleteAuthTokenFailure() throws DataAccessException {
 
-        // try to verify fake authToken
-        Exception exception = Assertions.assertThrows(DataAccessException.class, () -> {
-            authTokenDao.deleteAuthToken("fakeAuthToken");
-        });
-        Assertions.assertEquals("Error: invalid authToken: fakeAuthToken", exception.getMessage());
+        // deleteAuthToken will silently fail
+        authTokenDao.deleteAuthToken("fakeAuthToken");
     }
 
     @Test

@@ -67,6 +67,33 @@ public class GameDaoTests {
     }
 
     @Test
+    public void testUpdateGameSuccess() throws DataAccessException {
+
+        // create new game
+        GameData testGame = gameDao.createGame("testGameName");
+
+        // update gameData
+        testGame.setWhiteUsername("testUser");
+        gameDao.updateGame(testGame);
+
+        // verify that white username was updated
+        GameData verifiedGame = gameDao.getGame(testGame.getGameID());
+        Assertions.assertEquals(testGame.getWhiteUsername(), verifiedGame.getWhiteUsername());
+    }
+
+    @Test
+    public void testUpdateGameFailure() throws DataAccessException {
+
+        GameData gameData = new GameData(-1, null, null, "badGame", null);
+
+        // try to get fake gameID
+        Exception exception = Assertions.assertThrows(DataAccessException.class, () -> {
+            gameDao.updateGame(gameData);
+        });
+        Assertions.assertEquals("Error: invalid gameID: -1", exception.getMessage());
+    }
+
+    @Test
     public void testGetAllGamesSuccess() throws DataAccessException {
 
         // check if game list is 0

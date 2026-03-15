@@ -35,7 +35,12 @@ public class GameService extends BaseService {
 
     public void joinGame(String authToken, ChessGame.TeamColor playerColor, int gameID) throws ResponseException {
 
-        validateAuthToken(authToken);
+        try {
+            validateAuthToken(authToken);
+
+        } catch (ForbiddenRequestException f) {
+            throw new ResponseException(f.getMessage());
+        }
 
         if (gameID <= 0) {
             throw new BadRequestException("Error: invalid gameID: " + gameID);
@@ -70,6 +75,8 @@ public class GameService extends BaseService {
             }else {
                 throw new BadRequestException("Error: invalid team color: " + playerColor);
             }
+
+            gameDao.updateGame(gameData);
 
         }catch (DataAccessException e) {
             throw new ResponseException("Error joining game: " + e.getMessage());

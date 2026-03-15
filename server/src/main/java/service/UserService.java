@@ -12,6 +12,8 @@ import model.response.LoginResult;
 import model.response.RegisterResult;
 import org.mindrot.jbcrypt.BCrypt;
 
+import javax.xml.crypto.Data;
+
 /**
  * Service handles all user and authentication functions
  */
@@ -76,11 +78,16 @@ public class UserService extends BaseService {
             // check and see if username exists
             UserDao userDao = DaoFactory.getUserDao();
 
-            UserData userData = userDao.getUser(loginRequest.username());
+            UserData userData = null;
+            try {
+                userData = userDao.getUser(loginRequest.username());
+            } catch (DataAccessException d) {
+                throw new DataAccessException("Error: invalid username: " + loginRequest.username());
+            }
 
             // check for password match
             if (!BCrypt.checkpw(loginRequest.password(), userData.getPassword())) {
-                throw new DataAccessException("Incorrect password");
+                throw new DataAccessException("Error: incorrect password");
             }
 
             // create authToken

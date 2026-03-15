@@ -68,7 +68,7 @@ public class GameHandler extends BaseHandler {
             // Convert bodyObject back to Json and send to client
             context.json(new Gson().toJson(listGamesResult));
 
-        }catch (ResponseException r) {
+        }catch (ForbiddenRequestException r) {
             context.status(401).result(r.toJson());
 
         }catch (Exception e) {
