@@ -13,7 +13,7 @@ import org.mindrot.jbcrypt.BCrypt;
 public class UserServiceTest {
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws ResponseException {
 
         userService = new UserService();
         userService.clear();
@@ -22,7 +22,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testRegisterSuccess() throws DataAccessException {
+    public void testRegisterSuccess() throws DataAccessException, ResponseException {
 
         // register user
         userService.register(new RegisterRequest("testName", "testPass", "test@junk.com"));
@@ -35,7 +35,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testRegisterFailure() {
+    public void testRegisterFailure() throws ResponseException {
 
         // test for username collision
         userService.register(new RegisterRequest("testName", "testPass", "test@junk.com"));
@@ -53,7 +53,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testLoginSuccess() {
+    public void testLoginSuccess() throws ResponseException {
 
         // login user again
         String authToken = userService.login(new LoginRequest("testUsername", "testPassword")).authToken();
@@ -79,7 +79,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testLogoutSuccess() {
+    public void testLogoutSuccess() throws ResponseException {
 
         // log user out
         userService.logout(authToken);
@@ -101,7 +101,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testClear() {
+    public void testClear() throws ResponseException {
 
         // register 2 users
         userService.register(new RegisterRequest("testName", "testPass", "test@junk.com"));

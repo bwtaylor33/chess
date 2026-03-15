@@ -104,7 +104,7 @@ public class UserService extends BaseService {
         }
     }
 
-    public void logout(String authToken) {
+    public void logout(String authToken) throws ResponseException {
 
         validateAuthToken(authToken);
 
@@ -115,11 +115,14 @@ public class UserService extends BaseService {
             authTokenDao.deleteAuthToken(authToken);
 
         }catch (DataAccessException e) {
+//            if (e.getMessage().equals("failed to get connection")) {
+//                throw new
+//            }
             throw new ResponseException("Error logging out user: " + e.getMessage());
         }
     }
 
-    public void clear() {
+    public void clear() throws ResponseException {
 
         try {
             DaoFactory.getUserDao().clearAllUsers();

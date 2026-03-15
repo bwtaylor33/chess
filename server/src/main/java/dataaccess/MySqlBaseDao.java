@@ -117,8 +117,11 @@ public class MySqlBaseDao {
     private void configureDatabase() throws DataAccessException {
 
         DatabaseManager.createDatabase();
+
         try (Connection conn = DatabaseManager.getConnection()) {
+
             for (String statement : createStatements) {
+
                 try (var preparedStatement = conn.prepareStatement(statement)) {
                     preparedStatement.executeUpdate();
                 }

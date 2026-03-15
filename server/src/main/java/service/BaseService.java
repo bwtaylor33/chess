@@ -18,7 +18,11 @@ public class BaseService {
             authTokenDao.getAuthToken(authToken);
 
         }catch (DataAccessException e) {
-            e.printStackTrace();
+
+            if (e.getMessage().equals("failed to get connection")) {
+                throw new ResponseException("Error: " + e.getMessage());
+            }
+
             throw new ForbiddenRequestException("Error: " + e.getMessage());
         }
     }

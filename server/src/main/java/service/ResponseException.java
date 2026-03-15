@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * Exception used for capturing errors that occur when handling API requests.
  */
-public class ResponseException extends RuntimeException {
+public class ResponseException extends Exception {
 
     public ResponseException(String message) {
         super(message);

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class GameServiceTest {
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws ResponseException {
 
         gameService = new GameService();
         gameService.clear();
@@ -26,7 +26,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void testCreateGameSuccess() {
+    public void testCreateGameSuccess() throws ResponseException {
 
         int gameID = gameService.createGame(authToken, "testGameName").gameID();
         Assertions.assertTrue(gameID >= 1);
@@ -43,7 +43,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void testJoinGameSuccess() throws DataAccessException {
+    public void testJoinGameSuccess() throws DataAccessException, ResponseException {
 
         // create game and capture gameID
         int gameID = gameService.createGame(authToken, "testGameName").gameID();
@@ -54,7 +54,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void testJoinGameFailure() {
+    public void testJoinGameFailure() throws ResponseException {
 
         // test for invalid gameID
         Exception exception = Assertions.assertThrows(ResponseException.class, () -> {
@@ -73,7 +73,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void testListGamesSuccess() {
+    public void testListGamesSuccess() throws ResponseException {
 
         // create 2 games
         gameService.createGame(authToken, "testGameName");
@@ -85,7 +85,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void testListGamesFailure() {
+    public void testListGamesFailure() throws ResponseException {
 
         userService.logout(authToken);
 
@@ -97,7 +97,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void testClear() {
+    public void testClear() throws ResponseException {
 
         // creating 2 games
         gameService.createGame(authToken, "testGameName");

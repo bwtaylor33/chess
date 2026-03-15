@@ -98,7 +98,7 @@ public class GameService extends BaseService {
         }
     }
 
-    public void clear() {
+    public void clear() throws ResponseException {
 
         try {
             DaoFactory.getGameDao().clearAllGames();
