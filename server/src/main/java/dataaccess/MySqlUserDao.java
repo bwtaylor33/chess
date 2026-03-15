@@ -14,7 +14,7 @@ public class MySqlUserDao extends MySqlBaseDao implements UserDao {
     public MySqlUserDao() throws DataAccessException {
         super(new String[] {
             """
-            CREATE TABLE IF NOT EXISTS  User (
+            CREATE TABLE IF NOT EXISTS  user (
               `username` varchar(64) NOT NULL,
               `password` varchar(64) NOT NULL,
               `email` varchar(64) NOT NULL,
@@ -25,7 +25,7 @@ public class MySqlUserDao extends MySqlBaseDao implements UserDao {
 
     public void createUser(UserData userData) throws DataAccessException {
 
-        var statement = "INSERT INTO User (username, password, email) VALUES (?, ?, ?)";
+        var statement = "INSERT INTO user (username, password, email) VALUES (?, ?, ?)";
 
         String hashedPassword = BCrypt.hashpw(userData.getPassword(), BCrypt.gensalt());
 
@@ -38,7 +38,7 @@ public class MySqlUserDao extends MySqlBaseDao implements UserDao {
 
     public UserData getUser(String username) throws DataAccessException {
 
-        try (ResultSet rs = getRecordByStringKey("SELECT * FROM User WHERE username=?", username)) {
+        try (ResultSet rs = getRecordByStringKey("SELECT * FROM user WHERE username=?", username)) {
 
             if (rs == null) {
                 throw new DataAccessException("Error: invalid username: " + username);
@@ -52,7 +52,7 @@ public class MySqlUserDao extends MySqlBaseDao implements UserDao {
     }
 
     public void clearAllUsers() throws DataAccessException {
-        executeUpdate("TRUNCATE User");
+        executeUpdate("TRUNCATE user");
     }
 
     private UserData readUser(ResultSet rs) throws SQLException {

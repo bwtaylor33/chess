@@ -16,7 +16,7 @@ public class MySqlGameDao extends MySqlBaseDao implements GameDao {
     public MySqlGameDao() throws DataAccessException {
         super(new String[] {
             """
-            CREATE TABLE IF NOT EXISTS  Game (
+            CREATE TABLE IF NOT EXISTS  game (
               `gameID` int NOT NULL AUTO_INCREMENT,
               `whiteUsername` varchar(64) DEFAULT NULL,
               `blackUsername` varchar(64) DEFAULT NULL,
@@ -29,7 +29,7 @@ public class MySqlGameDao extends MySqlBaseDao implements GameDao {
 
     public GameData createGame(String gameName) throws DataAccessException {
 
-        var statement = "INSERT INTO Game (gameName) VALUES (?)";
+        var statement = "INSERT INTO game (gameName) VALUES (?)";
         int gameID = executeInsertReturnId(statement, gameName);
 
         if (gameID == 0) {
@@ -41,7 +41,7 @@ public class MySqlGameDao extends MySqlBaseDao implements GameDao {
 
     public GameData getGame(int gameID) throws DataAccessException {
 
-        try (ResultSet rs = getRecordByIntID("SELECT * FROM Game WHERE gameID=?", gameID)) {
+        try (ResultSet rs = getRecordByIntID("SELECT * FROM game WHERE gameID=?", gameID)) {
 
             if (rs == null) {
                 System.out.println("got a null result set");
@@ -57,7 +57,7 @@ public class MySqlGameDao extends MySqlBaseDao implements GameDao {
 
     public ArrayList<GameData> getAllGames() throws DataAccessException {
 
-        try (ResultSet rs = getAllRecords("SELECT * FROM Game ORDER BY gameID")) {
+        try (ResultSet rs = getAllRecords("SELECT * FROM game ORDER BY gameID")) {
 
             var result = new ArrayList<GameData>();
 
@@ -83,7 +83,7 @@ public class MySqlGameDao extends MySqlBaseDao implements GameDao {
             json = new Gson().toJson(gameData.getGame());
         }
 
-        int rowsUpdated = executeUpdate("UPDATE Game SET whiteUsername=?, blackUsername=?, gameName=?, game=? WHERE gameID=?",
+        int rowsUpdated = executeUpdate("UPDATE game SET whiteUsername=?, blackUsername=?, gameName=?, game=? WHERE gameID=?",
                 gameData.getWhiteUsername(),
                 gameData.getBlackUsername(),
                 gameData.getGameName(),
@@ -96,7 +96,7 @@ public class MySqlGameDao extends MySqlBaseDao implements GameDao {
     }
 
     public void clearAllGames() throws DataAccessException {
-        executeUpdate("TRUNCATE Game");
+        executeUpdate("TRUNCATE game");
     }
 
     private GameData readGame(ResultSet rs) throws SQLException {

@@ -13,7 +13,7 @@ public class MySqlAuthTokenDao extends MySqlBaseDao implements AuthTokenDao {
     public MySqlAuthTokenDao() throws DataAccessException {
         super(new String[] {
             """
-            CREATE TABLE IF NOT EXISTS  AuthToken (
+            CREATE TABLE IF NOT EXISTS  authToken (
               `authToken` varchar(64) NOT NULL,
               `username` varchar(64) NOT NULL,
               PRIMARY KEY (`authToken`)
@@ -23,7 +23,7 @@ public class MySqlAuthTokenDao extends MySqlBaseDao implements AuthTokenDao {
 
     public void createAuthToken(AuthData authData) throws DataAccessException {
 
-        var statement = "INSERT INTO AuthToken (authToken, username) VALUES (?, ?)";
+        var statement = "INSERT INTO authToken (authToken, username) VALUES (?, ?)";
         int id = executeUpdate(statement, authData.getAuthToken(), authData.getUsername());
 
         if (id == 0) {
@@ -33,7 +33,7 @@ public class MySqlAuthTokenDao extends MySqlBaseDao implements AuthTokenDao {
 
     public AuthData getAuthToken(String authToken) throws DataAccessException {
 
-        try (ResultSet rs = getRecordByStringKey("SELECT * FROM AuthToken WHERE authToken=?", authToken)) {
+        try (ResultSet rs = getRecordByStringKey("SELECT * FROM authToken WHERE authToken=?", authToken)) {
 
             if (rs == null) {
                 throw new DataAccessException("Error: invalid authToken: " + authToken);
@@ -48,12 +48,12 @@ public class MySqlAuthTokenDao extends MySqlBaseDao implements AuthTokenDao {
 
     public void deleteAuthToken(String authToken) throws DataAccessException {
 
-        executeUpdate("DELETE FROM AuthToken WHERE authToken=?", authToken);
+        executeUpdate("DELETE FROM authToken WHERE authToken=?", authToken);
         // silently fail if AuthToken doesn't exist
     }
 
     public void clearAllAuthTokens() throws DataAccessException {
-        executeUpdate("TRUNCATE AuthToken");
+        executeUpdate("TRUNCATE authToken");
     }
 
     private AuthData readAuthToken(ResultSet rs) throws SQLException {

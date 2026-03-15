@@ -1,7 +1,5 @@
 package dataaccess;
 
-import chess.ChessGame;
-import model.AuthData;
 import model.GameData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +26,6 @@ public class GameDaoTests {
         Assertions.assertNull(testGame.getBlackUsername());
         Assertions.assertNull(testGame.getWhiteUsername());
         Assertions.assertEquals("testGameName", testGame.getGameName());
-        // Assertions.assertTrue(testGame.getGame().getTeamTurn() == ChessGame.TeamColor.WHITE);
     }
 
     @Test
