@@ -38,14 +38,12 @@ public class MySqlGameDao extends MySqlBaseDao implements GameDao {
             throw new DataAccessException("Error creating game: " + gameName);
         }
 
-        System.out.println("Created gameID: " + gameID);
         return new GameData(gameID, null, null, gameName, new ChessGame());
     }
 
     public GameData getGame(int gameID) throws DataAccessException {
 
-        try {
-            ResultSet rs = getRecordByIntID("SELECT * FROM Game WHERE gameID=?", gameID);
+        try (ResultSet rs = getRecordByIntID("SELECT * FROM Game WHERE gameID=?", gameID)) {
 
             if (rs == null) {
                 System.out.println("got a null result set");
@@ -55,17 +53,15 @@ public class MySqlGameDao extends MySqlBaseDao implements GameDao {
             return readGame(rs);
 
         } catch(SQLException s) {
-            s.printStackTrace();
             throw new DataAccessException("Error: invalid gameID: " + gameID);
         }
     }
 
     public ArrayList<GameData> getAllGames() throws DataAccessException {
 
-        try {
+        try (ResultSet rs = getAllRecords("SELECT * FROM Game ORDER BY gameID")) {
 
             var result = new ArrayList<GameData>();
-            ResultSet rs = getAllRecords("SELECT * FROM Game ORDER BY gameID");
 
             if (rs == null) {
                 return result;
@@ -78,7 +74,6 @@ public class MySqlGameDao extends MySqlBaseDao implements GameDao {
             return result;
 
         } catch(SQLException s) {
-            s.printStackTrace();
             throw new DataAccessException("Unable to get game list: " + s.getMessage());
         }
     }

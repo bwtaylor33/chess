@@ -35,8 +35,7 @@ public class MySqlAuthTokenDao extends MySqlBaseDao implements AuthTokenDao {
 
     public AuthData getAuthToken(String authToken) throws DataAccessException {
 
-        try {
-            ResultSet rs = getRecordByStringKey("SELECT * FROM AuthToken WHERE authToken=?", authToken);
+        try (ResultSet rs = getRecordByStringKey("SELECT * FROM AuthToken WHERE authToken=?", authToken)) {
 
             if (rs == null) {
                 throw new DataAccessException("Error: invalid authToken: " + authToken);

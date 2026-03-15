@@ -19,14 +19,19 @@ public class MySqlBaseDao {
     }
 
     protected int executeUpdate(String statement, Object... params) throws DataAccessException {
+
         try (Connection conn = DatabaseManager.getConnection()) {
+
             try (PreparedStatement ps = conn.prepareStatement(statement)) {
+
                 for (int i = 0; i < params.length; i++) {
+
                     Object param = params[i];
                     if (param instanceof String p) ps.setString(i + 1, p);
                     else if (param instanceof Integer p) ps.setInt(i + 1, p);
                     else if (param == null) ps.setNull(i + 1, NULL);
                 }
+
                 return ps.executeUpdate();
             }
         } catch (SQLException e) {
@@ -58,7 +63,6 @@ public class MySqlBaseDao {
             return 0;
 
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new DataAccessException("unable to update database: " + e.getMessage());
         }
     }

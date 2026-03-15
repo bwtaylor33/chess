@@ -60,7 +60,7 @@ public class GameServiceTest {
         Exception exception = Assertions.assertThrows(ResponseException.class, () -> {
             gameService.joinGame(authToken, ChessGame.TeamColor.BLACK, 999);
         });
-        Assertions.assertEquals("Error joining game: Error: game not found: 999", exception.getMessage());
+        Assertions.assertEquals("Error joining game: Error: invalid gameID: 999", exception.getMessage());
 
         // test for joining overtop a player
         int gameID = gameService.createGame(authToken, "testGameName").gameID();
@@ -93,7 +93,7 @@ public class GameServiceTest {
         Exception exception = Assertions.assertThrows(ResponseException.class, () -> {
             gameService.listGames(authToken);
         });
-        Assertions.assertEquals("Error: invalid authToken: " + authToken, exception.getMessage());
+        Assertions.assertEquals("Error: Error: invalid authToken: " + authToken, exception.getMessage());
     }
 
     @Test

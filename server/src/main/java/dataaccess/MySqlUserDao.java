@@ -40,8 +40,7 @@ public class MySqlUserDao extends MySqlBaseDao implements UserDao {
 
     public UserData getUser(String username) throws DataAccessException {
 
-        try {
-            ResultSet rs = getRecordByStringKey("SELECT * FROM User WHERE username=?", username);
+        try (ResultSet rs = getRecordByStringKey("SELECT * FROM User WHERE username=?", username)) {
 
             if (rs == null) {
                 throw new DataAccessException("Error: invalid username: " + username);

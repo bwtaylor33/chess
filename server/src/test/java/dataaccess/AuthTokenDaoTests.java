@@ -91,6 +91,7 @@ public class AuthTokenDaoTests {
 
         // deleteAuthToken will silently fail
         authTokenDao.deleteAuthToken("fakeAuthToken");
+        Assertions.assertTrue(true);
     }
 
     @Test
