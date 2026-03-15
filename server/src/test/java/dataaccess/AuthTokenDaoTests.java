@@ -35,7 +35,7 @@ public class AuthTokenDaoTests {
         Exception exception = Assertions.assertThrows(DataAccessException.class, () -> {
             authTokenDao.createAuthToken(testAuth);
         });
-        Assertions.assertEquals("unable to update database: Duplicate entry 'hardCodedAuthToken' for key 'authtoken.PRIMARY'",
+        Assertions.assertEquals("unable to update database: Duplicate entry 'hardCodedAuthToken' for key 'authToken.PRIMARY'",
                 exception.getMessage());
     }
 
