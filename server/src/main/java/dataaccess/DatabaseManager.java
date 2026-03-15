@@ -4,10 +4,6 @@ import java.sql.*;
 import java.util.Properties;
 
 public class DatabaseManager {
-    private static String databaseName;
-    private static String dbUsername;
-    private static String dbPassword;
-    private static String connectionUrl;
 
     /*
      * Load the database information for the db.properties file.
@@ -74,4 +70,9 @@ public class DatabaseManager {
         var port = Integer.parseInt(props.getProperty("db.port"));
         connectionUrl = String.format("jdbc:mysql://%s:%d", host, port);
     }
+
+    private static String databaseName;
+    private static String dbUsername;
+    private static String dbPassword;
+    private static String connectionUrl;
 }

@@ -12,8 +12,6 @@ import model.response.LoginResult;
 import model.response.RegisterResult;
 import org.mindrot.jbcrypt.BCrypt;
 
-import javax.xml.crypto.Data;
-
 /**
  * Service handles all user and authentication functions
  */
@@ -115,9 +113,6 @@ public class UserService extends BaseService {
             authTokenDao.deleteAuthToken(authToken);
 
         }catch (DataAccessException e) {
-//            if (e.getMessage().equals("failed to get connection")) {
-//                throw new
-//            }
             throw new ResponseException("Error logging out user: " + e.getMessage());
         }
     }

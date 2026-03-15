@@ -1,13 +1,11 @@
 package dataaccess;
 
 import chess.ChessGame;
-import service.ResponseException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.NULL;
 
@@ -27,9 +25,14 @@ public class MySqlBaseDao {
                 for (int i = 0; i < params.length; i++) {
 
                     Object param = params[i];
-                    if (param instanceof String p) ps.setString(i + 1, p);
-                    else if (param instanceof Integer p) ps.setInt(i + 1, p);
-                    else if (param == null) ps.setNull(i + 1, NULL);
+
+                    if (param instanceof String p) {
+                        ps.setString(i + 1, p);
+                    } else if (param instanceof Integer p) {
+                         ps.setInt(i + 1, p);
+                    } else if (param == null) {
+                         ps.setNull(i + 1, NULL);
+                    }
                 }
 
                 return ps.executeUpdate();
@@ -47,10 +50,16 @@ public class MySqlBaseDao {
 
             for (int i = 0; i < params.length; i++) {
                 Object param = params[i];
-                if (param instanceof String p) ps.setString(i + 1, p);
-                else if (param instanceof Integer p) ps.setInt(i + 1, p);
-                else if (param instanceof ChessGame p) ps.setString(i + 1, p.toString());
-                else if (param == null) ps.setNull(i + 1, NULL);
+
+                if (param instanceof String p) {
+                    ps.setString(i + 1, p);
+                } else if (param instanceof Integer p) {
+                    ps.setInt(i + 1, p);
+                } else if (param instanceof ChessGame p) {
+                    ps.setString(i + 1, p.toString());
+                } else if (param == null) {
+                    ps.setNull(i + 1, NULL);
+                }
             }
 
             ps.executeUpdate();

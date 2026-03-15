@@ -1,7 +1,5 @@
 package dataaccess;
 
-import javax.xml.crypto.Data;
-
 /**
  * Supports centralized access to all Dao objects. Constant defined here determines
  * whether a sql database is used or in memory storage.
@@ -10,34 +8,34 @@ public class DaoFactory {
 
     public static AuthTokenDao getAuthTokenDao() throws DataAccessException {
 
-        if (AUTH_TOKEN_DAO == null) {
-            AUTH_TOKEN_DAO = USE_IN_MEMORY_DATA_STORE ? new InMemoryAuthTokenDao() : new MySqlAuthTokenDao();
+        if (authTokenDao == null) {
+            authTokenDao = USE_IN_MEMORY_DATA_STORE ? new InMemoryAuthTokenDao() : new MySqlAuthTokenDao();
         }
 
-        return AUTH_TOKEN_DAO;
+        return authTokenDao;
     }
 
     public static GameDao getGameDao() throws DataAccessException {
 
-        if (GAME_DAO == null) {
-            GAME_DAO = USE_IN_MEMORY_DATA_STORE ? new InMemoryGameDao() : new MySqlGameDao();
+        if (gameDao == null) {
+            gameDao = USE_IN_MEMORY_DATA_STORE ? new InMemoryGameDao() : new MySqlGameDao();
         }
 
-        return GAME_DAO;
+        return gameDao;
     }
 
     public static UserDao getUserDao() throws DataAccessException {
 
-        if (USER_DAO == null) {
-            USER_DAO = USE_IN_MEMORY_DATA_STORE ? new InMemoryUserDao() : new MySqlUserDao();
+        if (userDao == null) {
+            userDao = USE_IN_MEMORY_DATA_STORE ? new InMemoryUserDao() : new MySqlUserDao();
         }
 
-        return USER_DAO;
+        return userDao;
     }
 
-    private static UserDao USER_DAO = null;
-    private static GameDao GAME_DAO = null;
-    private static AuthTokenDao AUTH_TOKEN_DAO = null;
+    private static UserDao userDao = null;
+    private static GameDao gameDao = null;
+    private static AuthTokenDao authTokenDao = null;
 
     private static final boolean USE_IN_MEMORY_DATA_STORE = false;
 }
