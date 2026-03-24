@@ -3,6 +3,8 @@ package service;
 import chess.ChessGame;
 import dataaccess.*;
 import model.GameData;
+import model.request.CreateGameRequest;
+import model.request.JoinGameRequest;
 import model.response.CreateGameResult;
 import model.response.ListGamesResult;
 
@@ -11,11 +13,11 @@ import model.response.ListGamesResult;
  */
 public class GameService extends BaseService {
 
-    public CreateGameResult createGame(String authToken, String gameName) throws ResponseException {
+    public CreateGameResult createGame(String authToken, CreateGameRequest createGameRequest) throws ResponseException {
 
         validateAuthToken(authToken);
 
-        if (gameName == null || gameName.isBlank()) {
+        if (createGameRequest.gameName() == null || createGameRequest.gameName().isBlank()) {
             throw new BadRequestException("Error: gameName cannot be empty");
         }
 
@@ -23,7 +25,7 @@ public class GameService extends BaseService {
             GameDao gameDao = DaoFactory.getGameDao();
 
             // create game in game table
-            GameData gameData = gameDao.createGame(gameName);
+            GameData gameData = gameDao.createGame(createGameRequest.gameName());
 
             // return the authToken
             return new CreateGameResult(gameData.getGameID());
@@ -33,7 +35,7 @@ public class GameService extends BaseService {
         }
     }
 
-    public void joinGame(String authToken, ChessGame.TeamColor playerColor, int gameID) throws ResponseException {
+    public void joinGame(String authToken, JoinGameRequest joinGameRequest) throws ResponseException {
 
         try {
             validateAuthToken(authToken);
@@ -42,8 +44,8 @@ public class GameService extends BaseService {
             throw new ResponseException(f.getMessage());
         }
 
-        if (gameID <= 0) {
-            throw new BadRequestException("Error: invalid gameID: " + gameID);
+        if (joinGameRequest.gameID() <= 0) {
+            throw new BadRequestException("Error: invalid gameID: " + joinGameRequest.gameID());
         }
 
         try{
@@ -54,9 +56,9 @@ public class GameService extends BaseService {
             String username = authTokenDao.getAuthToken(authToken).getUsername();
 
             // join game in game table
-            GameData gameData = gameDao.getGame(gameID);
+            GameData gameData = gameDao.getGame(joinGameRequest.gameID());
 
-            if (playerColor == ChessGame.TeamColor.WHITE) {
+            if (joinGameRequest.playerColor() == ChessGame.TeamColor.WHITE) {
 
                 if (gameData.getWhiteUsername() != null) {
                     throw new ForbiddenRequestException("Error: white player already taken");
@@ -64,7 +66,7 @@ public class GameService extends BaseService {
 
                 gameData.setWhiteUsername(username);
 
-            }else if (playerColor == ChessGame.TeamColor.BLACK) {
+            }else if (joinGameRequest.playerColor() == ChessGame.TeamColor.BLACK) {
 
                 if (gameData.getBlackUsername() != null) {
                     throw new ForbiddenRequestException("Error: black player already taken");
@@ -73,7 +75,7 @@ public class GameService extends BaseService {
                 gameData.setBlackUsername(username);
 
             }else {
-                throw new BadRequestException("Error: invalid team color: " + playerColor);
+                throw new BadRequestException("Error: invalid team color: " + joinGameRequest.playerColor());
             }
 
             gameDao.updateGame(gameData);

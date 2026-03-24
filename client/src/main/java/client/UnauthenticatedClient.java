@@ -2,7 +2,7 @@ package client;
 
 import java.util.Arrays;
 import service.ResponseException;
-import server.ServerFacade;
+
 import static ui.EscapeSequences.*;
 
 public class UnauthenticatedClient extends BaseClient {

@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import chess.ChessGame;
 import service.ResponseException;
-import server.ServerFacade;
+import ServerFacade;
 import static ui.EscapeSequences.*;
 
 public class GameplayClient extends BaseClient {

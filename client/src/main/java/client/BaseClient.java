@@ -1,6 +1,5 @@
 package client;
 
-import server.ServerFacade;
 import service.ResponseException;
 
 import java.util.Scanner;

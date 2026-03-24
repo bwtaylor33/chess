@@ -1,10 +1,8 @@
 package client;
 
-import server.ServerFacade;
 import service.ResponseException;
 
 import java.util.Arrays;
-import java.util.Scanner;
 
 import static ui.EscapeSequences.*;
 
