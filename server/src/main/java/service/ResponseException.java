@@ -23,12 +23,4 @@ public class ResponseException extends Exception {
         String message = map.get("message").toString();
         return new ResponseException(message);
     }
-
-    public static HttpStatus.Code fromHttpStatusCode(int httpStatusCode) {
-        return switch (httpStatusCode) {
-            case 500 -> HttpStatus.Code.ServerError;
-            case 400 -> HttpStatus.Code.ClientError;
-            default -> throw new IllegalArgumentException("Unknown HTTP status code: " + httpStatusCode);
-        };
-    }
 }

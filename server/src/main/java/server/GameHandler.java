@@ -21,7 +21,7 @@ public class GameHandler extends BaseHandler {
 
         try {
             CreateGameRequest createGameRequest = getBodyObject(context, CreateGameRequest.class);
-            CreateGameResult createGameResult = gameService.createGame(context.header("Authorization"), createGameRequest.gameName());
+            CreateGameResult createGameResult = gameService.createGame(context.header("Authorization"), createGameRequest);
 
             // Convert bodyObject back to Json and send to client
             context.json(new Gson().toJson(createGameResult));
@@ -41,7 +41,7 @@ public class GameHandler extends BaseHandler {
 
         try {
             JoinGameRequest joinGameRequest = getBodyObject(context, JoinGameRequest.class);
-            gameService.joinGame(context.header("Authorization"), joinGameRequest.playerColor(), joinGameRequest.gameID());
+            gameService.joinGame(context.header("Authorization"), joinGameRequest);
 
             // return empty Json body
             context.status(200).result("{}");
