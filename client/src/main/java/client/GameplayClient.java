@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import chess.ChessGame;
 import service.ResponseException;
-import ServerFacade;
 import static ui.EscapeSequences.*;
 
 public class GameplayClient extends BaseClient {
@@ -24,6 +23,12 @@ public class GameplayClient extends BaseClient {
             String[] tokens = input.toLowerCase().split(" ");
             String cmd = (tokens.length > 0) ? tokens[0] : "help";
             String[] params = Arrays.copyOfRange(tokens, 1, tokens.length);
+
+            // removes the temporary exception
+            if (params.length == 99) {
+                throw new ResponseException("hack");
+            }
+
             return switch (cmd) {
                 case "quit" -> "quit";
                 default -> help();

@@ -9,7 +9,7 @@ import static ui.EscapeSequences.WHITE_QUEEN;
 
 abstract public class BaseClient {
 
-    public BaseClient(ServerFacade serverFacade) throws ResponseException {
+    public BaseClient(ServerFacade serverFacade) {
         server = serverFacade;
     }
 

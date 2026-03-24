@@ -1,5 +1,11 @@
 package client;
 
+import chess.ChessGame;
+import model.GameData;
+import model.request.CreateGameRequest;
+import model.request.JoinGameRequest;
+import model.response.CreateGameResult;
+import model.response.ListGamesResult;
 import service.ResponseException;
 
 import java.util.Arrays;
@@ -8,8 +14,9 @@ import static ui.EscapeSequences.*;
 
 public class AuthenticatedClient extends BaseClient {
 
-    public AuthenticatedClient(ServerFacade server, String username) throws ResponseException {
+    public AuthenticatedClient(ServerFacade server, String authToken, String username) throws ResponseException {
         super(server);
+        this.authToken = authToken;
         this.username = username;
     }
 
@@ -44,24 +51,37 @@ public class AuthenticatedClient extends BaseClient {
 
         if (params.length >= 1) {
             String gameName = params[0];
-            server.createGame(gameName);
+            CreateGameResult createGameResult = server.createGame(authToken, new CreateGameRequest(gameName));
             return String.format("Game %s has been created.", gameName);
         }
         throw new ResponseException("Error: Expected: <gameName>");
     }
 
     public String listGames() throws ResponseException {
-        assertSignedIn();
-        server.listGames();
-        return String.format("%s left the shop", username);
+        ListGamesResult listGamesResult = server.listGames(authToken);
+        StringBuilder builder = new StringBuilder("Games:\n");
+        for (GameData gameData : listGamesResult.games()) {
+            builder.append("\t");
+            builder.append(gameData.getGameName());
+            builder.append(": ");
+            builder.append(gameData.getGameID());
+        }
+        return builder.toString();
     }
 
     public String playGame(String... params) throws ResponseException {
-        assertSignedIn();
-        int gameID = Integer.parseInt(params[0]);
-        String color = params[1];
-        server.joinGame(gameID, color);
-        new GameplayClient(server, gameID, color);
+        int gameID = 0;
+        try {
+            gameID = Integer.parseInt(params[0]);
+
+        }catch (NumberFormatException n) {
+            throw new ResponseException("Error: Invalid gameID: " + n.getMessage());
+        }
+
+        String color = params[1].toLowerCase().trim();
+        ChessGame.TeamColor teamColor = color.equals("white") ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK;
+        server.joinGame(authToken, new JoinGameRequest(teamColor, gameID));
+        new GameplayClient(server, gameID, teamColor);
         return String.format("Game %s complete.", gameID);
     }
 
@@ -76,5 +96,6 @@ public class AuthenticatedClient extends BaseClient {
                 """;
     }
 
+    private String authToken = null;
     private String username = null;
 }

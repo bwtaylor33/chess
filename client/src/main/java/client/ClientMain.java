@@ -9,6 +9,6 @@ public class ClientMain {
             serverUrl = args[0];
         }
 
-        new UnauthenticatedClient(serverUrl).run();
+        new UnauthenticatedClient(new ServerFacade(serverUrl)).run();
     }
 }
