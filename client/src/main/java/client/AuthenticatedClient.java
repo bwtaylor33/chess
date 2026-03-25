@@ -30,9 +30,9 @@ public class AuthenticatedClient extends BaseClient {
             String cmd = (tokens.length > 0) ? tokens[0] : "help";
             String[] params = Arrays.copyOfRange(tokens, 1, tokens.length);
             return switch (cmd) {
-                case "create game" -> createGame(params);
-                case "list games" -> listGames();
-                case "play game" -> playGame();
+                case "create" -> createGame(params);
+                case "list" -> listGames();
+                case "play" -> playGame();
                 case "logout" -> logout();
                 case "quit" -> "quit";
                 default -> help();
@@ -48,17 +48,22 @@ public class AuthenticatedClient extends BaseClient {
     }
 
     public String createGame(String... params) throws ResponseException {
+        System.out.println("In createGame()");
 
         if (params.length >= 1) {
             String gameName = params[0];
+            System.out.println("Creating gameName: " + gameName);
             CreateGameResult createGameResult = server.createGame(authToken, new CreateGameRequest(gameName));
-            return String.format("Game %s has been created.", gameName);
+            System.out.println("Returning");
+            return String.format("Game %s has been created with ID: %d.", gameName, createGameResult.gameID());
         }
         throw new ResponseException("Error: Expected: <gameName>");
     }
 
     public String listGames() throws ResponseException {
+        System.out.println("Entering listGames()");
         ListGamesResult listGamesResult = server.listGames(authToken);
+        System.out.println("Got gamesResult");
         StringBuilder builder = new StringBuilder("Games:\n");
         for (GameData gameData : listGamesResult.games()) {
             builder.append("\t");
@@ -66,6 +71,8 @@ public class AuthenticatedClient extends BaseClient {
             builder.append(": ");
             builder.append(gameData.getGameID());
         }
+
+        System.out.println("List = " + builder.toString());
         return builder.toString();
     }
 
@@ -87,12 +94,13 @@ public class AuthenticatedClient extends BaseClient {
 
     public String help() {
         return """
-                - list
-                - adopt <pet id>
-                - rescue <name> <CAT|DOG|FROG|FISH>
-                - adoptAll
-                - signOut
-                - quit
+                - create <NAME> - a game
+                - list - games
+                - join <ID> - [WHITE|BLACK] - a game
+                - observe <ID> - a game
+                - logout - when you are done
+                - quit - playing chess
+                - help - with possible commands
                 """;
     }
 
