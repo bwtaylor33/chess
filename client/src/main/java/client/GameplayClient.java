@@ -2,6 +2,7 @@ package client;
 
 import java.util.Arrays;
 
+import chess.ChessBoard;
 import chess.ChessGame;
 import service.ResponseException;
 import static ui.EscapeSequences.*;
@@ -9,13 +10,14 @@ import static ui.EscapeSequences.*;
 public class GameplayClient extends BaseClient {
 
     public GameplayClient(ServerFacade serverFacade, int gameID, ChessGame.TeamColor color) throws ResponseException {
-        super(serverFacade);
+        super(serverFacade, "Good luck!");
         this.gameID = gameID;
         this.color = color;
     }
 
     public void printPrompt() {
-        System.out.printf("\n[LOGGED_IN to game %d] >>> %s", gameID, SET_TEXT_COLOR_GREEN);
+        System.out.printf("\n%s[LOGGED_IN to game %d] >>> %s", SET_TEXT_COLOR_LIGHT_GREY, gameID, SET_TEXT_COLOR_GREEN);
+        drawGameBoard();
     }
 
     public String eval(String input) {
@@ -44,6 +46,10 @@ public class GameplayClient extends BaseClient {
                - register <username> <password> <email>
                - quit
                """;
+    }
+
+    private void drawGameBoard() {
+        new ChessBoard().display();
     }
 
     private final int gameID;

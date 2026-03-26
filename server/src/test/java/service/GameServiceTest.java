@@ -4,6 +4,8 @@ import chess.ChessGame;
 import dataaccess.DaoFactory;
 import dataaccess.DataAccessException;
 import model.GameData;
+import model.request.CreateGameRequest;
+import model.request.JoinGameRequest;
 import model.request.RegisterRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +30,7 @@ public class GameServiceTest {
     @Test
     public void testCreateGameSuccess() throws ResponseException {
 
-        int gameID = gameService.createGame(authToken, "testGameName").gameID();
+        int gameID = gameService.createGame(authToken, new CreateGameRequest("testGameName")).gameID();
         Assertions.assertTrue(gameID >= 1);
     }
 
@@ -37,7 +39,7 @@ public class GameServiceTest {
 
         // trying to create with blank game name
         Exception exception = Assertions.assertThrows(BadRequestException.class, () -> {
-            gameService.createGame(authToken, "");
+            gameService.createGame(authToken, new CreateGameRequest(""));
         });
         Assertions.assertEquals("Error: gameName cannot be empty", exception.getMessage());
     }
@@ -46,8 +48,8 @@ public class GameServiceTest {
     public void testJoinGameSuccess() throws DataAccessException, ResponseException {
 
         // create game and capture gameID
-        int gameID = gameService.createGame(authToken, "testGameName").gameID();
-        gameService.joinGame(authToken, ChessGame.TeamColor.BLACK, gameID);
+        int gameID = gameService.createGame(authToken, new CreateGameRequest("testGameName")).gameID();
+        gameService.joinGame(authToken, new JoinGameRequest(ChessGame.TeamColor.BLACK, gameID));
 
         // confirm that game is in database
         Assertions.assertEquals("testGameName", DaoFactory.getGameDao().getGame(gameID).getGameName());
@@ -58,16 +60,16 @@ public class GameServiceTest {
 
         // test for invalid gameID
         Exception exception = Assertions.assertThrows(ResponseException.class, () -> {
-            gameService.joinGame(authToken, ChessGame.TeamColor.BLACK, 999);
+            gameService.joinGame(authToken, new JoinGameRequest(ChessGame.TeamColor.BLACK, 999));
         });
         Assertions.assertEquals("Error joining game: Error: invalid gameID: 999", exception.getMessage());
 
         // test for joining overtop a player
-        int gameID = gameService.createGame(authToken, "testGameName").gameID();
-        gameService.joinGame(authToken, ChessGame.TeamColor.BLACK, gameID);
+        int gameID = gameService.createGame(authToken, new CreateGameRequest("testGameName")).gameID();
+        gameService.joinGame(authToken, new JoinGameRequest(ChessGame.TeamColor.BLACK, gameID));
 
         exception = Assertions.assertThrows(ForbiddenRequestException.class, () -> {
-            gameService.joinGame(authToken, ChessGame.TeamColor.BLACK, gameID);
+            gameService.joinGame(authToken, new JoinGameRequest(ChessGame.TeamColor.BLACK, gameID));
         });
         Assertions.assertEquals("Error: black player already taken", exception.getMessage());
     }
@@ -76,8 +78,8 @@ public class GameServiceTest {
     public void testListGamesSuccess() throws ResponseException {
 
         // create 2 games
-        gameService.createGame(authToken, "testGameName");
-        gameService.createGame(authToken, "testGameName1");
+        gameService.createGame(authToken, new CreateGameRequest("testGameName"));
+        gameService.createGame(authToken, new CreateGameRequest("testGameName1"));
 
         // confirm that the 2 games were made
         ArrayList<GameData> games = gameService.listGames(authToken).games();
@@ -100,8 +102,8 @@ public class GameServiceTest {
     public void testClear() throws ResponseException {
 
         // creating 2 games
-        gameService.createGame(authToken, "testGameName");
-        gameService.createGame(authToken, "testGameName1");
+        gameService.createGame(authToken, new CreateGameRequest("testGameName"));
+        gameService.createGame(authToken, new CreateGameRequest("testGameName1"));
 
         // confirming that 2 games return back from listGames
         ArrayList<GameData> games = gameService.listGames(authToken).games();

@@ -4,17 +4,17 @@ import service.ResponseException;
 
 import java.util.Scanner;
 
-import static ui.EscapeSequences.SET_TEXT_COLOR_BLUE;
-import static ui.EscapeSequences.WHITE_QUEEN;
+import static ui.EscapeSequences.*;
 
 abstract public class BaseClient {
 
-    public BaseClient(ServerFacade serverFacade) {
+    public BaseClient(ServerFacade serverFacade, String greetingMessage) {
         server = serverFacade;
+        this.greetingMessage = greetingMessage;
     }
 
     public void run() {
-        System.out.println(WHITE_QUEEN + " Welcome to the chess client. Sign in to start.");
+        System.out.println(greetingMessage);
         System.out.print(help());
 
         Scanner scanner = new Scanner(System.in);
@@ -25,7 +25,7 @@ abstract public class BaseClient {
 
             try {
                 result = eval(line);
-                System.out.print(SET_TEXT_COLOR_BLUE + result);
+                System.out.print(SET_TEXT_COLOR_WHITE + result);
             } catch (Throwable e) {
                 var msg = e.toString();
                 System.out.print(msg);
@@ -41,4 +41,5 @@ abstract public class BaseClient {
     abstract public String eval(String line);
 
     protected final ServerFacade server;
+    private String greetingMessage;
 }
