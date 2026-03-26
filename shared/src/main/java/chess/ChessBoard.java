@@ -1,6 +1,8 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import static ui.EscapeSequences.*;
 
@@ -84,37 +86,252 @@ public class ChessBoard {
         addPawns(ChessGame.TeamColor.BLACK);
     }
 
-    public void display() {
-        displayEmptyBoard();
-    }
+    public void display(boolean viewAsWhite) {
 
-    private void displayEmptyBoard() {
-        System.out.println(String.format(
-                """
-                %s%s
-                %s    a  b  c  d  e  f  g  h   %s
-                %s 8                           8 %s
-                %s 7                           7 %s
-                %s 6                           6 %s
-                %s 5                           5 %s
-                %s 4                           4 %s
-                %s 3                           3 %s
-                %s 2                           2 %s
-                %s 1                           1 %s
-                %s    a  b  c  d  e  f  g  h    %s
-                """,
-                SET_BG_COLOR_DARK_GREEN, SET_TEXT_COLOR_DARK_GREY,
-                SET_BG_COLOR_DARK_GREEN, SET_TEXT_COLOR_DARK_GREY,
-                SET_BG_COLOR_DARK_GREEN, SET_TEXT_COLOR_DARK_GREY,
-                SET_BG_COLOR_DARK_GREEN, SET_TEXT_COLOR_DARK_GREY,
-                SET_BG_COLOR_DARK_GREEN, SET_TEXT_COLOR_DARK_GREY,
-                SET_BG_COLOR_DARK_GREEN, SET_TEXT_COLOR_DARK_GREY,
-                SET_BG_COLOR_DARK_GREEN, SET_TEXT_COLOR_DARK_GREY,
-                SET_BG_COLOR_DARK_GREEN, SET_TEXT_COLOR_DARK_GREY,
-                SET_BG_COLOR_DARK_GREEN, SET_TEXT_COLOR_DARK_GREY,
-                SET_BG_COLOR_DARK_GREEN, SET_TEXT_COLOR_DARK_GREY,
-                SET_BG_COLOR_DARK_GREEN, SET_TEXT_COLOR_DARK_GREY
-                ));
+        List<List<String>> boardRows = new ArrayList<>();
+        List<String> row = new ArrayList<>();
+
+        row.add(RESET_TEXT_COLOR);
+        row.add(SET_TEXT_COLOR_BLACK);
+        boardRows.add(row);
+
+        row = new ArrayList<>();
+        row.add(RESET_BG_COLOR);
+        row.add(SET_BG_COLOR_DARK_GREEN);
+        row.add("   ");
+        row.add(" a ");
+        row.add(" b ");
+        row.add(" c ");
+        row.add(" d ");
+        row.add(" e ");
+        row.add(" f ");
+        row.add(" g ");
+        row.add(" h ");
+        row.add("   ");
+        row.add(SET_BG_COLOR_DARK_GREEN);
+        row.add(RESET_BG_COLOR);
+        boardRows.add(row);
+
+//
+//        boardRows.add(String.format("%s%s 8 %s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s 8 %s%s",
+//                RESET_BG_COLOR,
+//                SET_BG_COLOR_DARK_GREEN,
+//                SET_BG_COLOR_WHITE,
+//                BLACK_ROOK,
+//                SET_BG_COLOR_LIGHT_GREY,
+//                BLACK_KNIGHT,
+//                SET_BG_COLOR_WHITE,
+//                BLACK_BISHOP,
+//                SET_BG_COLOR_LIGHT_GREY,
+//                BLACK_QUEEN,
+//                SET_BG_COLOR_WHITE,
+//                BLACK_KING,
+//                SET_BG_COLOR_LIGHT_GREY,
+//                BLACK_BISHOP,
+//                SET_BG_COLOR_WHITE,
+//                BLACK_KNIGHT,
+//                SET_BG_COLOR_LIGHT_GREY,
+//                BLACK_ROOK,
+//                SET_BG_COLOR_DARK_GREEN,
+//                SET_BG_COLOR_DARK_GREEN,
+//                RESET_BG_COLOR
+//        ));
+//
+//        boardRows.add(String.format("%s%s 7 %s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s 7 %s%s",
+//                RESET_BG_COLOR,
+//                SET_BG_COLOR_DARK_GREEN,
+//                SET_BG_COLOR_LIGHT_GREY,
+//                BLACK_PAWN,
+//                SET_BG_COLOR_WHITE,
+//                BLACK_PAWN,
+//                SET_BG_COLOR_LIGHT_GREY,
+//                BLACK_PAWN,
+//                SET_BG_COLOR_WHITE,
+//                BLACK_PAWN,
+//                SET_BG_COLOR_LIGHT_GREY,
+//                BLACK_PAWN,
+//                SET_BG_COLOR_WHITE,
+//                BLACK_PAWN,
+//                SET_BG_COLOR_LIGHT_GREY,
+//                BLACK_PAWN,
+//                SET_BG_COLOR_WHITE,
+//                BLACK_PAWN,
+//                SET_BG_COLOR_DARK_GREEN,
+//                SET_BG_COLOR_DARK_GREEN,
+//                RESET_BG_COLOR
+//        ));
+//
+//        boardRows.add(String.format("%s%s 6 %s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s 6 %s%s",
+//                RESET_BG_COLOR,
+//                SET_BG_COLOR_DARK_GREEN,
+//                SET_BG_COLOR_WHITE,
+//                EMPTY,
+//                SET_BG_COLOR_LIGHT_GREY,
+//                EMPTY,
+//                SET_BG_COLOR_WHITE,
+//                EMPTY,
+//                SET_BG_COLOR_LIGHT_GREY,
+//                EMPTY,
+//                SET_BG_COLOR_WHITE,
+//                EMPTY,
+//                SET_BG_COLOR_LIGHT_GREY,
+//                EMPTY,
+//                SET_BG_COLOR_WHITE,
+//                EMPTY,
+//                SET_BG_COLOR_LIGHT_GREY,
+//                EMPTY,
+//                SET_BG_COLOR_DARK_GREEN,
+//                SET_BG_COLOR_DARK_GREEN,
+//                RESET_BG_COLOR
+//        ));
+//
+//        boardRows.add(String.format("%s%s 5 %s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s 5 %s%s",
+//                RESET_BG_COLOR,
+//                SET_BG_COLOR_DARK_GREEN,
+//                SET_BG_COLOR_LIGHT_GREY,
+//                EMPTY,
+//                SET_BG_COLOR_WHITE,
+//                EMPTY,
+//                SET_BG_COLOR_LIGHT_GREY,
+//                EMPTY,
+//                SET_BG_COLOR_WHITE,
+//                EMPTY,
+//                SET_BG_COLOR_LIGHT_GREY,
+//                EMPTY,
+//                SET_BG_COLOR_WHITE,
+//                EMPTY,
+//                SET_BG_COLOR_LIGHT_GREY,
+//                EMPTY,
+//                SET_BG_COLOR_WHITE,
+//                EMPTY,
+//                SET_BG_COLOR_DARK_GREEN,
+//                SET_BG_COLOR_DARK_GREEN,
+//                RESET_BG_COLOR
+//        ));
+//
+//        boardRows.add(String.format("%s%s 4 %s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s 4 %s%s",
+//                RESET_BG_COLOR,
+//                SET_BG_COLOR_DARK_GREEN,
+//                SET_BG_COLOR_WHITE,
+//                EMPTY,
+//                SET_BG_COLOR_LIGHT_GREY,
+//                EMPTY,
+//                SET_BG_COLOR_WHITE,
+//                EMPTY,
+//                SET_BG_COLOR_LIGHT_GREY,
+//                EMPTY,
+//                SET_BG_COLOR_WHITE,
+//                EMPTY,
+//                SET_BG_COLOR_LIGHT_GREY,
+//                EMPTY,
+//                SET_BG_COLOR_WHITE,
+//                EMPTY,
+//                SET_BG_COLOR_LIGHT_GREY,
+//                EMPTY,
+//                SET_BG_COLOR_DARK_GREEN,
+//                SET_BG_COLOR_DARK_GREEN,
+//                RESET_BG_COLOR
+//        ));
+//
+//        boardRows.add(String.format("%s%s 3 %s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s 3 %s%s",
+//                RESET_BG_COLOR,
+//                SET_BG_COLOR_DARK_GREEN,
+//                SET_BG_COLOR_LIGHT_GREY,
+//                EMPTY,
+//                SET_BG_COLOR_WHITE,
+//                EMPTY,
+//                SET_BG_COLOR_LIGHT_GREY,
+//                EMPTY,
+//                SET_BG_COLOR_WHITE,
+//                EMPTY,
+//                SET_BG_COLOR_LIGHT_GREY,
+//                EMPTY,
+//                SET_BG_COLOR_WHITE,
+//                EMPTY,
+//                SET_BG_COLOR_LIGHT_GREY,
+//                EMPTY,
+//                SET_BG_COLOR_WHITE,
+//                EMPTY,
+//                SET_BG_COLOR_DARK_GREEN,
+//                SET_BG_COLOR_DARK_GREEN,
+//                RESET_BG_COLOR
+//        ));
+//
+//        boardRows.add(String.format("%s%s 2 %s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s 2 %s%s",
+//                RESET_BG_COLOR,
+//                SET_BG_COLOR_DARK_GREEN,
+//                SET_BG_COLOR_WHITE,
+//                WHITE_PAWN,
+//                SET_BG_COLOR_LIGHT_GREY,
+//                WHITE_PAWN,
+//                SET_BG_COLOR_WHITE,
+//                WHITE_PAWN,
+//                SET_BG_COLOR_LIGHT_GREY,
+//                WHITE_PAWN,
+//                SET_BG_COLOR_WHITE,
+//                WHITE_PAWN,
+//                SET_BG_COLOR_LIGHT_GREY,
+//                WHITE_PAWN,
+//                SET_BG_COLOR_WHITE,
+//                WHITE_PAWN,
+//                SET_BG_COLOR_LIGHT_GREY,
+//                WHITE_PAWN,
+//                SET_BG_COLOR_DARK_GREEN,
+//                SET_BG_COLOR_DARK_GREEN,
+//                RESET_BG_COLOR
+//        ));
+//
+//        boardRows.add(String.format("%s%s 1 %s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s 1 %s%s",
+//                RESET_BG_COLOR,
+//                SET_BG_COLOR_DARK_GREEN,
+//                SET_BG_COLOR_LIGHT_GREY,
+//                WHITE_ROOK,
+//                SET_BG_COLOR_WHITE,
+//                WHITE_KNIGHT,
+//                SET_BG_COLOR_LIGHT_GREY,
+//                WHITE_BISHOP,
+//                SET_BG_COLOR_WHITE,
+//                WHITE_QUEEN,
+//                SET_BG_COLOR_LIGHT_GREY,
+//                WHITE_KING,
+//                SET_BG_COLOR_WHITE,
+//                WHITE_BISHOP,
+//                SET_BG_COLOR_LIGHT_GREY,
+//                WHITE_KNIGHT,
+//                SET_BG_COLOR_WHITE,
+//                WHITE_ROOK,
+//                SET_BG_COLOR_DARK_GREEN,
+//                SET_BG_COLOR_DARK_GREEN,
+//                RESET_BG_COLOR
+//        ));
+//
+//        boardRows.add(String.format("%s%s    a  b  c  d  e  f  g  h    %s%s",
+//                RESET_BG_COLOR,
+//                SET_BG_COLOR_DARK_GREEN,
+//                SET_BG_COLOR_DARK_GREEN,
+//                RESET_BG_COLOR
+//        ));
+//
+//        boardRows.add(SET_TEXT_COLOR_BLACK + RESET_TEXT_COLOR);
+//
+        if (!viewAsWhite) {
+
+            List<List<String>> reversedBoard = boardRows.reversed();
+            for (int i = 0; i < reversedBoard.size(); i++) {
+
+                List<String> r = reversedBoard.get(i);
+                List<String> reverseRow = r.reversed();
+                reversedBoard.set(i, reverseRow);
+            }
+            boardRows = reversedBoard;
+        }
+
+        for (List<String> r: boardRows) {
+            for (String item: r) {
+                System.out.print(item);
+            }
+            System.out.println();
+        }
     }
 
     private void addPawns(ChessGame.TeamColor color) {

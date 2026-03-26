@@ -13,11 +13,7 @@ import model.response.LoginResult;
 import model.response.RegisterResult;
 import org.junit.jupiter.api.*;
 import server.Server;
-import service.BadRequestException;
 import service.ResponseException;
-
-import javax.xml.crypto.Data;
-
 
 public class ServerFacadeTests {
 

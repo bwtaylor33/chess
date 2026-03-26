@@ -9,8 +9,8 @@ import static ui.EscapeSequences.*;
 
 public class GameplayClient extends BaseClient {
 
-    public GameplayClient(ServerFacade serverFacade, int gameID, ChessGame.TeamColor color) throws ResponseException {
-        super(serverFacade, "Good luck!");
+    public GameplayClient(ServerFacade server, int gameID, ChessGame.TeamColor color) throws ResponseException {
+        super(server, String.format("%s%s Good luck!", SET_TEXT_COLOR_WHITE, WHITE_QUEEN));
         this.gameID = gameID;
         this.color = color;
     }
@@ -52,7 +52,7 @@ public class GameplayClient extends BaseClient {
     }
 
     private void drawGameBoard() {
-        new ChessBoard().display();
+        new ChessBoard().display(color == ChessGame.TeamColor.WHITE);
     }
 
     private final int gameID;
