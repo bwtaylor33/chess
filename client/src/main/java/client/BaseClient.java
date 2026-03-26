@@ -41,5 +41,5 @@ abstract public class BaseClient {
     abstract public String eval(String line);
 
     protected final ServerFacade server;
-    private String greetingMessage;
+    private final String greetingMessage;
 }

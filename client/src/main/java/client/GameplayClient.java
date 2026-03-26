@@ -41,11 +41,14 @@ public class GameplayClient extends BaseClient {
     }
 
     public String help() {
-        return """
-               - login <username> <password>
-               - register <username> <password> <email>
-               - quit
-               """;
+        return String.format(
+                """
+                %s- quit %s- playing chess
+                %s- help %s- with possible commands
+                """,
+                SET_TEXT_COLOR_BLUE, SET_TEXT_COLOR_MAGENTA,
+                SET_TEXT_COLOR_BLUE, SET_TEXT_COLOR_MAGENTA
+        );
     }
 
     private void drawGameBoard() {

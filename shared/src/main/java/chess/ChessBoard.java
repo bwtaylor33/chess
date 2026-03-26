@@ -92,30 +92,28 @@ public class ChessBoard {
         System.out.println(String.format(
                 """
                 %s%s
-                %s    a  b  c  d  e  f  g  h   \s
-                %s 8                           8 \s
-                %s 7                           7 \s
-                %s 6                           6 \s
-                %s 5                           5 \s
-                %s 4                           4 \s
-                %s 3                           3 \s
-                %s 2                           2 \s
-                %s 1                           1 \s
-                %s    a  b  c  d  e  f  g  h    \s
-                %s
-               \s""",
+                %s    a  b  c  d  e  f  g  h   %s
+                %s 8                           8 %s
+                %s 7                           7 %s
+                %s 6                           6 %s
+                %s 5                           5 %s
+                %s 4                           4 %s
+                %s 3                           3 %s
+                %s 2                           2 %s
+                %s 1                           1 %s
+                %s    a  b  c  d  e  f  g  h    %s
+                """,
                 SET_BG_COLOR_DARK_GREEN, SET_TEXT_COLOR_DARK_GREY,
-                SET_BG_COLOR_DARK_GREEN,
-                SET_BG_COLOR_DARK_GREEN,
-                SET_BG_COLOR_DARK_GREEN,
-                SET_BG_COLOR_DARK_GREEN,
-                SET_BG_COLOR_DARK_GREEN,
-                SET_BG_COLOR_DARK_GREEN,
-                SET_BG_COLOR_DARK_GREEN,
-                SET_BG_COLOR_DARK_GREEN,
-                SET_BG_COLOR_DARK_GREEN,
-                SET_BG_COLOR_DARK_GREEN,
-                SET_BG_COLOR_BLACK
+                SET_BG_COLOR_DARK_GREEN, SET_TEXT_COLOR_DARK_GREY,
+                SET_BG_COLOR_DARK_GREEN, SET_TEXT_COLOR_DARK_GREY,
+                SET_BG_COLOR_DARK_GREEN, SET_TEXT_COLOR_DARK_GREY,
+                SET_BG_COLOR_DARK_GREEN, SET_TEXT_COLOR_DARK_GREY,
+                SET_BG_COLOR_DARK_GREEN, SET_TEXT_COLOR_DARK_GREY,
+                SET_BG_COLOR_DARK_GREEN, SET_TEXT_COLOR_DARK_GREY,
+                SET_BG_COLOR_DARK_GREEN, SET_TEXT_COLOR_DARK_GREY,
+                SET_BG_COLOR_DARK_GREEN, SET_TEXT_COLOR_DARK_GREY,
+                SET_BG_COLOR_DARK_GREEN, SET_TEXT_COLOR_DARK_GREY,
+                SET_BG_COLOR_DARK_GREEN, SET_TEXT_COLOR_DARK_GREY
                 ));
     }
 
