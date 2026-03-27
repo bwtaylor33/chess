@@ -80,22 +80,22 @@ public class ChessPiece {
         String s = "";
 
         if (pieceType == PieceType.KING) {
-            s = "k";
+            s = " k ";
 
         } else if (pieceType == PieceType.QUEEN) {
-            s = "q";
+            s = " q ";
 
         } else if (pieceType == PieceType.ROOK) {
-            s = "r";
+            s = " r ";
 
         } else if (pieceType == PieceType.KNIGHT) {
-            s = "k";
+            s = " k ";
 
         } else if (pieceType == PieceType.BISHOP) {
-            s = "b";
+            s = " b ";
 
         } else if (pieceType == PieceType.PAWN) {
-            s = "p";
+            s = " p ";
         }
 
         if (pieceColor == ChessGame.TeamColor.BLACK) {

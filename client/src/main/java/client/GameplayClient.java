@@ -52,7 +52,8 @@ public class GameplayClient extends BaseClient {
     }
 
     private void drawGameBoard() {
-        new ChessBoard().display(color == ChessGame.TeamColor.WHITE);
+        ChessRenderer renderer = new ChessRenderer(new ChessBoard(), color);
+        renderer.display();
     }
 
     private final int gameID;
