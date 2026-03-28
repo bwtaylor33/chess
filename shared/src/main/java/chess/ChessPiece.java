@@ -3,6 +3,8 @@ package chess;
 import java.util.Collection;
 import java.util.Objects;
 
+import static ui.EscapeSequences.*;
+
 /**
  * Represents a single chess piece
  * <p>
@@ -77,32 +79,25 @@ public class ChessPiece {
     @Override
     public String toString() {
 
-        String s = "";
-
-        if (pieceType == PieceType.KING) {
-            s = " k ";
-
-        } else if (pieceType == PieceType.QUEEN) {
-            s = " q ";
-
-        } else if (pieceType == PieceType.ROOK) {
-            s = " r ";
-
-        } else if (pieceType == PieceType.KNIGHT) {
-            s = " k ";
-
-        } else if (pieceType == PieceType.BISHOP) {
-            s = " b ";
-
-        } else if (pieceType == PieceType.PAWN) {
-            s = " p ";
+        if (pieceColor == ChessGame.TeamColor.WHITE) {
+            return switch (pieceType) {
+                case PieceType.PAWN -> WHITE_PAWN;
+                case PieceType.ROOK -> WHITE_ROOK;
+                case PieceType.KNIGHT -> WHITE_KNIGHT;
+                case PieceType.BISHOP -> WHITE_BISHOP;
+                case PieceType.KING -> WHITE_KING;
+                default -> WHITE_QUEEN;
+            };
+        } else {
+            return switch (pieceType) {
+                case PieceType.PAWN -> BLACK_PAWN;
+                case PieceType.ROOK -> BLACK_ROOK;
+                case PieceType.KNIGHT -> BLACK_KNIGHT;
+                case PieceType.BISHOP -> BLACK_BISHOP;
+                case PieceType.KING -> BLACK_KING;
+                default -> BLACK_QUEEN;
+            };
         }
-
-        if (pieceColor == ChessGame.TeamColor.BLACK) {
-            s = s.toUpperCase();
-        }
-
-        return s;
     }
 
     private final ChessGame.TeamColor pieceColor;

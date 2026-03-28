@@ -52,7 +52,9 @@ public class GameplayClient extends BaseClient {
     }
 
     private void drawGameBoard() {
-        ChessRenderer renderer = new ChessRenderer(new ChessBoard(), color);
+        ChessBoard board = new ChessBoard();
+        board.resetBoard();
+        ChessRenderer renderer = new ChessRenderer(board, color);
         renderer.display();
     }
 
