@@ -3,8 +3,6 @@ package chess;
 import java.util.Collection;
 import java.util.Objects;
 
-import static ui.EscapeSequences.*;
-
 /**
  * Represents a single chess piece
  * <p>
