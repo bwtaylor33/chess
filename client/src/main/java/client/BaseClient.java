@@ -39,5 +39,7 @@ abstract public class BaseClient {
     abstract public String eval(String line);
 
     protected final ServerFacade server;
+    protected static final String WHITE_QUEEN = " ♕ ";
+
     private final String greetingMessage;
 }
