@@ -13,7 +13,6 @@ import model.response.LoginResult;
 import model.response.RegisterResult;
 import org.junit.jupiter.api.*;
 import server.Server;
-import service.ResponseException;
 
 public class ServerFacadeTests {
 
@@ -43,7 +42,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void testRegisterSuccess() throws ResponseException {
+    public void testRegisterSuccess() throws ClientException {
 
         RegisterResult registerResult = client.register(new RegisterRequest("testUser", "testPassword", "testEmail"));
         Assertions.assertEquals("testUser", registerResult.username());
@@ -54,7 +53,7 @@ public class ServerFacadeTests {
     public void testRegisterFailure() {
 
         // trying to register duplicate user
-        Exception exception = Assertions.assertThrows(ResponseException.class, () -> {
+        Exception exception = Assertions.assertThrows(ClientException.class, () -> {
             client.register(new RegisterRequest("testUser", "testPassword", "testEmail"));
             client.register(new RegisterRequest("testUser", "testPassword", "testEmail"));
         });
@@ -62,7 +61,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void testLoginSuccess() throws ResponseException {
+    public void testLoginSuccess() throws ClientException {
 
         // register new user and logout
         RegisterResult registerResult = client.register(new RegisterRequest("testUser", "testPassword", "testEmail"));
@@ -75,45 +74,45 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void testLoginFailure() throws ResponseException {
+    public void testLoginFailure() throws ClientException {
 
         // register new user and logout
         RegisterResult registerResult = client.register(new RegisterRequest("testUser", "testPassword", "testEmail"));
         client.logout(registerResult.authToken());
 
         // trying to register duplicate user
-        Exception exception = Assertions.assertThrows(ResponseException.class, () -> {
+        Exception exception = Assertions.assertThrows(ClientException.class, () -> {
             client.login(new LoginRequest("testUser", "badPassword"));
         });
         Assertions.assertEquals("Error logging in user: Error: incorrect password", exception.getMessage());
     }
 
     @Test
-    public void testLogoutSuccess() throws ResponseException {
+    public void testLogoutSuccess() throws ClientException {
 
         // register new user and logout
         RegisterResult registerResult = client.register(new RegisterRequest("testUser", "testPassword", "testEmail"));
         client.logout(registerResult.authToken());
 
         // try to do something that requires valid authToken
-        Exception exception = Assertions.assertThrows(ResponseException.class, () -> {
+        Exception exception = Assertions.assertThrows(ClientException.class, () -> {
             client.listGames(registerResult.authToken());
         });
         Assertions.assertTrue(exception.getMessage().startsWith("Error: Error: invalid authToken: "));
     }
 
     @Test
-    public void testLogoutFailure() throws ResponseException {
+    public void testLogoutFailure() throws ClientException {
 
         // try to pass invalid authToken
-        Exception exception = Assertions.assertThrows(ResponseException.class, () -> {
+        Exception exception = Assertions.assertThrows(ClientException.class, () -> {
             client.logout("badToken");
         });
         Assertions.assertTrue(exception.getMessage().startsWith("Error: Error: invalid authToken: "));
     }
 
     @Test
-    public void testCreateGameSuccess() throws ResponseException {
+    public void testCreateGameSuccess() throws ClientException {
 
         // register new user
         RegisterResult registerResult = client.register(new RegisterRequest("testUser", "testPassword", "testEmail"));
@@ -123,20 +122,20 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void testCreateGameFailure() throws ResponseException {
+    public void testCreateGameFailure() throws ClientException {
 
         // register new user
         RegisterResult registerResult = client.register(new RegisterRequest("testUser", "testPassword", "testEmail"));
 
         // trying to create with blank game name
-        Exception exception = Assertions.assertThrows(ResponseException.class, () -> {
+        Exception exception = Assertions.assertThrows(ClientException.class, () -> {
             client.createGame(registerResult.authToken(), new CreateGameRequest(""));
         });
         Assertions.assertEquals("Error: gameName cannot be empty", exception.getMessage());
     }
 
     @Test
-    public void testJoinGameSuccess() throws ResponseException, DataAccessException {
+    public void testJoinGameSuccess() throws ClientException, DataAccessException {
 
         // register new user
         RegisterResult registerResult = client.register(new RegisterRequest("testUser", "testPassword", "testEmail"));
@@ -149,20 +148,20 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void testJoinGameFailure() throws ResponseException {
+    public void testJoinGameFailure() throws ClientException {
 
         // register new user
         RegisterResult registerResult = client.register(new RegisterRequest("testUser", "testPassword", "testEmail"));
 
         // test for invalid gameID
-        Exception exception = Assertions.assertThrows(ResponseException.class, () -> {
+        Exception exception = Assertions.assertThrows(ClientException.class, () -> {
             client.joinGame(registerResult.authToken(), new JoinGameRequest(ChessGame.TeamColor.BLACK, 999));
         });
         Assertions.assertEquals("Error joining game: Error: invalid gameID: 999", exception.getMessage());
     }
 
     @Test
-    public void testListGamesSuccess() throws ResponseException {
+    public void testListGamesSuccess() throws ClientException {
 
         // register new user
         RegisterResult registerResult = client.register(new RegisterRequest("testUser", "testPassword", "testEmail"));
@@ -177,10 +176,10 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void testListGamesFailure() throws ResponseException {
+    public void testListGamesFailure() throws ClientException {
 
         // test for unauthenticated call to listGames
-        Exception exception = Assertions.assertThrows(ResponseException.class, () -> {
+        Exception exception = Assertions.assertThrows(ClientException.class, () -> {
             client.listGames("badToken");
         });
         Assertions.assertEquals("Error: Error: invalid authToken: badToken", exception.getMessage());

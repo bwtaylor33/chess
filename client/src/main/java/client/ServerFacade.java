@@ -10,7 +10,6 @@ import model.response.CreateGameResult;
 import model.response.ListGamesResult;
 import model.response.LoginResult;
 import model.response.RegisterResult;
-import service.ResponseException;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -23,37 +22,37 @@ public class ServerFacade {
         serverUrl = url;
     }
 
-    public RegisterResult register(RegisterRequest registerRequest) throws ResponseException {
+    public RegisterResult register(RegisterRequest registerRequest) throws ClientException {
         var request = buildRequest(null, "POST", "/user", registerRequest);
         var response = sendRequest(request);
         return handleResponse(response, RegisterResult.class);
     }
 
-    public LoginResult login(LoginRequest loginRequest) throws ResponseException {
+    public LoginResult login(LoginRequest loginRequest) throws ClientException {
         var request = buildRequest(null, "POST", "/session", loginRequest);
         var response = sendRequest(request);
         return handleResponse(response, LoginResult.class);
     }
 
-    public void logout(String authToken) throws ResponseException {
+    public void logout(String authToken) throws ClientException {
         var request = buildRequest(authToken, "DELETE", "/session", null);
         var response = sendRequest(request);
         handleResponse(response, null);
     }
 
-    public CreateGameResult createGame(String authToken, CreateGameRequest createGameRequest) throws ResponseException {
+    public CreateGameResult createGame(String authToken, CreateGameRequest createGameRequest) throws ClientException {
         var request = buildRequest(authToken, "POST", "/game", createGameRequest);
         var response = sendRequest(request);
         return handleResponse(response, CreateGameResult.class);
     }
 
-    public void joinGame(String authToken, JoinGameRequest joinGameRequest) throws ResponseException {
+    public void joinGame(String authToken, JoinGameRequest joinGameRequest) throws ClientException {
         var request = buildRequest(authToken, "PUT", "/game", joinGameRequest);
         var response = sendRequest(request);
         handleResponse(response, null);
     }
 
-    public ListGamesResult listGames(String authToken) throws ResponseException {
+    public ListGamesResult listGames(String authToken) throws ClientException {
         var request = buildRequest(authToken, "GET", "/game", null);
         var response = sendRequest(request);
         return handleResponse(response, ListGamesResult.class);
@@ -80,23 +79,23 @@ public class ServerFacade {
         }
     }
 
-    private HttpResponse<String> sendRequest(HttpRequest request) throws ResponseException {
+    private HttpResponse<String> sendRequest(HttpRequest request) throws ClientException {
         try {
             return client.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (Exception ex) {
-            throw new ResponseException("Error: Send request failure: " + ex.getMessage());
+            throw new ClientException("Error: Send request failure: " + ex.getMessage());
         }
     }
 
-    private <T> T handleResponse(HttpResponse<String> response, Class<T> responseClass) throws ResponseException {
+    private <T> T handleResponse(HttpResponse<String> response, Class<T> responseClass) throws ClientException {
         var status = response.statusCode();
         if (!isSuccessful(status)) {
             var body = response.body();
             if (body != null) {
-                throw ResponseException.fromJson(body);
+                throw ClientException.fromJson(body);
             }
 
-            throw new ResponseException("Error: other failure: " + status);
+            throw new ClientException("Error: other failure: " + status);
         }
 
         if (responseClass != null) {
