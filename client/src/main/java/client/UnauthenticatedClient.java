@@ -5,7 +5,6 @@ import model.request.LoginRequest;
 import model.request.RegisterRequest;
 import model.response.LoginResult;
 import model.response.RegisterResult;
-import service.ResponseException;
 
 import static ui.EscapeSequences.*;
 
@@ -34,12 +33,12 @@ public class UnauthenticatedClient extends BaseClient {
                 default -> help();
             };
 
-        } catch (ResponseException ex) {
+        } catch (ClientException ex) {
             return ex.getMessage();
         }
     }
 
-    public String login(String... params) throws ResponseException {
+    public String login(String... params) throws ClientException {
 
         if (params.length >= 2) {
 
@@ -52,10 +51,10 @@ public class UnauthenticatedClient extends BaseClient {
             return String.format("%s is now signed out.", username);
         }
 
-        throw new ResponseException("Error: Expected: <username> <password>");
+        throw new ClientException("Error: Expected: <username> <password>");
     }
 
-    public String register(String... params) throws ResponseException {
+    public String register(String... params) throws ClientException {
 
         if (params.length >= 3) {
 
@@ -69,7 +68,7 @@ public class UnauthenticatedClient extends BaseClient {
             return String.format("%s is now signed out.", username);
         }
 
-        throw new ResponseException("Error: Expected: <username> <password> <email>");
+        throw new ClientException("Error: Expected: <username> <password> <email>");
     }
 
     public String help() {

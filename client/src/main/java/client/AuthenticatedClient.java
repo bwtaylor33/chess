@@ -6,7 +6,6 @@ import model.request.CreateGameRequest;
 import model.request.JoinGameRequest;
 import model.response.CreateGameResult;
 import model.response.ListGamesResult;
-import service.ResponseException;
 
 import java.util.Arrays;
 
@@ -14,7 +13,7 @@ import static ui.EscapeSequences.*;
 
 public class AuthenticatedClient extends BaseClient {
 
-    public AuthenticatedClient(ServerFacade server, String authToken, String username) throws ResponseException {
+    public AuthenticatedClient(ServerFacade server, String authToken, String username) throws ClientException {
         super(server, String.format("%s%s Hello, %s!", SET_TEXT_COLOR_WHITE, WHITE_QUEEN, username));
         this.authToken = authToken;
         this.username = username;
@@ -42,17 +41,17 @@ public class AuthenticatedClient extends BaseClient {
                 default -> help();
             };
 
-        } catch (ResponseException ex) {
+        } catch (ClientException ex) {
             return ex.getMessage();
         }
     }
 
-    public String logout() throws ResponseException {
+    public String logout() throws ClientException {
         server.logout(authToken);
         return "quit";
     }
 
-    public String createGame(String... params) throws ResponseException {
+    public String createGame(String... params) throws ClientException {
 
         if (params.length >= 1) {
 
@@ -62,10 +61,10 @@ public class AuthenticatedClient extends BaseClient {
             return String.format("Game \"%s\" has been created with ID: %d.", gameName, createGameResult.gameID());
         }
 
-        throw new ResponseException("Error: Expected: <gameName>");
+        throw new ClientException("Error: Expected: <gameName>");
     }
 
-    public String listGames() throws ResponseException {
+    public String listGames() throws ClientException {
 
         ListGamesResult listGamesResult = server.listGames(authToken);
         StringBuilder builder = new StringBuilder("Games:\n");
@@ -82,7 +81,7 @@ public class AuthenticatedClient extends BaseClient {
         return builder.toString();
     }
 
-    public String playGame(String... params) throws ResponseException {
+    public String playGame(String... params) throws ClientException {
 
         if (params.length >= 2) {
 
@@ -91,7 +90,7 @@ public class AuthenticatedClient extends BaseClient {
                 gameID = Integer.parseInt(params[0]);
 
             }catch (NumberFormatException n) {
-                throw new ResponseException("Error: Invalid gameID: " + n.getMessage());
+                throw new ClientException("Error: Invalid gameID: " + n.getMessage());
             }
 
             String color = params[1].toLowerCase().trim();
@@ -102,10 +101,10 @@ public class AuthenticatedClient extends BaseClient {
             return String.format("Game %s complete.", gameID);
         }
 
-        throw new ResponseException("Error: Expected: <gameID> [WHITE|BLACK]");
+        throw new ClientException("Error: Expected: <gameID> [WHITE|BLACK]");
     }
 
-    public String observeGame(String... params) throws ResponseException {
+    public String observeGame(String... params) throws ClientException {
 
         if (params.length >= 1) {
 
@@ -114,13 +113,13 @@ public class AuthenticatedClient extends BaseClient {
                 gameID = Integer.parseInt(params[0]);
 
             }catch (NumberFormatException n) {
-                throw new ResponseException("Error: Invalid gameID: " + n.getMessage());
+                throw new ClientException("Error: Invalid gameID: " + n.getMessage());
             }
 
             return "Game observation not currently supported";
         }
 
-        throw new ResponseException("Error: Expected: <gameID>");
+        throw new ClientException("Error: Expected: <gameID>");
     }
 
     public String help() {

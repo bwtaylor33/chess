@@ -4,12 +4,11 @@ import java.util.Arrays;
 
 import chess.ChessBoard;
 import chess.ChessGame;
-import service.ResponseException;
 import static ui.EscapeSequences.*;
 
 public class GameplayClient extends BaseClient {
 
-    public GameplayClient(ServerFacade server, int gameID, ChessGame.TeamColor color) throws ResponseException {
+    public GameplayClient(ServerFacade server, int gameID, ChessGame.TeamColor color) throws ClientException {
         super(server, String.format("%s%s Good luck!", SET_TEXT_COLOR_WHITE, WHITE_QUEEN));
         this.gameID = gameID;
         this.color = color;
@@ -28,14 +27,14 @@ public class GameplayClient extends BaseClient {
 
             // removes the temporary exception
             if (params.length == 99) {
-                throw new ResponseException("hack");
+                throw new ClientException("hack");
             }
 
             return switch (cmd) {
                 case "quit" -> "quit";
                 default -> help();
             };
-        } catch (ResponseException ex) {
+        } catch (ClientException ex) {
             return ex.getMessage();
         }
     }
