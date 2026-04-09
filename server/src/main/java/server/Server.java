@@ -33,9 +33,13 @@ public class Server {
 
         WebSocketHandler webSocketHandler = new WebSocketHandler();
         javalin.ws("/ws", ws -> {
-            ws.onConnect(webSocketHandler);
-            ws.onMessage(webSocketHandler);
-            ws.onClose(webSocketHandler);
+            ws.onConnect(context -> {System.out.println("connect " + context.session.getUpgradeRequest().getRequestURI());});
+            ws.onMessage(context -> {System.out.println("message: " + context.message());
+            System.out.println(Thread.currentThread().getName());});
+            ws.onClose(context -> {System.out.println("closed!!!!!");});
+//            ws.onConnect(webSocketHandler::handleConnect);
+//            ws.onMessage(webSocketHandler::handleMessage);
+//            ws.onClose(webSocketHandler::handleClose);
         });
     }
 
