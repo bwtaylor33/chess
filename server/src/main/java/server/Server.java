@@ -1,6 +1,7 @@
 package server;
 
 import io.javalin.*;
+import server.websocket.WebSocketHandler;
 import service.*;
 
 /**
@@ -29,6 +30,13 @@ public class Server {
         javalin.post("/game", gameHandler::createHandler);
         javalin.put("/game", gameHandler::joinHandler);
         javalin.get("/game", gameHandler::listGamesHandler);
+
+        WebSocketHandler webSocketHandler = new WebSocketHandler();
+        javalin.ws("/ws", ws -> {
+            ws.onConnect(webSocketHandler);
+            ws.onMessage(webSocketHandler);
+            ws.onClose(webSocketHandler);
+        });
     }
 
     public int run(int desiredPort) {
