@@ -26,11 +26,11 @@ public class UserHandler extends BaseHandler {
             // Convert bodyObject back to json and send to client
             context.json(new Gson().toJson(registerResult));
 
-        }catch (ForbiddenRequestException f) {
-            context.status(403).result(f.toJson());
-
         }catch (BadRequestException m) {
             context.status(400).result(m.toJson());
+
+        }catch (ForbiddenRequestException f) {
+            context.status(403).result(f.toJson());
 
         }catch (Exception e) {
             context.status(500).result("{\"message\": \"" + e.getMessage() + "\"}");
@@ -49,7 +49,7 @@ public class UserHandler extends BaseHandler {
         }catch (BadRequestException m) {
             context.status(400).result(m.toJson());
 
-        }catch (ResponseException r) {
+        }catch (UnauthorizedRequestException r) {
             context.status(401).result(r.toJson());
 
         }catch (Exception e) {
@@ -65,7 +65,7 @@ public class UserHandler extends BaseHandler {
         }catch (BadRequestException m) {
             context.status(400).result(m.toJson());
 
-        }catch (ResponseException r) {
+        }catch (UnauthorizedRequestException r) {
             context.status(401).result(r.toJson());
 
         }catch (Exception e) {

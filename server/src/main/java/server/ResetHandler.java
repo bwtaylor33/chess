@@ -1,7 +1,7 @@
 package server;
 
-import io.javalin.http.Context;
 import service.*;
+import io.javalin.http.Context;
 
 /**
  * Handler for database cleanup
@@ -23,7 +23,7 @@ public class ResetHandler extends BaseHandler {
         }catch (BadRequestException m) {
             context.status(400).result(m.toJson());
 
-        }catch (ResponseException r) {
+        }catch (UnauthorizedRequestException r) {
             context.status(401).result(r.toJson());
 
         }catch (Exception e) {

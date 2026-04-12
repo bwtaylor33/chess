@@ -2,11 +2,12 @@ package server;
 
 import com.google.gson.Gson;
 import io.javalin.http.Context;
+
+import service.*;
 import model.request.CreateGameRequest;
 import model.request.JoinGameRequest;
 import model.response.CreateGameResult;
 import model.response.ListGamesResult;
-import service.*;
 
 /**
  * Handler for all game API calls
@@ -23,13 +24,13 @@ public class GameHandler extends BaseHandler {
             CreateGameRequest createGameRequest = getBodyObject(context, CreateGameRequest.class);
             CreateGameResult createGameResult = gameService.createGame(context.header("Authorization"), createGameRequest);
 
-            // Convert bodyObject back to Json and send to client
+            // convert bodyObject back to Json and send to client
             context.json(new Gson().toJson(createGameResult));
 
         }catch (BadRequestException m) {
             context.status(400).result(m.toJson());
 
-        }catch (ResponseException r) {
+        }catch (UnauthorizedRequestException r) {
             context.status(401).result(r.toJson());
 
         }catch (Exception e) {
@@ -49,11 +50,11 @@ public class GameHandler extends BaseHandler {
         }catch (BadRequestException m) {
             context.status(400).result(m.toJson());
 
+        }catch (UnauthorizedRequestException r) {
+            context.status(401).result(r.toJson());
+
         }catch (ForbiddenRequestException f) {
             context.status(403).result(f.toJson());
-
-        }catch (ResponseException r) {
-            context.status(401).result(r.toJson());
 
         }catch (Exception e) {
             context.status(500).result("{\"message\": \"" + e.getMessage() + "\"}");
@@ -65,10 +66,10 @@ public class GameHandler extends BaseHandler {
         try {
             ListGamesResult listGamesResult = gameService.listGames(context.header("Authorization"));
 
-            // Convert bodyObject back to Json and send to client
+            // convert bodyObject back to Json and send to client
             context.json(new Gson().toJson(listGamesResult));
 
-        }catch (ForbiddenRequestException r) {
+        }catch (UnauthorizedRequestException r) {
             context.status(401).result(r.toJson());
 
         }catch (Exception e) {

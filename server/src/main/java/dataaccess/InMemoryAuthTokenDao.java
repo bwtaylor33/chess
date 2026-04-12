@@ -11,7 +11,7 @@ public class InMemoryAuthTokenDao implements AuthTokenDao {
     public void createAuthToken(AuthData authData) throws DataAccessException {
 
         if (authTokens.containsKey(authData)) {
-            throw new DataAccessException("unable to update database: Duplicate entry '" + authData.getAuthToken() + "' for key 'authtoken.PRIMARY'");
+            throw new DataAccessException("Unable to update database: Duplicate entry '" + authData.getAuthToken() + "' for key 'authtoken.PRIMARY'");
         }
 
         authTokens.put(authData, authData.getUsername());
@@ -25,7 +25,7 @@ public class InMemoryAuthTokenDao implements AuthTokenDao {
             }
         }
 
-        throw new DataAccessException("Error: invalid authToken: " + authToken);
+        throw new DataAccessException("Error: Invalid authToken: " + authToken);
     }
 
     public void deleteAuthToken(String authToken) throws DataAccessException {

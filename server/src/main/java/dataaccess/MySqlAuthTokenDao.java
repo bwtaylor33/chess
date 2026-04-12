@@ -12,7 +12,7 @@ public class MySqlAuthTokenDao extends MySqlBaseDao implements AuthTokenDao {
 
     public MySqlAuthTokenDao() throws DataAccessException {
         super(new String[] {
-            """
+                """
             CREATE TABLE IF NOT EXISTS  authToken (
               `authToken` varchar(64) NOT NULL,
               `username` varchar(64) NOT NULL,
@@ -36,13 +36,13 @@ public class MySqlAuthTokenDao extends MySqlBaseDao implements AuthTokenDao {
         try (ResultSet rs = getRecordByStringKey("SELECT * FROM authToken WHERE authToken=?", authToken)) {
 
             if (rs == null) {
-                throw new DataAccessException("Error: invalid authToken: " + authToken);
+                throw new DataAccessException("Invalid authToken: " + authToken);
             }
 
             return readAuthToken(rs);
 
         } catch(SQLException s) {
-            throw new DataAccessException("Error: invalid authToken: " + authToken);
+            throw new DataAccessException("Invalid authToken: " + authToken);
         }
     }
 
