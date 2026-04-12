@@ -36,7 +36,10 @@ public class MySqlGameDao extends MySqlBaseDao implements GameDao {
             throw new DataAccessException("Error creating game: " + gameName);
         }
 
-        return new GameData(gameID, null, null, gameName, new ChessGame());
+        GameData gameData = new GameData(gameID, null, null, gameName, new ChessGame());
+        updateGame(gameData);
+
+        return gameData;
     }
 
     public GameData getGame(int gameID) throws DataAccessException {

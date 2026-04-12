@@ -77,7 +77,11 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         // Retrieve game details
         GameData gameData = gameService.getGame(command.getAuthToken(), command.getGameID());
 
+        // test if Game null
+
+
         // Respond with the load game message
+        System.out.println("loaded game: " + gameData.getGame().toString());
         connectionManager.send(session, new LoadGameMessage(username, gameData.getGame()));
 
         // Broadcast an update to watchers
