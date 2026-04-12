@@ -69,13 +69,13 @@ public class UserServiceTest {
         Exception exception = Assertions.assertThrows(ResponseException.class, () -> {
             userService.login(new LoginRequest("testUsername", "badPassword"));
         });
-        Assertions.assertEquals("Error logging in user: Error: incorrect password", exception.getMessage());
+        Assertions.assertEquals("Error: Incorrect password", exception.getMessage());
 
         // test for unregistered user
         exception = Assertions.assertThrows(ResponseException.class, () -> {
             userService.login(new LoginRequest("badUsername", "testPassword"));
         });
-        Assertions.assertEquals("Error logging in user: Error: invalid username: badUsername", exception.getMessage());
+        Assertions.assertEquals("Error: Invalid username: badUsername", exception.getMessage());
     }
 
     @Test
@@ -97,7 +97,7 @@ public class UserServiceTest {
         Exception exception = Assertions.assertThrows(ResponseException.class, () -> {
             userService.logout("badToken");
         });
-        Assertions.assertEquals("Error: Error: invalid authToken: badToken", exception.getMessage());
+        Assertions.assertEquals("Error: Invalid authToken: badToken", exception.getMessage());
     }
 
     @Test

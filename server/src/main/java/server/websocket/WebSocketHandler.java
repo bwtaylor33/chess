@@ -120,13 +120,13 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         // Leave the game
         gameService.leaveGame(command.getAuthToken(), command);
 
-        // Remove this one from active watchers
-        connectionManager.remove(command.getGameID(), session);
-
         // Broadcast an update to watchers
         connectionManager.broadcast(command.getGameID(), session,
                 new NotificationMessage(NotificationMessage.NotificationMessageType.LEFT, username,
-                        String.format("%s left game %d", username, command.getGameID())));
+                        String.format("%s left game %d.", username, command.getGameID())));
+
+        // Remove this one from active watchers
+        connectionManager.remove(command.getGameID(), session);
     }
 
     private void resign(Session session, String username, ResignGameCommand command) throws ResponseException, IOException {
@@ -134,13 +134,13 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         // Resign game
         gameService.resignGame(command.getAuthToken(), command);
 
-        // Remove this one from active watchers
-        connectionManager.remove(command.getGameID(), session);
-
         // Broadcast an update to watchers
-        connectionManager.broadcast(command.getGameID(), session,
+        connectionManager.broadcast(command.getGameID(), null,
                 new NotificationMessage(NotificationMessage.NotificationMessageType.RESIGN, username,
                         String.format("%s resigned game %d.", username, command.getGameID())));
+
+        // Remove this one from active watchers
+        connectionManager.remove(command.getGameID(), session);
     }
 
     private String getUsername(String authToken) throws ForbiddenRequestException {

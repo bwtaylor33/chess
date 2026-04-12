@@ -47,14 +47,13 @@ public class MySqlGameDao extends MySqlBaseDao implements GameDao {
         try (ResultSet rs = getRecordByIntID("SELECT * FROM game WHERE gameID=?", gameID)) {
 
             if (rs == null) {
-                System.out.println("got a null result set");
-                throw new DataAccessException("Error: invalid gameID: " + gameID);
+                throw new DataAccessException("Error: Invalid gameID: " + gameID);
             }
 
             return readGame(rs);
 
         } catch(SQLException s) {
-            throw new DataAccessException("Error: invalid gameID: " + gameID);
+            throw new DataAccessException("Error: Invalid gameID: " + gameID);
         }
     }
 
@@ -94,7 +93,7 @@ public class MySqlGameDao extends MySqlBaseDao implements GameDao {
                 gameData.getGameID());
 
         if (rowsUpdated != 1) {
-            throw new DataAccessException("Error: invalid gameID: " + gameData.getGameID());
+            throw new DataAccessException("Error: Invalid gameID: " + gameData.getGameID());
         }
     }
 

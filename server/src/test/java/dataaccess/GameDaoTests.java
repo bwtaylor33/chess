@@ -60,7 +60,7 @@ public class GameDaoTests {
         Exception exception = Assertions.assertThrows(DataAccessException.class, () -> {
             gameDao.getGame(-1);
         });
-        Assertions.assertEquals("Error: invalid gameID: -1", exception.getMessage());
+        Assertions.assertEquals("Error: Invalid gameID: -1", exception.getMessage());
     }
 
     @Test
@@ -87,7 +87,7 @@ public class GameDaoTests {
         Exception exception = Assertions.assertThrows(DataAccessException.class, () -> {
             gameDao.updateGame(gameData);
         });
-        Assertions.assertEquals("Error: invalid gameID: -1", exception.getMessage());
+        Assertions.assertEquals("Error: Invalid gameID: -1", exception.getMessage());
     }
 
     @Test

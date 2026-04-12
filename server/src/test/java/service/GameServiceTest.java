@@ -62,7 +62,7 @@ public class GameServiceTest {
         Exception exception = Assertions.assertThrows(ResponseException.class, () -> {
             gameService.joinGame(authToken, new JoinGameRequest(ChessGame.TeamColor.BLACK, 999));
         });
-        Assertions.assertEquals("Error joining game: Error: invalid gameID: 999", exception.getMessage());
+        Assertions.assertEquals("Error loading game: Error: Invalid gameID: 999", exception.getMessage());
 
         // test for joining overtop a player
         int gameID = gameService.createGame(authToken, new CreateGameRequest("testGameName")).gameID();
@@ -71,7 +71,7 @@ public class GameServiceTest {
         exception = Assertions.assertThrows(ForbiddenRequestException.class, () -> {
             gameService.joinGame(authToken, new JoinGameRequest(ChessGame.TeamColor.BLACK, gameID));
         });
-        Assertions.assertEquals("Error: black player already taken", exception.getMessage());
+        Assertions.assertEquals("Error: BLACK player already taken", exception.getMessage());
     }
 
     @Test
@@ -95,7 +95,7 @@ public class GameServiceTest {
         Exception exception = Assertions.assertThrows(ResponseException.class, () -> {
             gameService.listGames(authToken);
         });
-        Assertions.assertEquals("Error: Error: invalid authToken: " + authToken, exception.getMessage());
+        Assertions.assertEquals("Error: Invalid authToken: " + authToken, exception.getMessage());
     }
 
     @Test

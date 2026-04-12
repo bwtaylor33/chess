@@ -120,10 +120,6 @@ public class GameService extends BaseService {
                 leftAsBlack = true;
             }
 
-            if(!leftAsWhite && !leftAsBlack){
-                throw new BadRequestException("Error leaving game: " + username + " was not a participant");
-            }
-
             gameDao.updateGame(gameData);
 
         }catch (DataAccessException e) {
@@ -145,6 +141,11 @@ public class GameService extends BaseService {
             // vacate spot for the game in game table
             GameData gameData = gameDao.getGame(resignGameCommand.getGameID());
 
+            // make sure game is not already over
+            if (gameData.getGame().isGameOver()) {
+                throw new BadRequestException("Error: Game has already concluded.");
+            }
+
             boolean resignedAsWhite = false;
             boolean resignedAsBlack = false;
 
@@ -159,7 +160,7 @@ public class GameService extends BaseService {
             }
 
             if(!resignedAsWhite && !resignedAsBlack){
-                throw new BadRequestException("Error resigning game: " + username + " was not a participant");
+                throw new BadRequestException("Error resigning game: " + username + " was not a participant.");
             }
 
             gameDao.updateGame(gameData);

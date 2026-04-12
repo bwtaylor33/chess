@@ -64,7 +64,7 @@ public class AuthTokenDaoTests {
         Exception exception = Assertions.assertThrows(DataAccessException.class, () -> {
             authTokenDao.getAuthToken("fakeAuthToken");
         });
-        Assertions.assertEquals("Invalid authToken: fakeAuthToken", exception.getMessage());
+        Assertions.assertEquals("Error: Invalid authToken: fakeAuthToken", exception.getMessage());
     }
 
     @Test
@@ -84,7 +84,7 @@ public class AuthTokenDaoTests {
         Exception exception = Assertions.assertThrows(DataAccessException.class, () -> {
             authTokenDao.getAuthToken(testAuth.getAuthToken());
         });
-        Assertions.assertTrue(exception.getMessage().startsWith("Invalid authToken: "));
+        Assertions.assertTrue(exception.getMessage().startsWith("Error: Invalid authToken: "));
     }
 
     @Test
@@ -107,7 +107,7 @@ public class AuthTokenDaoTests {
         Exception exception = Assertions.assertThrows(DataAccessException.class, () -> {
             authTokenDao.getAuthToken(testAuth.getAuthToken());
         });
-        Assertions.assertTrue(exception.getMessage().startsWith("Invalid authToken: "));
+        Assertions.assertTrue(exception.getMessage().startsWith("Error: Invalid authToken: "));
     }
 
     private AuthTokenDao authTokenDao;

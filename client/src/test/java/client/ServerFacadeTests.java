@@ -157,7 +157,7 @@ public class ServerFacadeTests {
         Exception exception = Assertions.assertThrows(ClientException.class, () -> {
             client.joinGame(registerResult.authToken(), new JoinGameRequest(ChessGame.TeamColor.BLACK, 999));
         });
-        Assertions.assertEquals("Error loading game: Error: invalid gameID: 999", exception.getMessage());
+        Assertions.assertEquals("Error loading game: Error: Invalid gameID: 999", exception.getMessage());
     }
 
     @Test

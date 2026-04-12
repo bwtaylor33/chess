@@ -13,7 +13,7 @@ public class InMemoryGameDao implements GameDao {
     public GameData createGame(String gameName) throws DataAccessException {
 
         if (gameName == null) {
-            throw new DataAccessException("unable to update database: Column 'gameName' cannot be null");
+            throw new DataAccessException("Unable to update database: Column 'gameName' cannot be null");
         }
 
         GameData gameData = new GameData(nextGameID++, null, null, gameName, new ChessGame());
@@ -25,7 +25,7 @@ public class InMemoryGameDao implements GameDao {
     public GameData getGame(int gameID) throws DataAccessException {
 
         if (!games.containsKey(gameID)) {
-            throw new DataAccessException("Error: invalid gameID: " + gameID);
+            throw new DataAccessException("Error: Invalid gameID: " + gameID);
         }
 
         return games.get(gameID);
@@ -34,7 +34,7 @@ public class InMemoryGameDao implements GameDao {
     public void updateGame(GameData gameData) throws DataAccessException {
 
         if (!games.containsKey(gameData.getGameID())) {
-            throw new DataAccessException("Error: invalid gameID: " + gameData.getGameID());
+            throw new DataAccessException("Error: Invalid gameID: " + gameData.getGameID());
         }
 
         games.put(gameData.getGameID(), gameData);
