@@ -66,7 +66,7 @@ public class ChessMove {
         return String.format("S: %s --> E: %s (%s)", startPosition, endPosition, promotionPiece);
     }
 
-    private final ChessPosition startPosition;
-    private final ChessPosition endPosition;
-    private final ChessPiece.PieceType promotionPiece;
+    private ChessPosition startPosition;
+    private ChessPosition endPosition;
+    private ChessPiece.PieceType promotionPiece;
 }

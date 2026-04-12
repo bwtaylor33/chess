@@ -54,6 +54,6 @@ public class ChessPosition {
         return String.format("[%d,%d]", row, column);
     }
 
-    private final int row;
-    private final int column;
+    private int row;
+    private int column;
 }

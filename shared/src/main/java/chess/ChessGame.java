@@ -24,7 +24,10 @@ public class ChessGame {
         }
 
         ChessGame chessGame = (ChessGame) o;
-        return Objects.equals(getBoard(), chessGame.getBoard()) && turn == chessGame.turn;
+        return Objects.equals(getBoard(), chessGame.getBoard())
+                && turn == chessGame.turn
+                && winningTeamColor == chessGame.winningTeamColor
+                && gameOver == chessGame.gameOver;
     }
 
     @Override
@@ -33,7 +36,7 @@ public class ChessGame {
     }
 
     /**
-     * @return Which team's turn it is
+     * @return which team's turn it is
      */
     public TeamColor getTeamTurn() {
         return turn;
@@ -213,6 +216,19 @@ public class ChessGame {
         return board;
     }
 
+    public void setGameOver(TeamColor winningTeamColor){
+        gameOver = true;
+        this.winningTeamColor = winningTeamColor;
+    }
+
+    public TeamColor getWinningTeamColor() {
+        return winningTeamColor;
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
     private boolean isValidMove(ChessMove move) {
 
         ChessPiece startPiece = board.getPiece(move.getStartPosition());
@@ -273,4 +289,6 @@ public class ChessGame {
 
     private ChessBoard board = new ChessBoard();
     private TeamColor turn = TeamColor.WHITE;
+    private TeamColor winningTeamColor = null;
+    private boolean gameOver = false;
 }
