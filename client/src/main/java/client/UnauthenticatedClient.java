@@ -11,12 +11,11 @@ import static ui.EscapeSequences.*;
 public class UnauthenticatedClient extends BaseClient {
 
     public UnauthenticatedClient(ServerFacade serverFacade) {
-        super(serverFacade, String.format("%s%s Welcome to the chess client. Sign in to start.", SET_TEXT_COLOR_WHITE, WHITE_QUEEN));
+        super(serverFacade, String.format("\n%s%s Welcome to the Chess client. Sign in to get started!", SET_TEXT_COLOR_WHITE, WHITE_QUEEN));
     }
 
     public void printPrompt() {
-        System.out.printf("\n%s[LOGGED_OUT] >>> %s", SET_TEXT_COLOR_LIGHT_GREY, SET_TEXT_COLOR_GREEN);
-
+        System.out.printf("%s[LOGGED_OUT] >>> %s", SET_TEXT_COLOR_LIGHT_GREY, SET_TEXT_COLOR_GREEN);
     }
 
     public String eval(String input) {
@@ -83,6 +82,6 @@ public class UnauthenticatedClient extends BaseClient {
                 SET_TEXT_COLOR_BLUE, SET_TEXT_COLOR_MAGENTA,
                 SET_TEXT_COLOR_BLUE, SET_TEXT_COLOR_MAGENTA,
                 SET_TEXT_COLOR_BLUE, SET_TEXT_COLOR_MAGENTA
-                );
+        );
     }
 }

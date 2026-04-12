@@ -70,7 +70,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         connectionManager.remove(command.getGameID(), session);
     }
 
-    private void resign(Session session, String username, ResignCommand command) {
+    private void resign(Session session, String username, ResignGameCommand command) {
         System.out.println("resign called for " + username);
     }
 

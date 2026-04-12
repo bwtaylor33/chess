@@ -11,7 +11,6 @@ import java.util.Objects;
  * methods.
  */
 public class ServerMessage {
-    ServerMessageType serverMessageType;
 
     public enum ServerMessageType {
         LOAD_GAME,
@@ -46,4 +45,10 @@ public class ServerMessage {
     public int hashCode() {
         return Objects.hash(getServerMessageType());
     }
+
+    public void display() {
+        System.out.printf("ServerMessage(Type=%s)", serverMessageType);
+    }
+
+    private ServerMessageType serverMessageType;
 }

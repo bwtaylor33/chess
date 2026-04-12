@@ -20,7 +20,7 @@ public class AuthenticatedClient extends BaseClient {
     }
 
     public void printPrompt() {
-        System.out.printf("\n%s[LOGGED_IN as %s] >>> %s", SET_TEXT_COLOR_LIGHT_GREY, username, SET_TEXT_COLOR_GREEN);
+        System.out.printf("%s[LOGGED_IN as %s] >>> %s", SET_TEXT_COLOR_LIGHT_GREY, username, SET_TEXT_COLOR_GREEN);
     }
 
     public String eval(String input) {
@@ -53,29 +53,37 @@ public class AuthenticatedClient extends BaseClient {
 
     public String createGame(String... params) throws ClientException {
 
-        if (params.length >= 1) {
-
-            String gameName = params[0];
-            CreateGameResult createGameResult = server.createGame(authToken, new CreateGameRequest(gameName));
-
-            return String.format("Game \"%s\" has been created with ID: %d.", gameName, createGameResult.gameID());
+        if (params.length < 1) {
+            throw new ClientException("Error: Expected: <gameName>");
         }
 
-        throw new ClientException("Error: Expected: <gameName>");
+        String gameName = params[0];
+        CreateGameResult createGameResult = server.createGame(authToken, new CreateGameRequest(gameName));
+
+        return String.format("Game \"%s\" has been created with ID: %d.", gameName, createGameResult.gameID());
     }
 
     public String listGames() throws ClientException {
 
         ListGamesResult listGamesResult = server.listGames(authToken);
-        StringBuilder builder = new StringBuilder("Games:\n");
+        StringBuilder builder = new StringBuilder();
 
-        for (GameData gameData : listGamesResult.games()) {
+        if(listGamesResult.games().size() == 0){
+            builder.append("No games have been created yet.");
 
-            builder.append("\t");
-            builder.append(gameData.getGameName());
-            builder.append(":\t");
-            builder.append(gameData.getGameID());
-            builder.append("\n");
+        }else{
+
+            // Build a formatted listing of available games
+            builder.append("Games:\n");
+
+            for (GameData gameData : listGamesResult.games()) {
+
+                builder.append("\t");
+                builder.append(gameData.getGameName());
+                builder.append(":\t\t");
+                builder.append(gameData.getGameID());
+                builder.append("\n");
+            }
         }
 
         return builder.toString();
@@ -96,9 +104,9 @@ public class AuthenticatedClient extends BaseClient {
             String color = params[1].toLowerCase().trim();
             ChessGame.TeamColor teamColor = color.equals("white") ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK;
             server.joinGame(authToken, new JoinGameRequest(teamColor, gameID));
-            new GameplayClient(server, gameID, teamColor).run();
+            new GameplayClient(server, authToken, username, gameID, teamColor).run();
 
-            return String.format("Game %s complete.", gameID);
+            return String.format("Game %s exited.", gameID);
         }
 
         throw new ClientException("Error: Expected: <gameID> [WHITE|BLACK]");
@@ -116,7 +124,11 @@ public class AuthenticatedClient extends BaseClient {
                 throw new ClientException("Error: Invalid gameID: " + n.getMessage());
             }
 
-            return "Game observation not currently supported";
+            server.joinGame(authToken, new JoinGameRequest(null, gameID));
+
+            new GameplayClient(server, authToken, username, gameID, null).run();
+
+            return String.format("Exited game %s.", gameID);
         }
 
         throw new ClientException("Error: Expected: <gameID>");

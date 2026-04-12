@@ -1,6 +1,7 @@
 package websocket.commands;
 
 import java.util.Objects;
+import com.google.gson.Gson;
 
 /**
  * Represents a command a user can send the server over a websocket
@@ -9,12 +10,6 @@ import java.util.Objects;
  * methods.
  */
 public class UserGameCommand {
-
-    private final CommandType commandType;
-
-    private final String authToken;
-
-    private final Integer gameID;
 
     public UserGameCommand(CommandType commandType, String authToken, Integer gameID) {
         this.commandType = commandType;
@@ -58,4 +53,12 @@ public class UserGameCommand {
     public int hashCode() {
         return Objects.hash(getCommandType(), getAuthToken(), getGameID());
     }
+
+    public String toJson() {
+        return new Gson().toJson(this);
+    }
+
+    private CommandType commandType;
+    private String authToken;
+    private Integer gameID;
 }
