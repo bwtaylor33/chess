@@ -16,87 +16,102 @@ public class ChessRenderer {
 
     public void display() {
 
-        drawBoardBackground();
-
-        for (int row = 1; row <= 8; row++) {
-            for (int col = 1; col <= 8; col++) {
-
-                ChessPiece piece = board.getPiece(new ChessPosition(row, col));
-
-                if (piece != null) {
-                    displayPiece(row, col, piece);
-                }
-            }
-        }
-    }
-
-    private void drawBoardBackground() {
-
-        System.out.print(ERASE_SCREEN);
-
-        for (int row = 1; row <= 8; row++) {
-
-            int pRow = asWhite ? row : 9 - row;
-
-            for (int col = 1; col <= 8; col++) {
-
-                System.out.print(moveCursorToLocation(ORIGIN_ROW + pRow, (ORIGIN_COL + col) * 3));
-                System.out.print(getBackgroundColorForSquare(pRow, col));
-                System.out.print("   ");
-                System.out.print(RESET_BG_COLOR + RESET_TEXT_COLOR);
-                // System.out.print("\u001B[0m");
-            }
-        }
-
-        System.out.print(moveCursorToLocation(ORIGIN_ROW + 10, 0));
-
-        System.out.flush();
-
-        addBoardLabels();
-    }
-
-    private void addBoardLabels(){
-
-        String rowLabels = " 12345678 ";
-        String colLabels = " abcdefgh ";
+        String rowLabels = "12345678";
 
         if(!asWhite){
             rowLabels = new StringBuilder(rowLabels).reverse().toString();
-            colLabels = new StringBuilder(colLabels).reverse().toString();
         }
 
-        for(int row = 1; row <= 10; row++){
-            System.out.print(moveCursorToLocation(ORIGIN_ROW + 10 - row, ORIGIN_COL + 3));
-            System.out.print(rowLabels.charAt(row - 1));
-            System.out.print(moveCursorToLocation(ORIGIN_ROW + 10 - row, ORIGIN_COL + 30));
-            System.out.print(rowLabels.charAt(row - 1));
-            System.out.print(RESET_BG_COLOR + RESET_TEXT_COLOR);
+        System.out.print(topPadding());
+
+        System.out.print(columnLabels());
+
+        // Board rows
+        for(int row = 1; row <= 8; row++){
+
+            // Padding
+            System.out.print(leftPadding());
+
+            // Row label
+            System.out.print(SET_TEXT_COLOR_RED);
+            System.out.printf(" %c ", rowLabels.charAt(row - 1));
+
+            // Row squares
+            for(int col = 1; col <= 8; col++){
+
+                ChessPiece piece = board.getPiece(new ChessPosition(asWhite ? 9 - row : row, col));
+                System.out.print(getBackgroundColorForSquare(row, col));
+
+                if(piece == null){
+
+                    // Empty square
+                    System.out.print("   ");
+
+                }else{
+
+                    // Piece
+                    System.out.print(piece.getTeamColor() == ChessGame.TeamColor.WHITE ? SET_TEXT_COLOR_WHITE : SET_TEXT_COLOR_BLACK);
+                    System.out.print(piece);
+                }
+            }
+
+            // Row label
+            System.out.print(RESET_BG_COLOR);
+            System.out.print(SET_TEXT_COLOR_RED);
+            System.out.printf(" %c \n", rowLabels.charAt(row - 1));
         }
 
-        for(int col = 1; col <= 10; col++){
-            System.out.print(moveCursorToLocation(ORIGIN_ROW - 1, ORIGIN_COL + 3 + (col - 1) * 3));
-            System.out.print(colLabels.charAt(col - 1));
-            System.out.print(moveCursorToLocation(ORIGIN_ROW + 9, ORIGIN_COL + 3 + (col - 1) * 3));
-            System.out.print(colLabels.charAt(col - 1));
-            System.out.print(RESET_BG_COLOR + RESET_TEXT_COLOR);
-        }
+        System.out.print(columnLabels());
+
+        System.out.print(bottomPadding());
 
         System.out.flush();
     }
 
-    private void displayPiece(int row, int col, ChessPiece piece) {
+    private String leftPadding(){
+        String padding = "";
+        for(int i = 0; i < LEFT_PADDING; i++){
+            padding = padding + " ";
+        }
+        return padding;
+    }
 
-        int pRow = asWhite ? row : 9 - row;
+    private String topPadding(){
+        return topBottomPadding(TOP_PADDING);
+    }
 
-        System.out.print(SET_TEXT_COLOR_BLACK);
-        System.out.print(moveCursorToLocation(ORIGIN_ROW + pRow, (ORIGIN_COL + col) * 3));
-        System.out.print(getBackgroundColorForSquare(pRow, col));
-        System.out.print(piece);
-        // System.out.print("\u001B[0m");
-        System.out.print(RESET_BG_COLOR + RESET_TEXT_COLOR);
-        System.out.print(moveCursorToLocation(ORIGIN_ROW + 10, 0));
+    private String bottomPadding(){
+        return topBottomPadding(BOTTOM_PADDING);
+    }
 
-        System.out.flush();
+    private String topBottomPadding(int lines){
+        String padding = "";
+        for(int i = 0; i < lines; i++){
+            padding = padding + "\n";
+        }
+        return padding;
+    }
+
+    private String columnLabels(){
+
+        String colLabels = "abcdefgh";
+
+        if(!asWhite){
+            colLabels = new StringBuilder(colLabels).reverse().toString();
+        }
+
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(leftPadding());
+        buffer.append("   ");
+        buffer.append(SET_TEXT_COLOR_RED);
+
+        for(int i = 0; i < 8; i++){
+            buffer.append(String.format(" %c ", colLabels.charAt(i)));
+        }
+
+        buffer.append("\n");
+
+        return buffer.toString();
     }
 
     private String getBackgroundColorForSquare(int row, int col){
@@ -106,6 +121,7 @@ public class ChessRenderer {
     private final ChessBoard board;
     private final boolean asWhite;
 
-    private static final int ORIGIN_ROW = 1;
-    private static final int ORIGIN_COL = 1;
+    private static final int TOP_PADDING = 2;
+    private static final int BOTTOM_PADDING = 1;
+    private static final int LEFT_PADDING = 1;
 }
