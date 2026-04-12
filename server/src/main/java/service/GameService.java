@@ -8,6 +8,7 @@ import model.request.CreateGameRequest;
 import model.request.JoinGameRequest;
 import model.response.CreateGameResult;
 import model.response.ListGamesResult;
+import model.response.MakeMoveResult;
 import websocket.commands.LeaveGameCommand;
 import websocket.commands.ResignGameCommand;
 import websocket.commands.MakeMoveCommand;
@@ -168,7 +169,7 @@ public class GameService extends BaseService {
         }
     }
 
-    public String makeMove(String authToken, MakeMoveCommand makeMoveCommand) throws ResponseException {
+    public MakeMoveResult makeMove(String authToken, MakeMoveCommand makeMoveCommand) throws ResponseException {
 
         // get game from database (and validate authToken)
         GameData gameData = getGame(makeMoveCommand.getAuthToken(), makeMoveCommand.getGameID());
@@ -176,7 +177,6 @@ public class GameService extends BaseService {
         try {
             // get username from authToken
             String username = DaoFactory.getAuthTokenDao().getAuthToken(authToken).getUsername();
-
 
             // determine color for username (null when observing)
 
@@ -214,29 +214,26 @@ public class GameService extends BaseService {
                 throw new ResponseException("Move prohibited: Invalid move: " + x.getMessage());
             }
 
-            String moveMessage = null;
+            String specialMessage = null;
 
             // game status checks
 
             if(gameData.getGame().isInCheckmate(opponentColor)){
                 gameData.getGame().setGameOver(color);
-                moveMessage = String.format("Checkmate! %s has won the game!", color);
+                specialMessage = String.format("Checkmate! %s has won the game!", color);
 
             }else if(gameData.getGame().isInStalemate(opponentColor)){
                 gameData.getGame().setGameOver(null);
-                moveMessage = String.format("Stalemate: The game ends in a tie.");
+                specialMessage = String.format("Stalemate: The game ends in a tie.");
 
             }else if(gameData.getGame().isInCheck(opponentColor)){
-                moveMessage = String.format("Check! A move by %s has put %s in danger!", color, opponentColor);
-
-            }else{
-                moveMessage = String.format("%s has made a move.", color);
+                specialMessage = String.format("Check! A move by %s has put %s in danger!", color, opponentColor);
             }
 
             // update the game
             DaoFactory.getGameDao().updateGame(gameData);
 
-            return moveMessage;
+            return new MakeMoveResult(String.format("%s has made a move.", color), specialMessage);
 
         }catch(DataAccessException e){
             throw new ResponseException("Error executing move: " + e.getMessage());

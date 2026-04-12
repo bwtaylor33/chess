@@ -7,6 +7,8 @@ import org.eclipse.jetty.websocket.api.Session;
 
 import websocket.messages.ServerMessage;
 
+import javax.swing.plaf.synth.SynthDesktopIconUI;
+
 public class ConnectionManager {
 
     public void add(int gameID, Session session) {

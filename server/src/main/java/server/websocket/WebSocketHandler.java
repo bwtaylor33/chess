@@ -5,6 +5,8 @@ import dataaccess.DataAccessException;
 import io.javalin.websocket.*;
 import com.google.gson.Gson;
 import java.io.IOException;
+
+import model.response.MakeMoveResult;
 import org.eclipse.jetty.websocket.api.Session;
 import org.jetbrains.annotations.NotNull;
 import service.ForbiddenRequestException;
@@ -14,7 +16,6 @@ import websocket.messages.*;
 import service.GameService;
 import service.UnauthorizedRequestException;
 import model.GameData;
-import model.request.JoinGameRequest;
 import websocket.commands.LeaveGameCommand;
 import websocket.commands.ResignGameCommand;
 import websocket.commands.MakeMoveCommand;
@@ -77,9 +78,6 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         // Retrieve game details
         GameData gameData = gameService.getGame(command.getAuthToken(), command.getGameID());
 
-        // test if Game null
-
-
         // Respond with the load game message
         System.out.println("loaded game: " + gameData.getGame().toString());
         connectionManager.send(session, new LoadGameMessage(username, gameData.getGame()));
@@ -92,10 +90,10 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
 
     private void makeMove(Session session, String username, MakeMoveCommand command) throws ResponseException, IOException {
 
-        String moveMessage = null;
+        MakeMoveResult makeMoveResult = null;
 
         try {
-            moveMessage = gameService.makeMove(command.getAuthToken(), command);
+            makeMoveResult = gameService.makeMove(command.getAuthToken(), command);
 
         } catch (ResponseException x){
             connectionManager.send(session, new ErrorMessage(x.getMessage()));
@@ -104,11 +102,17 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
 
         // Broadcast an update to watchers
         connectionManager.broadcast(command.getGameID(), session,
-                new NotificationMessage(NotificationMessage.NotificationMessageType.MOVE, username, moveMessage));
+                new NotificationMessage(NotificationMessage.NotificationMessageType.MOVE, username, makeMoveResult.moveMessage()));
 
         // Broadcast a board update
-        connectionManager.broadcast(command.getGameID(), session,
+        connectionManager.broadcast(command.getGameID(), null,
                 new LoadGameMessage(username, gameService.getGame(command.getAuthToken(), command.getGameID()).getGame()));
+
+        // Broadcast a board update
+        if (makeMoveResult.specialMessage() != null) {
+            connectionManager.broadcast(command.getGameID(), null,
+                    new NotificationMessage(NotificationMessage.NotificationMessageType.MOVE, username, makeMoveResult.moveMessage()));
+        }
     }
 
     private void leaveGame(Session session, String username, LeaveGameCommand command) throws ResponseException, IOException {
