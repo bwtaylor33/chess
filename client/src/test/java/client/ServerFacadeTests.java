@@ -84,7 +84,7 @@ public class ServerFacadeTests {
         Exception exception = Assertions.assertThrows(ClientException.class, () -> {
             client.login(new LoginRequest("testUser", "badPassword"));
         });
-        Assertions.assertEquals("Error logging in user: Error: incorrect password", exception.getMessage());
+        Assertions.assertEquals("Error: Incorrect password", exception.getMessage());
     }
 
     @Test
@@ -98,7 +98,7 @@ public class ServerFacadeTests {
         Exception exception = Assertions.assertThrows(ClientException.class, () -> {
             client.listGames(registerResult.authToken());
         });
-        Assertions.assertTrue(exception.getMessage().startsWith("Error: Error: invalid authToken: "));
+        Assertions.assertTrue(exception.getMessage().startsWith("Error: Invalid authToken: "));
     }
 
     @Test
@@ -108,7 +108,7 @@ public class ServerFacadeTests {
         Exception exception = Assertions.assertThrows(ClientException.class, () -> {
             client.logout("badToken");
         });
-        Assertions.assertTrue(exception.getMessage().startsWith("Error: Error: invalid authToken: "));
+        Assertions.assertTrue(exception.getMessage().startsWith("Error: Invalid authToken: "));
     }
 
     @Test
@@ -157,7 +157,7 @@ public class ServerFacadeTests {
         Exception exception = Assertions.assertThrows(ClientException.class, () -> {
             client.joinGame(registerResult.authToken(), new JoinGameRequest(ChessGame.TeamColor.BLACK, 999));
         });
-        Assertions.assertEquals("Error joining game: Error: invalid gameID: 999", exception.getMessage());
+        Assertions.assertEquals("Error loading game: Error: invalid gameID: 999", exception.getMessage());
     }
 
     @Test
@@ -182,6 +182,6 @@ public class ServerFacadeTests {
         Exception exception = Assertions.assertThrows(ClientException.class, () -> {
             client.listGames("badToken");
         });
-        Assertions.assertEquals("Error: Error: invalid authToken: badToken", exception.getMessage());
+        Assertions.assertEquals("Error: Invalid authToken: badToken", exception.getMessage());
     }
 }

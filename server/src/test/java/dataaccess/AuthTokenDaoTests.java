@@ -35,7 +35,7 @@ public class AuthTokenDaoTests {
         Exception exception = Assertions.assertThrows(DataAccessException.class, () -> {
             authTokenDao.createAuthToken(testAuth);
         });
-        Assertions.assertEquals("unable to update database: Duplicate entry 'hardCodedAuthToken' for key 'authToken.PRIMARY'".toLowerCase(),
+        Assertions.assertEquals("Unable to update database: Duplicate entry 'hardCodedAuthToken' for key 'authToken.PRIMARY'".toLowerCase(),
                 exception.getMessage().toLowerCase());
     }
 
@@ -64,7 +64,7 @@ public class AuthTokenDaoTests {
         Exception exception = Assertions.assertThrows(DataAccessException.class, () -> {
             authTokenDao.getAuthToken("fakeAuthToken");
         });
-        Assertions.assertEquals("Error: invalid authToken: fakeAuthToken", exception.getMessage());
+        Assertions.assertEquals("Invalid authToken: fakeAuthToken", exception.getMessage());
     }
 
     @Test
@@ -84,7 +84,7 @@ public class AuthTokenDaoTests {
         Exception exception = Assertions.assertThrows(DataAccessException.class, () -> {
             authTokenDao.getAuthToken(testAuth.getAuthToken());
         });
-        Assertions.assertTrue(exception.getMessage().startsWith("Error: invalid authToken: "));
+        Assertions.assertTrue(exception.getMessage().startsWith("Invalid authToken: "));
     }
 
     @Test
@@ -107,7 +107,7 @@ public class AuthTokenDaoTests {
         Exception exception = Assertions.assertThrows(DataAccessException.class, () -> {
             authTokenDao.getAuthToken(testAuth.getAuthToken());
         });
-        Assertions.assertTrue(exception.getMessage().startsWith("Error: invalid authToken: "));
+        Assertions.assertTrue(exception.getMessage().startsWith("Invalid authToken: "));
     }
 
     private AuthTokenDao authTokenDao;

@@ -36,6 +36,7 @@ public class UserService extends BaseService {
             UserData userData = userDao.getUser(registerRequest.username());
 
             throw new ForbiddenRequestException("Error: username is already in use: " + registerRequest.username());
+
         }catch (DataAccessException e) {
             // username is not already present
         }
@@ -79,13 +80,14 @@ public class UserService extends BaseService {
             UserData userData = null;
             try {
                 userData = userDao.getUser(loginRequest.username());
+
             } catch (DataAccessException d) {
-                throw new DataAccessException("Error: invalid username: " + loginRequest.username());
+                throw new UnauthorizedRequestException("Error: Invalid username: " + loginRequest.username());
             }
 
             // check for password match
             if (!BCrypt.checkpw(loginRequest.password(), userData.getPassword())) {
-                throw new DataAccessException("Error: incorrect password");
+                throw new UnauthorizedRequestException("Error: Incorrect password");
             }
 
             // create authToken
@@ -98,7 +100,7 @@ public class UserService extends BaseService {
             return new LoginResult(loginRequest.username(), authData.getAuthToken());
 
         }catch (DataAccessException e) {
-            throw new ResponseException("Error logging in user: " + e.getMessage());
+            throw new UnauthorizedRequestException("Error logging in user: " + e.getMessage());
         }
     }
 

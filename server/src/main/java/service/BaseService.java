@@ -1,6 +1,5 @@
 package service;
 
-import dataaccess.AuthTokenDao;
 import dataaccess.DaoFactory;
 import dataaccess.DataAccessException;
 
@@ -9,16 +8,13 @@ import dataaccess.DataAccessException;
  */
 public class BaseService {
 
-    protected void validateAuthToken(String authToken) throws ResponseException {
+    protected String validateAuthToken(String authToken) throws ResponseException {
 
         try{
-            // create authToken
-            AuthTokenDao authTokenDao = DaoFactory.getAuthTokenDao();
-
-            authTokenDao.getAuthToken(authToken);
+            return DaoFactory.getAuthTokenDao().getAuthToken(authToken).getUsername();
 
         }catch (DataAccessException e) {
-            throw new ForbiddenRequestException("Error: " + e.getMessage());
+            throw new UnauthorizedRequestException("Error: " + e.getMessage());
         }
     }
 }
