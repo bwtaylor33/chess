@@ -65,8 +65,8 @@ public class GameplayClient extends BaseClient implements ServerMessageConsumer 
     public String help() {
         return String.format(
                 """
-                %s- move <FROM_ROW><FROM_COL> <TO_ROW><TO_COL> [PROMOTION_PIECE]%s - piece from and to coordinates (use PROMOTION_PIECE only if an eligible pawn)
-                %s- show <ROW><COL>%s - valid moves for the piece at space 
+                %s- move <FROM_COL><FROM_ROW> <TO_COL><TO_ROW> [PROMOTION_PIECE]%s - for possible pawn promotion
+                %s- show <ROW><COL>%s - valid moves for the piece at space
                 %s- leave %s- a game
                 %s- resign %s- resign the game
                 %s- redraw %s- redraw the board
