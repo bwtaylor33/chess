@@ -21,7 +21,7 @@ public class ConnectionManager {
 
     public void send(Session session, ServerMessage serverMessage) throws IOException {
 
-        //TODO: Clean up debug logging
+        // debug logging
         if (serverMessage instanceof websocket.messages.ErrorMessage){
             websocket.messages.ErrorMessage errMsg = (websocket.messages.ErrorMessage)serverMessage;
             System.out.println("Sending errorMessage: " + errMsg.getErrorMessage());
@@ -43,7 +43,7 @@ public class ConnectionManager {
 
     public void broadcast(int gameID, Session excludeSession, ServerMessage serverMessage) throws IOException {
 
-        //TODO: Clean up debug logging
+        // debug logging
         if (serverMessage instanceof websocket.messages.ErrorMessage){
             websocket.messages.ErrorMessage errMsg = (websocket.messages.ErrorMessage)serverMessage;
             System.out.println("Broadcasting errorMessage: " + errMsg.getErrorMessage());

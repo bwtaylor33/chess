@@ -30,7 +30,6 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
 
     @Override
     public void handleClose(@NotNull WsCloseContext context) throws Exception {
-        // TODO: Do we need to do any kind of auto-exit on observing games or playing games?
         System.out.println("connection closed");
     }
 
