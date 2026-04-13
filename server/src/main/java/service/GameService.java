@@ -82,8 +82,8 @@ public class GameService extends BaseService {
 
                 gameData.setBlackUsername(username);
 
-            }else {
-                throw new BadRequestException("Error: Invalid team color: " + joinGameRequest.playerColor());
+//            }else {
+//                throw new BadRequestException("Error: Invalid team color: " + joinGameRequest.playerColor());
             }
 
             DaoFactory.getGameDao().updateGame(gameData);

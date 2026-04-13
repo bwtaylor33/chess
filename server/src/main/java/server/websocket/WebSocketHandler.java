@@ -36,14 +36,12 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
     @Override
     public void handleMessage(@NotNull WsMessageContext context) throws Exception {
 
-        int gameID = -1;
         Session session = context.session;
 
         try {
             Gson gson = new Gson();
 
             UserGameCommand command = gson.fromJson(context.message(), UserGameCommand.class);
-            gameID = command.getGameID();
             String username = getUsername(command.getAuthToken());
 
             switch (command.getCommandType()) {
@@ -99,7 +97,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         connectionManager.broadcast(command.getGameID(), null,
                 new LoadGameMessage(username, gameService.getGame(command.getAuthToken(), command.getGameID()).getGame()));
 
-        // Broadcast a board update
+        // Broadcast a special message
         if (makeMoveResult.specialMessage() != null) {
             connectionManager.broadcast(command.getGameID(), null,
                     new NotificationMessage(NotificationMessage.NotificationMessageType.MOVE, username, makeMoveResult.specialMessage()));
