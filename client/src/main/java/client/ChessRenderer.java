@@ -10,7 +10,7 @@ public class ChessRenderer {
 
     public ChessRenderer(ChessBoard board, ChessGame.TeamColor perspective) {
         this.board = board;
-        this.asWhite = perspective == ChessGame.TeamColor.WHITE;
+        this.asWhite = perspective != ChessGame.TeamColor.BLACK;
     }
 
     public void display(ArrayList<ChessPosition> highlightedPositions) {
