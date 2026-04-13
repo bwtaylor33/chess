@@ -55,7 +55,7 @@ public class ChessPosition {
     }
 
     public String toRowColumnString() {
-        return String.format("%c%c", 'a' + row - 1, '1' + column - 1);
+        return String.format("%c%c", 'a' + column - 1, '1' + row - 1);
     }
 
     public static ChessPosition fromRowColumnString(String rowColumnString) {

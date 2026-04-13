@@ -84,7 +84,7 @@ public class GameplayClient extends BaseClient implements ServerMessageConsumer 
     }
 
     public void notify(NotificationMessage notificationMessage) {
-        System.out.print(SET_TEXT_COLOR_MAGENTA);
+        System.out.println(SET_TEXT_COLOR_MAGENTA);
         notificationMessage.display();
         System.out.print(RESET_TEXT_COLOR);
         printPrompt();
@@ -97,7 +97,7 @@ public class GameplayClient extends BaseClient implements ServerMessageConsumer 
     }
 
     public void error(ErrorMessage errorMessage) {
-        System.out.print(SET_TEXT_COLOR_RED);
+        System.out.println(SET_TEXT_COLOR_RED);
         errorMessage.display();
         System.out.print(RESET_TEXT_COLOR);
         printPrompt();
@@ -106,7 +106,7 @@ public class GameplayClient extends BaseClient implements ServerMessageConsumer 
     private String movePiece(String... params) throws ClientException {
 
         if (params.length < 2){
-            throw new ClientException("Error: Expected <fromRow><fromCol> <toRow><toCol>");
+            throw new ClientException("Error: Expected <fromCol><fromRow> <toCol><toRow>");
         }
 
         String from = params[0].trim();
@@ -148,7 +148,7 @@ public class GameplayClient extends BaseClient implements ServerMessageConsumer 
     private String showValidMoves(String... params) throws ClientException {
 
         if (params.length < 1) {
-            throw new ClientException("Error: Expected: <row><col>");
+            throw new ClientException("Error: Expected: <col><row>");
         }
 
         String position = params[0].trim();
