@@ -9,7 +9,7 @@ public class ErrorMessage extends ServerMessage {
 
     @Override
     public void display() {
-        System.out.println("Server error: " + errorMessage);
+        System.out.println(errorMessage);
     }
 
     public String getErrorMessage(){

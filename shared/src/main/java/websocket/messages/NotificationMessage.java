@@ -18,22 +18,7 @@ public class NotificationMessage extends ServerMessage {
 
     @Override
     public void display() {
-        switch(type){
-            case CONNECT:
-                System.out.printf("Connect: %s", message);
-                break;
-            case MOVE:
-                System.out.printf("Move: %s", message);
-                break;
-            case LEFT:
-                System.out.printf("Left: %s", message);
-                break;
-            case RESIGN:
-                System.out.printf("Resign: %s", message);
-                break;
-            default:
-                break;
-        }
+        System.out.println(message);
     }
 
     private final NotificationMessageType type;

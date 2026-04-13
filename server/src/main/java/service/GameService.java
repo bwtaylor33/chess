@@ -138,7 +138,7 @@ public class GameService extends BaseService {
         try{
             GameDao gameDao = DaoFactory.getGameDao();
 
-            // vacate spot for the game in game table
+            // get game
             GameData gameData = gameDao.getGame(resignGameCommand.getGameID());
 
             // make sure game is not already over
@@ -149,12 +149,12 @@ public class GameService extends BaseService {
             boolean resignedAsWhite = false;
             boolean resignedAsBlack = false;
 
-            if (gameData.getWhiteUsername().equals(username)) {
+            if (gameData.getWhiteUsername() != null && gameData.getWhiteUsername().equals(username)) {
                 gameData.getGame().setGameOver(ChessGame.TeamColor.BLACK);
                 resignedAsWhite = true;
             }
 
-            if (gameData.getBlackUsername().equals(username)) {
+            if (gameData.getBlackUsername() != null && gameData.getBlackUsername().equals(username)) {
                 gameData.getGame().setGameOver(ChessGame.TeamColor.WHITE);
                 resignedAsBlack = true;
             }
@@ -221,20 +221,24 @@ public class GameService extends BaseService {
 
             if(gameData.getGame().isInCheckmate(opponentColor)){
                 gameData.getGame().setGameOver(color);
-                specialMessage = String.format("Checkmate! %s has won the game!", color);
+                specialMessage = String.format("Checkmate! %s has won the game!", username);
 
             }else if(gameData.getGame().isInStalemate(opponentColor)){
                 gameData.getGame().setGameOver(null);
                 specialMessage = String.format("Stalemate: The game ends in a tie.");
 
             }else if(gameData.getGame().isInCheck(opponentColor)){
-                specialMessage = String.format("Check! A move by %s has put %s in danger!", color, opponentColor);
+                specialMessage = String.format("Check! A move by %s has put %s in danger!", username, opponentColor);
             }
 
             // update the game
             DaoFactory.getGameDao().updateGame(gameData);
 
-            return new MakeMoveResult(String.format("%s has made a move.", color), specialMessage);
+            return new MakeMoveResult(String.format("%s has made a move from %s to %s.",
+                    username,
+                    makeMoveCommand.getMove().getStartPosition().toRowColumnString(),
+                    makeMoveCommand.getMove().getEndPosition().toRowColumnString()),
+                    specialMessage);
 
         }catch(DataAccessException e){
             throw new ResponseException("Error executing move: " + e.getMessage());

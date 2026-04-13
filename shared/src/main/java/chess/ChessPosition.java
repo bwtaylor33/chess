@@ -54,6 +54,28 @@ public class ChessPosition {
         return String.format("[%d,%d]", row, column);
     }
 
+    public String toRowColumnString() {
+        return String.format("%c%c", 'a' + row - 1, '1' + column - 1);
+    }
+
+    public static ChessPosition fromRowColumnString(String rowColumnString) {
+
+        if(rowColumnString == null || rowColumnString.length() != 2){
+            throw new IllegalArgumentException("Invalid format: expect row-column string as 2-character, letter-digit combo");
+        }
+
+        rowColumnString = rowColumnString.toLowerCase();
+
+        int col = rowColumnString.charAt(0) - 'a' + 1;
+        int row = rowColumnString.charAt(1) - '1' + 1;
+
+        if(row < 1 || row > 8 || col < 1 || col > 8){
+            throw new IllegalArgumentException("Error: Expected row in range a-h and column in range 1-8");
+        }
+
+        return new ChessPosition(row, col);
+    }
+
     private int row;
     private int column;
 }

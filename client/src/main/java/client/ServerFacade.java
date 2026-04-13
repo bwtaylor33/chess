@@ -111,7 +111,9 @@ public class ServerFacade extends Endpoint {
             });
         }
 
-        session.getAsyncRemote().sendText(command.toJson());
+        if (session.isOpen()) {
+            session.getAsyncRemote().sendText(command.toJson());
+        }
     }
 
     private HttpRequest buildRequest(String authToken, String method, String path, Object body) {

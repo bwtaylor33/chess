@@ -7,8 +7,6 @@ import org.eclipse.jetty.websocket.api.Session;
 
 import websocket.messages.ServerMessage;
 
-import javax.swing.plaf.synth.SynthDesktopIconUI;
-
 public class ConnectionManager {
 
     public void add(int gameID, Session session) {
@@ -22,29 +20,51 @@ public class ConnectionManager {
     }
 
     public void send(Session session, ServerMessage serverMessage) throws IOException {
-        String message = serverMessage.toString();
 
-        System.out.println("Sending direct message: " + serverMessage.getServerMessageType());
+        //TODO: Clean up debug logging
         if (serverMessage instanceof websocket.messages.ErrorMessage){
             websocket.messages.ErrorMessage errMsg = (websocket.messages.ErrorMessage)serverMessage;
-            System.out.println("errorMessage: " + errMsg.getErrorMessage());
+            System.out.println("Sending errorMessage: " + errMsg.getErrorMessage());
         }
+        if (serverMessage instanceof websocket.messages.NotificationMessage){
+            websocket.messages.NotificationMessage notifMsg = (websocket.messages.NotificationMessage)serverMessage;
+            System.out.print("Sending notification: ");
+            notifMsg.display();
+        }
+        if (serverMessage instanceof websocket.messages.LoadGameMessage){
+            websocket.messages.LoadGameMessage loadMsg = (websocket.messages.LoadGameMessage)serverMessage;
+            System.out.printf("Sending load: username=%s\n", loadMsg.getUsername());
+        }
+
         synchronized(session){
-            session.getRemote().sendString(message);
+            session.getRemote().sendString(serverMessage.toString());
         }
     }
 
     public void broadcast(int gameID, Session excludeSession, ServerMessage serverMessage) throws IOException {
 
-        String message = serverMessage.toString();
-        System.out.println("Broadcasting message: " + serverMessage.getServerMessageType());
+        //TODO: Clean up debug logging
+        if (serverMessage instanceof websocket.messages.ErrorMessage){
+            websocket.messages.ErrorMessage errMsg = (websocket.messages.ErrorMessage)serverMessage;
+            System.out.println("Broadcasting errorMessage: " + errMsg.getErrorMessage());
+        }
+        if (serverMessage instanceof websocket.messages.NotificationMessage){
+            websocket.messages.NotificationMessage notifMsg = (websocket.messages.NotificationMessage)serverMessage;
+            System.out.print("Broadcasting notification: ");
+            notifMsg.display();
+        }
+        if (serverMessage instanceof websocket.messages.LoadGameMessage){
+            websocket.messages.LoadGameMessage loadMsg = (websocket.messages.LoadGameMessage)serverMessage;
+            System.out.printf("Broadcasting load: username=%s\n", loadMsg.getUsername());
+        }
+
         ArrayList<Session> set = connections.computeIfAbsent(gameID, k -> new ArrayList<>());
 
         for (Session s : set) {
             if (s.isOpen()) {
                 if (!s.equals(excludeSession)) {
                     synchronized(s){
-                        s.getRemote().sendString(message);
+                        s.getRemote().sendString(serverMessage.toString());
                     }
                 }
             }

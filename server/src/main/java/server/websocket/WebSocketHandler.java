@@ -20,12 +20,12 @@ import websocket.commands.LeaveGameCommand;
 import websocket.commands.ResignGameCommand;
 import websocket.commands.MakeMoveCommand;
 
-public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsCloseHandler, WsErrorHandler {
+public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsCloseHandler {
 
     @Override
     public void handleConnect(@NotNull WsConnectContext context) throws Exception {
         System.out.println("connection opened");
-        // TODO: What do we need to do for the keepalive behavior, so things don't time out at 30s?
+        context.enableAutomaticPings();
     }
 
     @Override
@@ -35,19 +35,12 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
     }
 
     @Override
-    public void handleError(@NotNull WsErrorContext context) { //TODO: Error handler for debugging only
-        System.err.println("WebSocket error on session: " + context.sessionId());
-        context.error().printStackTrace();
-    }
-
-    @Override
     public void handleMessage(@NotNull WsMessageContext context) throws Exception {
 
         int gameID = -1;
         Session session = context.session;
 
         try {
-            //System.out.println("RAW COMMAND: " + context.message()); //TODO: Remove raw each of socket message inbound to client
             Gson gson = new Gson();
 
             UserGameCommand command = gson.fromJson(context.message(), UserGameCommand.class);
@@ -65,7 +58,6 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             connectionManager.send(session, new ErrorMessage("Error: Unauthorized: " + e.getMessage()));
 
         } catch (Exception e) {
-            //e.printStackTrace(); //TODO:Clean up after debugging
             connectionManager.send(session, new ErrorMessage("Error: " + e.getMessage()));
         }
     }
@@ -111,7 +103,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         // Broadcast a board update
         if (makeMoveResult.specialMessage() != null) {
             connectionManager.broadcast(command.getGameID(), null,
-                    new NotificationMessage(NotificationMessage.NotificationMessageType.MOVE, username, makeMoveResult.moveMessage()));
+                    new NotificationMessage(NotificationMessage.NotificationMessageType.MOVE, username, makeMoveResult.specialMessage()));
         }
     }
 

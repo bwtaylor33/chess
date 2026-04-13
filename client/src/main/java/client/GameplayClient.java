@@ -1,9 +1,11 @@
 package client;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 
 import static ui.EscapeSequences.*;
-import chess.ChessBoard;
+
 import chess.ChessGame;
 import chess.ChessPiece;
 import chess.ChessMove;
@@ -107,21 +109,8 @@ public class GameplayClient extends BaseClient implements ServerMessageConsumer 
             throw new ClientException("Error: Expected <fromRow><fromCol> <toRow><toCol>");
         }
 
-        String from = params[0].trim().toLowerCase();
-        String to = params[1].trim().toLowerCase();
-
-        if(from.length() != 2 || to.length() != 2){
-            throw new ClientException("Error: Expected to and from positions, defined a letter-digit combos (e.g. a1)");
-        }
-
-        int fromRow = from.charAt(0) - 'a' + 1;
-        int fromCol = from.charAt(1) - '1' + 1;
-        int toRow = to.charAt(0) - 'a' + 1;
-        int toCol = to.charAt(1) - '1' + 1;
-
-        if(fromRow < 1 || fromRow > 8 || fromCol < 1 || fromCol > 8 || toRow < 1 || toRow > 8 || toCol < 1 || toCol > 8){
-            throw new ClientException("Error: Expected rows in range a-h and columns in range 1-8)");
-        }
+        String from = params[0].trim();
+        String to = params[1].trim();
 
         ChessPiece.PieceType promotionPiece = null;
 
@@ -130,7 +119,15 @@ public class GameplayClient extends BaseClient implements ServerMessageConsumer 
             promotionPiece = mapPromotionPieceRequest(params[2].trim().toLowerCase());
         }
 
-        ChessMove chessMove = new ChessMove(new ChessPosition(fromRow, fromCol), new ChessPosition(toRow, toCol), promotionPiece);
+        // Converts string to valid chess move
+        ChessMove chessMove = null;
+        try {
+            chessMove = new ChessMove(ChessPosition.fromRowColumnString(from), ChessPosition.fromRowColumnString(to), promotionPiece);
+
+        } catch (IllegalArgumentException i) {
+            throw new ClientException(i.getMessage());
+        }
+
         server.sendCommand(new MakeMoveCommand(authToken, gameID, chessMove));
 
         return "Move completed.";
@@ -154,19 +151,29 @@ public class GameplayClient extends BaseClient implements ServerMessageConsumer 
             throw new ClientException("Error: Expected: <row><col>");
         }
 
-        String position = params[0].trim().toLowerCase();
-        if(position.length() != 2){
-            throw new ClientException("Error: Expected position as a letter-digit, 2-character combo (e.g. \"a1\"");
+        String position = params[0].trim();
+
+        // Converts string to valid chess move
+        ChessPosition chessPosition = null;
+        try {
+            chessPosition = ChessPosition.fromRowColumnString(position);
+
+        } catch (IllegalArgumentException i) {
+            throw new ClientException(i.getMessage());
         }
 
-        int row = position.charAt(0) - 'a' + 1;
-        int col = position.charAt(1) - '1' + 1;
-
-        if(row < 1 || row > 8 || col < 1 || col > 8){
-            throw new ClientException("Error: Expected a row in range a-h and a column in range 1-8)");
+        Collection<ChessMove> validMoves = game.validMoves(chessPosition);
+        if (validMoves == null) {
+            throw new ClientException("Error: No piece available at specified coordinate.");
         }
 
-        // TODO: Show valid moves
+        // Pull destination chess position for each valid move
+        highlightedPositions.clear();
+        for (ChessMove validMove : validMoves) {
+            highlightedPositions.add(validMove.getEndPosition());
+        }
+
+        boardRefreshRequested = true;
 
         return String.format("Moves highlighted for piece at %s.", position);
     }
@@ -188,7 +195,8 @@ public class GameplayClient extends BaseClient implements ServerMessageConsumer 
 
     private void drawGameBoard() {
         ChessRenderer renderer = new ChessRenderer(game.getBoard(), color);
-        renderer.display();
+        renderer.display(highlightedPositions);
+        highlightedPositions.clear();
     }
 
     private final String authToken;
@@ -197,4 +205,5 @@ public class GameplayClient extends BaseClient implements ServerMessageConsumer 
     private final ChessGame.TeamColor color;
     private ChessGame game = new ChessGame();
     private boolean boardRefreshRequested = false;
+    private ArrayList<ChessPosition> highlightedPositions = new ArrayList<>();
 }

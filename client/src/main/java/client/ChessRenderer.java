@@ -1,9 +1,8 @@
 package client;
 
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessPiece;
-import chess.ChessPosition;
+import chess.*;
+
+import java.util.ArrayList;
 
 import static ui.EscapeSequences.*;
 
@@ -14,11 +13,11 @@ public class ChessRenderer {
         this.asWhite = perspective == ChessGame.TeamColor.WHITE;
     }
 
-    public void display() {
+    public void display(ArrayList<ChessPosition> highlightedPositions) {
 
         String rowLabels = "12345678";
 
-        if(!asWhite){
+        if(asWhite){
             rowLabels = new StringBuilder(rowLabels).reverse().toString();
         }
 
@@ -33,14 +32,20 @@ public class ChessRenderer {
             System.out.print(leftPadding());
 
             // Row label
-            System.out.print(SET_TEXT_COLOR_RED);
+            System.out.print(LABEL_COLOR);
             System.out.printf(" %c ", rowLabels.charAt(row - 1));
 
             // Row squares
             for(int col = 1; col <= 8; col++){
 
-                ChessPiece piece = board.getPiece(new ChessPosition(asWhite ? 9 - row : row, col));
-                System.out.print(getBackgroundColorForSquare(row, col));
+                ChessPosition position = new ChessPosition(asWhite ? 9 - row : row, asWhite ? col : 9 - col);
+
+                ChessPiece piece = board.getPiece(position);
+
+                // Determine if this square is highlighted as a valid move
+                boolean highlighted = highlightedPositions.contains(position);
+
+                System.out.print(getBackgroundColorForSquare(row, col, highlighted));
 
                 if(piece == null){
 
@@ -50,14 +55,14 @@ public class ChessRenderer {
                 }else{
 
                     // Piece
-                    System.out.print(piece.getTeamColor() == ChessGame.TeamColor.WHITE ? SET_TEXT_COLOR_WHITE : SET_TEXT_COLOR_BLACK);
+                    System.out.print(piece.getTeamColor() == ChessGame.TeamColor.WHITE ? WHITE_COLOR : BLACK_COLOR);
                     System.out.print(piece);
                 }
             }
 
             // Row label
             System.out.print(RESET_BG_COLOR);
-            System.out.print(SET_TEXT_COLOR_RED);
+            System.out.print(LABEL_COLOR);
             System.out.printf(" %c \n", rowLabels.charAt(row - 1));
         }
 
@@ -103,7 +108,7 @@ public class ChessRenderer {
         StringBuffer buffer = new StringBuffer();
         buffer.append(leftPadding());
         buffer.append("   ");
-        buffer.append(SET_TEXT_COLOR_RED);
+        buffer.append(LABEL_COLOR);
 
         for(int i = 0; i < 8; i++){
             buffer.append(String.format(" %c ", colLabels.charAt(i)));
@@ -114,13 +119,21 @@ public class ChessRenderer {
         return buffer.toString();
     }
 
-    private String getBackgroundColorForSquare(int row, int col){
-        return (row + col) % 2 == 0 ? SET_BG_COLOR_DARK_GREY : SET_BG_COLOR_LIGHT_GREY;
+    private String getBackgroundColorForSquare(int row, int col, boolean highlighted){
+
+        if (highlighted) {
+            return (row + col) % 2 == 0 ? SET_BG_COLOR_DARK_GREEN : SET_BG_COLOR_GREEN;
+        }
+
+        return (row + col) % 2 == 0 ? SET_BG_COLOR_BLACK : SET_BG_COLOR_WHITE;
     }
 
     private final ChessBoard board;
     private final boolean asWhite;
 
+    private static final String LABEL_COLOR = SET_TEXT_COLOR_LIGHT_GREY;
+    private static final String WHITE_COLOR = SET_TEXT_COLOR_RED;
+    private static final String BLACK_COLOR = SET_TEXT_COLOR_BLUE;
     private static final int TOP_PADDING = 2;
     private static final int BOTTOM_PADDING = 1;
     private static final int LEFT_PADDING = 1;

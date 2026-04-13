@@ -77,36 +77,19 @@ public class ChessPiece {
     @Override
     public String toString() {
 
-        if (pieceColor == ChessGame.TeamColor.WHITE) {
-            return switch (pieceType) {
-                case PieceType.PAWN -> WHITE_PAWN;
-                case PieceType.ROOK -> WHITE_ROOK;
-                case PieceType.KNIGHT -> WHITE_KNIGHT;
-                case PieceType.BISHOP -> WHITE_BISHOP;
-                case PieceType.KING -> WHITE_KING;
-                default -> WHITE_QUEEN;
-            };
-        } else {
-            return switch (pieceType) {
-                case PieceType.PAWN -> BLACK_PAWN;
-                case PieceType.ROOK -> BLACK_ROOK;
-                case PieceType.KNIGHT -> BLACK_KNIGHT;
-                case PieceType.BISHOP -> BLACK_BISHOP;
-                case PieceType.KING -> BLACK_KING;
-                default -> BLACK_QUEEN;
-            };
-        }
+        return switch (pieceType) {
+            case PieceType.PAWN -> BLACK_PAWN;
+            case PieceType.ROOK -> BLACK_ROOK;
+            case PieceType.KNIGHT -> BLACK_KNIGHT;
+            case PieceType.BISHOP -> BLACK_BISHOP;
+            case PieceType.KING -> BLACK_KING;
+            default -> BLACK_QUEEN;
+        };
     }
 
     private final ChessGame.TeamColor pieceColor;
     private final ChessPiece.PieceType pieceType;
 
-    public static final String WHITE_KING = " ♔ ";
-    public static final String WHITE_QUEEN = " ♕ ";
-    public static final String WHITE_BISHOP = " ♗ ";
-    public static final String WHITE_KNIGHT = " ♘ ";
-    public static final String WHITE_ROOK = " ♖ ";
-    public static final String WHITE_PAWN = " ♙ ";
     public static final String BLACK_KING = " ♚ ";
     public static final String BLACK_QUEEN = " ♛ ";
     public static final String BLACK_BISHOP = " ♝ ";
