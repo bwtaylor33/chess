@@ -3,6 +3,7 @@ package client;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Scanner;
 
 import static ui.EscapeSequences.*;
 
@@ -184,8 +185,17 @@ public class GameplayClient extends BaseClient implements ServerMessageConsumer 
     }
 
     private String resignGame() throws ClientException {
-        server.sendCommand(new ResignGameCommand(authToken, gameID));
-        return "quit";
+
+        System.out.print("Type yes to confirm resignation: ");
+        Scanner scanner = new Scanner(System.in);
+        String line = scanner.nextLine();
+
+        // player resigns, but does not get kicked out of game
+        if (line.toLowerCase().trim().equals("yes")) {
+            server.sendCommand(new ResignGameCommand(authToken, gameID));
+        }
+
+        return "ok";
     }
 
     private String redrawBoard() {
