@@ -39,35 +39,33 @@ public class UnauthenticatedClient extends BaseClient {
 
     public String login(String... params) throws ClientException {
 
-        if (params.length >= 2) {
-
-            String username = params[0];
-            String password = params[1];
-
-            LoginResult loginResult = server.login(new LoginRequest(username, password));
-            new AuthenticatedClient(server, loginResult.authToken(), loginResult.username()).run();
-
-            return String.format("%s is now signed out.", username);
+        if (params.length != 2) {
+            throw new ClientException("Error: Expected: <username> <password>");
         }
 
-        throw new ClientException("Error: Expected: <username> <password>");
+        String username = params[0];
+        String password = params[1];
+
+        LoginResult loginResult = server.login(new LoginRequest(username, password));
+        new AuthenticatedClient(server, loginResult.authToken(), loginResult.username()).run();
+
+        return String.format("%s is now signed out.", username);
     }
 
     public String register(String... params) throws ClientException {
 
-        if (params.length >= 3) {
-
-            String username = params[0];
-            String password = params[1];
-            String email = params[2];
-
-            RegisterResult registerResult = server.register(new RegisterRequest(username, password, email));
-            new AuthenticatedClient(server, registerResult.authToken(), registerResult.username()).run();
-
-            return String.format("%s is now signed out.", username);
+        if (params.length != 3) {
+            throw new ClientException("Error: Expected: <username> <password> <email>");
         }
 
-        throw new ClientException("Error: Expected: <username> <password> <email>");
+        String username = params[0];
+        String password = params[1];
+        String email = params[2];
+
+        RegisterResult registerResult = server.register(new RegisterRequest(username, password, email));
+        new AuthenticatedClient(server, registerResult.authToken(), registerResult.username()).run();
+
+        return String.format("%s is now signed out.", username);
     }
 
     public String help() {

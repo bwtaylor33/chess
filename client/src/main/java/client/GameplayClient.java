@@ -67,7 +67,7 @@ public class GameplayClient extends BaseClient implements ServerMessageConsumer 
         return String.format(
                 """
                 %s- move <FROM_COL><FROM_ROW> <TO_COL><TO_ROW> [PROMOTION_PIECE]%s - for possible pawn promotion
-                %s- show <ROW><COL>%s - valid moves for the piece at space
+                %s- show <COL<ROW>%s - valid moves for the piece at space
                 %s- leave %s- a game
                 %s- resign %s- resign the game
                 %s- redraw %s- redraw the board
@@ -106,8 +106,8 @@ public class GameplayClient extends BaseClient implements ServerMessageConsumer 
 
     private String movePiece(String... params) throws ClientException {
 
-        if (params.length < 2){
-            throw new ClientException("Error: Expected <fromCol><fromRow> <toCol><toRow>");
+        if (params.length != 2 && params.length != 3){
+            throw new ClientException("Error: Expected <fromCol><fromRow> <toCol><toRow> [PROMOTION_PIECE]");
         }
 
         String from = params[0].trim();
@@ -116,7 +116,7 @@ public class GameplayClient extends BaseClient implements ServerMessageConsumer 
         ChessPiece.PieceType promotionPiece = null;
 
         // Handle promotion piece
-        if(params.length >= 3){
+        if(params.length == 3){
             promotionPiece = mapPromotionPieceRequest(params[2].trim().toLowerCase());
         }
 
@@ -148,7 +148,7 @@ public class GameplayClient extends BaseClient implements ServerMessageConsumer 
 
     private String showValidMoves(String... params) throws ClientException {
 
-        if (params.length < 1) {
+        if (params.length != 1) {
             throw new ClientException("Error: Expected: <col><row>");
         }
 

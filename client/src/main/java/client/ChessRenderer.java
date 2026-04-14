@@ -122,10 +122,10 @@ public class ChessRenderer {
     private String getBackgroundColorForSquare(int row, int col, boolean highlighted){
 
         if (highlighted) {
-            return (row + col) % 2 == 0 ? SET_BG_COLOR_DARK_GREEN : SET_BG_COLOR_GREEN;
+            return (row + col) % 2 == 0 ? SET_BG_COLOR_GREEN : SET_BG_COLOR_DARK_GREEN;
         }
 
-        return (row + col) % 2 == 0 ? SET_BG_COLOR_BLACK : SET_BG_COLOR_WHITE;
+        return (row + col) % 2 == 0 ? SET_BG_COLOR_WHITE : SET_BG_COLOR_BLACK;
     }
 
     private final ChessBoard board;

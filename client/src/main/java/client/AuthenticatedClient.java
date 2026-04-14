@@ -53,7 +53,7 @@ public class AuthenticatedClient extends BaseClient {
 
     public String createGame(String... params) throws ClientException {
 
-        if (params.length < 1) {
+        if (params.length != 1) {
             throw new ClientException("Error: Expected: <gameName>");
         }
 
@@ -80,9 +80,21 @@ public class AuthenticatedClient extends BaseClient {
 
                 builder.append("\t");
                 builder.append(gameData.getGameName());
-                builder.append(":\t\t");
+                builder.append("(ID:");
                 builder.append(gameData.getGameID());
-                builder.append("\n");
+                builder.append("):\tWhite (");
+                if(gameData.getWhiteUsername() != null) {
+                    builder.append(gameData.getWhiteUsername());
+                }else{
+                    builder.append("<OPEN>");
+                }
+                builder.append(")\tBlack (");
+                if(gameData.getBlackUsername() != null) {
+                    builder.append(gameData.getBlackUsername());
+                }else{
+                    builder.append("<OPEN>");
+                }
+                builder.append(")\n");
             }
         }
 
@@ -91,47 +103,51 @@ public class AuthenticatedClient extends BaseClient {
 
     public String playGame(String... params) throws ClientException {
 
-        if (params.length >= 2) {
-
-            int gameID = 0;
-            try {
-                gameID = Integer.parseInt(params[0]);
-
-            }catch (NumberFormatException n) {
-                throw new ClientException("Error: Invalid gameID: " + n.getMessage());
-            }
-
-            String color = params[1].toLowerCase().trim();
-            ChessGame.TeamColor teamColor = color.equals("white") ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK;
-            server.joinGame(authToken, new JoinGameRequest(teamColor, gameID));
-            new GameplayClient(server, authToken, username, gameID, teamColor).run();
-
-            return String.format("Game %s exited.", gameID);
+        if (params.length != 2) {
+            throw new ClientException("Error: Expected: <gameID> [WHITE|BLACK]");
         }
 
-        throw new ClientException("Error: Expected: <gameID> [WHITE|BLACK]");
+        String color = params[1].toLowerCase().trim();
+
+        if(!color.equals("white") && !color.equals("black")){
+            throw new ClientException("Error: Invalid team color");
+        }
+
+        int gameID = 0;
+        try {
+            gameID = Integer.parseInt(params[0]);
+
+        }catch (NumberFormatException n) {
+            throw new ClientException("Error: Invalid gameID");
+        }
+
+        ChessGame.TeamColor teamColor = color.equals("white") ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK;
+        server.joinGame(authToken, new JoinGameRequest(teamColor, gameID));
+
+        new GameplayClient(server, authToken, username, gameID, teamColor).run();
+
+        return String.format("Game %s exited.", gameID);
     }
 
     public String observeGame(String... params) throws ClientException {
 
-        if (params.length >= 1) {
-
-            int gameID = 0;
-            try {
-                gameID = Integer.parseInt(params[0]);
-
-            }catch (NumberFormatException n) {
-                throw new ClientException("Error: Invalid gameID: " + n.getMessage());
-            }
-
-            server.joinGame(authToken, new JoinGameRequest(null, gameID));
-
-            new GameplayClient(server, authToken, username, gameID, null).run();
-
-            return String.format("Exited game %s.", gameID);
+        if (params.length != 1) {
+            throw new ClientException("Error: Expected: <gameID>");
         }
 
-        throw new ClientException("Error: Expected: <gameID>");
+        int gameID = 0;
+        try {
+            gameID = Integer.parseInt(params[0]);
+
+        }catch (NumberFormatException n) {
+            throw new ClientException("Error: Invalid gameID");
+        }
+
+        server.joinGame(authToken, new JoinGameRequest(null, gameID));
+
+        new GameplayClient(server, authToken, username, gameID, null).run();
+
+        return String.format("Exited game %s.", gameID);
     }
 
     public String help() {
